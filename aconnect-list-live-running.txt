@@ -1,0 +1,28 @@
+# aconnect -l
+client 0: 'System' [type=kernel]
+    0 'Timer           '
+    1 'Announce        '
+client 20: 'MPC Live Controller' [type=kernel,card=1]
+    0 'MPC Live Controller MIDI 1'
+    1 'MPC Live Controller MIDI 2'
+    2 'MPC Live Controller MIDI 3'
+	Connecting To: 129:0
+	Connected From: 128:0, 128:2
+    3 'MPC Live Controller MIDI 4'
+	Connecting To: 129:1
+	Connected From: 128:1, 128:3
+client 128: 'Juce Midi Output' [type=user,pid=307]
+    0 'Juce Midi Output'
+	Connecting To: 20:2
+    1 'Juce Midi Output'
+	Connecting To: 20:3
+    2 'Juce Midi Output'
+	Connecting To: 20:2
+    3 'Juce Midi Output'
+	Connecting To: 20:3
+client 129: 'Juce Midi Input' [type=user,pid=307]
+    0 'Juce Midi Input '
+	Connected From: 20:2
+    1 'Juce Midi Input '
+	Connected From: 20:3
+# 
