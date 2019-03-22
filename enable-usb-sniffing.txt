@@ -16,5 +16,8 @@ Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 
 # tcpdump -i usbmon2 -w /tmp/usblog.pcap &
 # killall tcpdump
+152959 packets captured
+152959 packets received by filter
+0 packets dropped by kernel
 
 
