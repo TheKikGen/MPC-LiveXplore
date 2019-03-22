@@ -1,0 +1,6 @@
+
+# Emis lors du lancement du logiciel MPC vers le controleur
+F0 7E 00 06 01 F7
+# Réponse du controleur
+F0 7E 00 06 02 47 3B 00 19 00 01 01 01 7F 00 00 00 00 XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX 00 F7
+# Serial number                                       A  1  X  X  X  X  X  X  X  X  X  X  X  X 
