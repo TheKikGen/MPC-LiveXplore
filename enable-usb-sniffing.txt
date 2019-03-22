@@ -1,0 +1,20 @@
+# modprobe usbmon
+# tcpdump -D
+1.wlan0 [Up, Running]
+2.any (Pseudo-device that captures on all interfaces) [Up, Running]
+3.lo [Up, Running, Loopback]
+4.usbmon1 (USB bus number 1)
+5.usbmon2 (USB bus number 2)
+
+# lsusb
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 007: ID 09e8:003b AKAI  Professional M.I. Corp.
+Bus 002 Device 006: ID 09e8:203b AKAI  Professional M.I. Corp.
+Bus 002 Device 009: ID 152d:0578 JMicron Technology Corp. / JMicron USA Technology Corp.
+Bus 002 Device 002: ID 09e8:503b AKAI  Professional M.I. Corp.
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+# tcpdump -i usbmon2 -w /tmp/usblog.pcap &
+# killall tcpdump
+
+
