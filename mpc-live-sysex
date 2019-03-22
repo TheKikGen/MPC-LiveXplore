@@ -5,3 +5,17 @@ F0 7E 00 06 01 F7
 F0 7E 00 06 02 47 3B 00 19 00 01 01 01 7F 00 00 00 00 XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX 00 F7
 # 15 bytes Serial number                              X  X  X  X  X  X  X  X  X  X  X  X  X  X  X
 
+0000   80 c4 c1 ed 00 00 00 00 53 03 01 06 02 00 2d 00
+0010   10 1f 83 5c 00 00 00 00 c6 29 04 00 8d ff ff ff
+0020   10 00 00 00 10 00 00 00 00 00 00 00 00 00 00 00
+0030   00 00 00 00 00 00 00 00 04 00 00 00 00 00 00 00
+
+# Host to USB MPC Controller
+f0 47 00 3b 65 00 04 01 00 7f 00 f7
+f0 47 00 3b 65 00 04 01 7f 00 00 f7
+
+
+
+
+
+
