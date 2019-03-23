@@ -1,0 +1,2 @@
+# on a mounted rootfs partition
+sudo ln -s lib/systemd/system/sshd.service etc/systemd/system/multi-user.target.wants/sshd.service 
