@@ -1,6 +1,8 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force technical explorations and hacks
 
+## How to activate the linux console
+
 After my hack to add 4 MIDI OUT on the MPC Live, I went a little further.
 I plugged a TTL USB serial interface into the main CPU board after opening the case (with a few cold sweats!!!).
 
