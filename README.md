@@ -4,6 +4,7 @@ Akai MPC Live/X/Force technical explorations and hacks
 ## How to add 2 new midi ports C D : a quick guide with MIDI-OX.
 
 <img border="0" width="350" src="https://github.com/TheKikGen/USBMidiKliK4x4/wiki/mpclive-hack/akai-mpc-live-usbmidiklik.jpg?raw=true"  />
+https://github.com/TheKikGen/USBMidiKliK4x4
 
 1. First, you must install MIDI-OX (or any other MIDI tool) on your computer (You will find this software here : http://www.midiox.com/ for Windows).
 
