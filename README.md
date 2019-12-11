@@ -9,3 +9,5 @@ https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D-:-a-qu
 
 https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-console
 
+## SSH activation and flashing the rootfs with fastboot
+https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSH-activation-and-flashing-the-rootfs-with-fastboot
