@@ -1,0 +1,219 @@
+{
+    "progression": {
+        "name": "Jazz 05",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "Fmin9",
+                "role": "Root",
+                "notes": [
+                    41,
+                    53,
+                    60,
+                    63,
+                    67,
+                    68,
+                    72
+                ]
+            },
+            {
+                "name": "A#13",
+                "role": "Normal",
+                "notes": [
+                    46,
+                    53,
+                    56,
+                    58,
+                    60,
+                    62,
+                    67
+                ]
+            },
+            {
+                "name": "D#maj9",
+                "role": "Normal",
+                "notes": [
+                    51,
+                    58,
+                    62,
+                    63,
+                    65,
+                    67,
+                    70
+                ]
+            },
+            {
+                "name": "G#maj9",
+                "role": "Normal",
+                "notes": [
+                    44,
+                    51,
+                    58,
+                    63,
+                    67,
+                    72,
+                    75
+                ]
+            },
+            {
+                "name": "Dmin7b5",
+                "role": "Normal",
+                "notes": [
+                    50,
+                    56,
+                    60,
+                    65,
+                    68,
+                    72,
+                    74,
+                    77
+                ]
+            },
+            {
+                "name": "G7b9b13",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    50,
+                    56,
+                    65,
+                    68,
+                    71,
+                    75
+                ]
+            },
+            {
+                "name": "Cmin9",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    55,
+                    58,
+                    63,
+                    67,
+                    70,
+                    74
+                ]
+            },
+            {
+                "name": "Cmin7",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    55,
+                    63,
+                    67,
+                    70,
+                    75,
+                    79
+                ]
+            },
+            {
+                "name": "Dmin7b5",
+                "role": "Normal",
+                "notes": [
+                    50,
+                    56,
+                    60,
+                    65,
+                    68,
+                    72,
+                    74,
+                    77
+                ]
+            },
+            {
+                "name": "G7b9b13",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    56,
+                    65,
+                    68,
+                    71,
+                    75
+                ]
+            },
+            {
+                "name": "Cmin9",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    55,
+                    62,
+                    63,
+                    67,
+                    70,
+                    72,
+                    74
+                ]
+            },
+            {
+                "name": "A#add9/C",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    58,
+                    62,
+                    70,
+                    74,
+                    77,
+                    82
+                ]
+            },
+            {
+                "name": "Fmin9",
+                "role": "Normal",
+                "notes": [
+                    53,
+                    60,
+                    68,
+                    72,
+                    75,
+                    79
+                ]
+            },
+            {
+                "name": "A#13",
+                "role": "Normal",
+                "notes": [
+                    46,
+                    53,
+                    60,
+                    68,
+                    72,
+                    74,
+                    79
+                ]
+            },
+            {
+                "name": "D#maj9",
+                "role": "Normal",
+                "notes": [
+                    51,
+                    58,
+                    65,
+                    67,
+                    70,
+                    74,
+                    79
+                ]
+            },
+            {
+                "name": "D#maj9",
+                "role": "Normal",
+                "notes": [
+                    51,
+                    58,
+                    65,
+                    70,
+                    74,
+                    79,
+                    82
+                ]
+            }
+        ]
+    }
+}

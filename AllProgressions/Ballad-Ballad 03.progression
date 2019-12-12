@@ -1,0 +1,199 @@
+{
+    "progression": {
+        "name": "Ballad 03",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "Cadd9",
+                "role": "Root",
+                "notes": [
+                    36,
+                    48,
+                    60,
+                    62,
+                    64,
+                    67
+                ]
+            },
+            {
+                "name": "Emin7/B",
+                "role": "Normal",
+                "notes": [
+                    35,
+                    47,
+                    59,
+                    62,
+                    64,
+                    67
+                ]
+            },
+            {
+                "name": "Fadd9/A",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    57,
+                    60,
+                    65,
+                    67
+                ]
+            },
+            {
+                "name": "Fadd9",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    55,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "Emin7",
+                "role": "Normal",
+                "notes": [
+                    40,
+                    47,
+                    52,
+                    55,
+                    59,
+                    62
+                ]
+            },
+            {
+                "name": "Amin7",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    52,
+                    55,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "Dmin9",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    45,
+                    52,
+                    53,
+                    57,
+                    60,
+                    64
+                ]
+            },
+            {
+                "name": "G9sus4",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    50,
+                    53,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "Cadd9",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    60,
+                    62,
+                    64,
+                    67
+                ]
+            },
+            {
+                "name": "Emin7",
+                "role": "Normal",
+                "notes": [
+                    40,
+                    47,
+                    52,
+                    55,
+                    59,
+                    62
+                ]
+            },
+            {
+                "name": "Amin7",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    52,
+                    55,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "Dmin7",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    50,
+                    53,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "Bmin7b5",
+                "role": "Normal",
+                "notes": [
+                    35,
+                    47,
+                    53,
+                    57,
+                    59,
+                    62
+                ]
+            },
+            {
+                "name": "E7",
+                "role": "Normal",
+                "notes": [
+                    40,
+                    47,
+                    52,
+                    56,
+                    59,
+                    62
+                ]
+            },
+            {
+                "name": "Amin7",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    52,
+                    55,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "G9sus4",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    50,
+                    53,
+                    57,
+                    60
+                ]
+            }
+        ]
+    }
+}

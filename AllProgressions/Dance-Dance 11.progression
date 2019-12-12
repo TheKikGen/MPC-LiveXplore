@@ -1,0 +1,180 @@
+{
+    "progression": {
+        "name": "Dance 11",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "Cmin",
+                "role": "Root",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "D#",
+                "role": "Normal",
+                "notes": [
+                    39,
+                    51,
+                    55,
+                    58,
+                    63
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    46,
+                    53,
+                    58,
+                    62
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    44,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Cmin7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    58,
+                    63
+                ]
+            },
+            {
+                "name": "D#maj7",
+                "role": "Normal",
+                "notes": [
+                    39,
+                    51,
+                    55,
+                    58,
+                    62
+                ]
+            },
+            {
+                "name": "Fmin7",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "G#sus2",
+                "role": "Normal",
+                "notes": [
+                    44,
+                    51,
+                    56,
+                    58,
+                    63
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    51,
+                    63
+                ]
+            },
+            {
+                "name": "D#",
+                "role": "Normal",
+                "notes": [
+                    39,
+                    51,
+                    55,
+                    67
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    46,
+                    50,
+                    62
+                ]
+            },
+            {
+                "name": "Fmin",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    56,
+                    68
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    51,
+                    55,
+                    63
+                ]
+            },
+            {
+                "name": "D#",
+                "role": "Normal",
+                "notes": [
+                    39,
+                    51,
+                    55,
+                    58,
+                    67
+                ]
+            },
+            {
+                "name": "Fmin",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    56,
+                    60,
+                    68
+                ]
+            },
+            {
+                "name": "G#add9",
+                "role": "Normal",
+                "notes": [
+                    44,
+                    56,
+                    58,
+                    60,
+                    68,
+                    70
+                ]
+            }
+        ]
+    }
+}

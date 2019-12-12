@@ -1,0 +1,30 @@
+{
+    "progression": {
+        "name": "Godly",
+        "rootNote": "E",
+        "scale": "Pentatonic Minor",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "Em",    "role": "Root",   "notes": [ 52, 59, 64, 67 ] },
+            { "name": "Em7/D", "role": "Normal", "notes": [ 50, 59, 62, 67 ] },
+            { "name": "B/F#",  "role": "Normal", "notes": [ 54, 59, 63, 66 ] },
+            { "name": "B7/D#", "role": "Normal", "notes": [ 51, 59, 63, 66, 69 ] },
+
+            { "name": "C",     "role": "Normal", "notes": [ 52, 59, 64, 67 ] },
+            { "name": "G",     "role": "Normal", "notes": [ 57, 60, 64, 67 ] },
+            { "name": "Em",    "role": "Normal", "notes": [ 48, 60, 64, 67 ] },
+            { "name": "Am7",   "role": "Normal", "notes": [ 55, 59, 62, 67 ] },
+
+            { "name": "D7",    "role": "Normal", "notes": [ 50, 57, 61, 62 ] },
+            { "name": "D7/F#", "role": "Normal", "notes": [ 54, 57, 61, 64, 66 ] },
+            { "name": "A7",    "role": "Normal", "notes": [ 49, 61, 64, 67 ] },
+            { "name": "A7/C#", "role": "Normal", "notes": [ 57, 61, 64, 67, 69 ] },
+
+            { "name": "F#",    "role": "Normal", "notes": [ 52, 57, 61, 64 ] },
+            { "name": "F#7/F", "role": "Normal", "notes": [ 51, 57, 61, 63 ] },
+            { "name": "F#/E",  "role": "Normal", "notes": [ 50, 57, 61, 62 ] },
+            { "name": "F#/Eb", "role": "Normal", "notes": [ 49, 57, 61, 66 ] }
+        ]
+    }
+}
+

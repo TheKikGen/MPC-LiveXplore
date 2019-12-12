@@ -1,0 +1,93 @@
+{
+    "progression": {
+        "name": "House 4",
+        "rootNote": "F",
+        "scale": "Major",
+        "recordingOctave": 3,
+        "chords": [
+            {
+                "name": "Fmin7",
+                "role": "Root",
+                "notes": [
+                    65,
+                    68,
+                    72,
+                    75
+                ]
+            },
+            {
+                "name": "G#maj7",
+                "role": "Normal",
+                "notes": [
+                    68,
+                    72,
+                    75,
+                    79
+                ]
+            },
+            {
+                "name": "Cmin7/G",
+                "role": "Normal",
+                "notes": [
+                    67,
+                    72,
+                    75,
+                    82
+                ]
+            },
+            {
+                "name": "F7sus4",
+                "role": "Normal",
+                "notes": [
+                    65,
+                    72,
+                    75,
+                    82
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    65,
+                    68,
+                    75,
+                    79
+                ]
+            },
+            {
+                "name": "D#maj9",
+                "role": "Normal",
+                "notes": [
+                    63,
+                    67,
+                    70,
+                    74,
+                    77
+                ]
+            },
+            {
+                "name": "Fmin9",
+                "role": "Normal",
+                "notes": [
+                    65,
+                    68,
+                    72,
+                    75,
+                    79
+                ]
+            },
+            {
+                "name": "G#min9",
+                "role": "Normal",
+                "notes": [
+                    68,
+                    71,
+                    75,
+                    78,
+                    82
+                ]
+            }
+        ]
+    }
+}

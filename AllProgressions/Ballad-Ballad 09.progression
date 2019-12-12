@@ -1,0 +1,187 @@
+{
+    "progression": {
+        "name": "Ballad 09",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "Cmin",
+                "role": "Root",
+                "notes": [
+                    36,
+                    48,
+                    60,
+                    63,
+                    67
+                ]
+            },
+            {
+                "name": "Gmin/A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    55,
+                    62,
+                    67
+                ]
+            },
+            {
+                "name": "Fmin",
+                "role": "Normal",
+                "notes": [
+                    29,
+                    41,
+                    56,
+                    60,
+                    65,
+                    68
+                ]
+            },
+            {
+                "name": "Gsus4",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    55,
+                    60,
+                    62,
+                    67
+                ]
+            },
+            {
+                "name": "Fmin",
+                "role": "Normal",
+                "notes": [
+                    29,
+                    41,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "Cmin/D#",
+                "role": "Normal",
+                "notes": [
+                    27,
+                    39,
+                    55,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Gsus4",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    55,
+                    60,
+                    62,
+                    67
+                ]
+            },
+            {
+                "name": "Gaug",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    55,
+                    59,
+                    63
+                ]
+            },
+            {
+                "name": "Fmin9",
+                "role": "Normal",
+                "notes": [
+                    29,
+                    41,
+                    56,
+                    60,
+                    67
+                ]
+            },
+            {
+                "name": "Fmin7/G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    53,
+                    56,
+                    63
+                ]
+            },
+            {
+                "name": "Csus4",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    65
+                ]
+            },
+            {
+                "name": "Cm/A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    55,
+                    60
+                ]
+            },
+            {
+                "name": "Fmin7",
+                "role": "Normal",
+                "notes": [
+                    29,
+                    41,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Fmin/G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    53,
+                    60,
+                    65
+                ]
+            },
+            {
+                "name": "D#",
+                "role": "Normal",
+                "notes": [
+                    39,
+                    51,
+                    58,
+                    63,
+                    67
+                ]
+            },
+            {
+                "name": "G",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    55,
+                    59,
+                    62
+                ]
+            }
+        ]
+    }
+}

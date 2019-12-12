@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "Guitar Acoustic 2",
+        "rootNote": "A",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "Am7", "role": "Root", "notes": [ 45, 52, 57, 60, 67 ] },
+            { "name": "Am", "role": "Normal", "notes": [ 45, 60, 52, 57, 64 ] },
+            { "name": "Am/G", "role": "Normal", "notes": [ 43, 52, 55, 62, 43 ] },
+            { "name": "C/G", "role": "Normal", "notes": [ 43, 52, 55, 60 ] },
+            { "name": "D/F#", "role": "Normal", "notes": [ 50, 57, 62, 42 ] },
+            { "name": "D7/F#", "role": "Normal", "notes": [ 42, 50, 57, 60 ] },
+            { "name": "F", "role": "Normal", "notes": [ 41, 53, 57, 45, 60 ] },
+            { "name": "E", "role": "Normal", "notes": [ 40, 52, 56, 59 ] }
+        ]
+    }
+}
+

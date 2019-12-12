@@ -1,0 +1,27 @@
+{
+    "progression": {
+        "name": "So Simple",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "C", "role": "Root", "notes": [ 48, 64 ] },
+            { "name": "Dm", "role": "Normal", "notes": [ 50, 65 ] },
+            { "name": "Em", "role": "Normal", "notes": [ 52, 67 ] },
+            { "name": "F", "role": "Normal", "notes": [ 53, 69 ] },
+            { "name": "G", "role": "Normal", "notes": [ 43, 59 ] },
+            { "name": "Am", "role": "Normal", "notes": [ 45, 60 ] },
+            { "name": "Bm", "role": "Normal", "notes": [ 47, 62 ] },
+            { "name": "F/A", "role": "Normal", "notes": [ 45, 53 ] },
+            { "name": "C", "role": "Normal", "notes": [ 48, 52 ] },
+            { "name": "Dm", "role": "Normal", "notes": [ 50, 53 ] },
+            { "name": "Em", "role": "Normal", "notes": [ 52, 55 ] },
+            { "name": "F", "role": "Normal", "notes": [ 53, 57 ] },
+            { "name": "G", "role": "Normal", "notes": [ 43, 47 ] },
+            { "name": "Am", "role": "Normal", "notes": [ 45, 48 ] },
+            { "name": "Bm", "role": "Normal", "notes": [ 47, 50, 47 ] },
+            { "name": "Dm", "role": "Normal", "notes": [ 45, 50, 45, 50 ] }
+        ]
+    }
+}
+

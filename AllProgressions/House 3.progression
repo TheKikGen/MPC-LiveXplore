@@ -1,0 +1,100 @@
+{
+    "progression": {
+        "name": "House 3",
+        "rootNote": "E",
+        "scale": "Pentatonic Minor",
+        "recordingOctave": 3,
+        "chords": [
+            {
+                "name": "Emaj9",
+                "role": "Root",
+                "notes": [
+                    64,
+                    68,
+                    71,
+                    75,
+                    78
+                ]
+            },
+            {
+                "name": "C#min9",
+                "role": "Normal",
+                "notes": [
+                    61,
+                    64,
+                    68,
+                    71,
+                    75
+                ]
+            },
+            {
+                "name": "Emin9",
+                "role": "Normal",
+                "notes": [
+                    64,
+                    67,
+                    71,
+                    74,
+                    78
+                ]
+            },
+            {
+                "name": "Am11/D",
+                "role": "Normal",
+                "notes": [
+                    62,
+                    66,
+                    69,
+                    71,
+                    76
+                ]
+            },
+            {
+                "name": "Emin9",
+                "role": "Normal",
+                "notes": [
+                    64,
+                    67,
+                    71,
+                    74,
+                    78
+                ]
+            },
+            {
+                "name": "A13",
+                "role": "Normal",
+                "notes": [
+                    57,
+                    61,
+                    64,
+                    67,
+                    71,
+                    78
+                ]
+            },
+            {
+                "name": "Cmin9",
+                "role": "Normal",
+                "notes": [
+                    60,
+                    63,
+                    67,
+                    70,
+                    74,
+                    79
+                ]
+            },
+            {
+                "name": "F9",
+                "role": "Normal",
+                "notes": [
+                    65,
+                    69,
+                    72,
+                    75,
+                    79
+                ]
+            }
+        ]
+    }
+}

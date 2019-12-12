@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "Keys Jazz 4",
+        "rootNote": "A#",
+        "scale": "Chromatic",
+        "recordingOctave": 3,
+        "chords": [
+            { "name": "A#maj7", "role": "Root", "notes": [ 47, 54, 66, 70, 75 ] },
+            { "name": "Am7", "role": "Normal", "notes": [ 45, 55, 60, 64, 71 ] },
+            { "name": "D7", "role": "Normal", "notes": [ 50, 57, 60, 63, 66, 69 ] },
+            { "name": "Gadd9", "role": "Normal", "notes": [ 43, 50, 57, 59, 62 ] },
+            { "name": "F#m7", "role": "Normal", "notes": [ 42, 52, 57, 61, 64, 68 ] },
+            { "name": "B7", "role": "Normal", "notes": [ 47, 57, 63, 66 ] },
+            { "name": "E", "role": "Normal", "notes": [ 40, 47, 56, 59 ] },
+            { "name": "D#maj7", "role": "Normal", "notes": [ 39, 46, 55, 58, 62, 65 ] }
+        ]
+    }
+}
+

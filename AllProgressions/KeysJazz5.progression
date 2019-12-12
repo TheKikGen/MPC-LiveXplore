@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "Keys Jazz 5",
+        "rootNote": "F",
+        "scale": "Chromatic",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "D#", "role": "BelowRoot", "notes": [ 53, 58, 63, 67 ] },
+            { "name": "E/F#", "role": "Normal", "notes": [ 54, 59, 64, 68 ] },
+            { "name": "C/D", "role": "Normal", "notes": [ 50, 55, 60, 64 ] },
+            { "name": "C#/D#", "role": "Normal", "notes": [ 51, 56, 61, 65 ] },
+            { "name": "A#/C", "role": "Normal", "notes": [ 48, 53, 58, 62 ] },
+            { "name": "B/C#", "role": "Normal", "notes": [ 49, 54, 59, 63 ] },
+            { "name": "A#add9", "role": "Normal", "notes": [ 46, 53, 60, 62 ] },
+            { "name": "Amaj9", "role": "Normal", "notes": [ 45, 52, 56, 59, 61, 64 ] }
+        ]
+    }
+}
+

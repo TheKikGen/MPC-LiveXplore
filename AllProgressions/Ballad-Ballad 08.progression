@@ -1,0 +1,194 @@
+{
+    "progression": {
+        "name": "Ballad 08",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "C",
+                "role": "Root",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    64
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    53,
+                    58,
+                    62
+                ]
+            },
+            {
+                "name": "F/A",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    53,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    53,
+                    58,
+                    62
+                ]
+            },
+            {
+                "name": "C",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    64
+                ]
+            },
+            {
+                "name": "Dmin7",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    50,
+                    57,
+                    60,
+                    62,
+                    65
+                ]
+            },
+            {
+                "name": "C",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    64
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    57,
+                    60,
+                    65
+                ]
+            },
+            {
+                "name": "A#add9",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    58,
+                    60,
+                    62,
+                    65
+                ]
+            },
+            {
+                "name": "F/A",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    57,
+                    60,
+                    65
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    55,
+                    58,
+                    62,
+                    65
+                ]
+            },
+            {
+                "name": "Fadd9",
+                "role": "Normal",
+                "notes": [
+                    29,
+                    41,
+                    55,
+                    57,
+                    60,
+                    65
+                ]
+            },
+            {
+                "name": "Cmin7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    58,
+                    63,
+                    67
+                ]
+            },
+            {
+                "name": "A#/D",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    50,
+                    53,
+                    58,
+                    62,
+                    65
+                ]
+            },
+            {
+                "name": "D#",
+                "role": "Normal",
+                "notes": [
+                    39,
+                    51,
+                    55,
+                    58,
+                    63,
+                    67
+                ]
+            },
+            {
+                "name": "C",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    64,
+                    67
+                ]
+            }
+        ]
+    }
+}

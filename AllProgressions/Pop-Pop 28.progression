@@ -1,0 +1,181 @@
+{
+    "progression": {
+        "name": "Pop 28",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "C#maj7",
+                "role": "Root",
+                "notes": [
+                    37,
+                    49,
+                    53,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "Cmin7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    51,
+                    55,
+                    58
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    51,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    53,
+                    58,
+                    62
+                ]
+            },
+            {
+                "name": "Cmin7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    58,
+                    63
+                ]
+            },
+            {
+                "name": "Fmin7",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    51,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    53,
+                    58,
+                    62
+                ]
+            },
+            {
+                "name": "G#maj7",
+                "role": "Normal",
+                "notes": [
+                    44,
+                    55,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    51,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "D#/G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    51,
+                    55,
+                    58
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    53,
+                    58,
+                    62
+                ]
+            },
+            {
+                "name": "Cmin7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    58,
+                    63
+                ]
+            },
+            {
+                "name": "D#/G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    58,
+                    63
+                ]
+            },
+            {
+                "name": "Fmin7",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    58,
+                    62,
+                    65
+                ]
+            },
+            {
+                "name": "Cmin7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    51,
+                    55,
+                    58,
+                    60,
+                    63
+                ]
+            }
+        ]
+    }
+}

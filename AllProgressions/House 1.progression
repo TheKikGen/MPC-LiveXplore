@@ -1,0 +1,98 @@
+{
+    "progression": {
+        "name": "House 1",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 3,
+        "chords": [
+            {
+                "name": "Cmaj7/G",
+                "role": "Root",
+                "notes": [
+                    55,
+                    59,
+                    60,
+                    64
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    53,
+                    57,
+                    59,
+                    60,
+                    64
+                ]
+            },
+            {
+                "name": "Cmin9/G",
+                "role": "Normal",
+                "notes": [
+                    55,
+                    58,
+                    60,
+                    62,
+                    63
+                ]
+            },
+            {
+                "name": "Gmin7/F",
+                "role": "Normal",
+                "notes": [
+                    53,
+                    55,
+                    58,
+                    62,
+                    65
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    51,
+                    55,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "G#maj7/D#",
+                "role": "Normal",
+                "notes": [
+                    51,
+                    55,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Dmin9/C",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    50,
+                    52,
+                    53,
+                    57,
+                    62
+                ]
+            },
+            {
+                "name": "G6",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    52,
+                    55,
+                    59,
+                    62
+                ]
+            }
+        ]
+    }
+}

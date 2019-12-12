@@ -1,0 +1,195 @@
+{
+    "progression": {
+        "name": "Gospel 06",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 3,
+        "chords": [
+            {
+                "name": "C/G",
+                "role": "Root",
+                "notes": [
+                    31,
+                    43,
+                    52,
+                    55,
+                    60,
+                    64
+                ]
+            },
+            {
+                "name": "G7/F",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    50,
+                    55,
+                    59,
+                    62
+                ]
+            },
+            {
+                "name": "C/E",
+                "role": "Normal",
+                "notes": [
+                    40,
+                    48,
+                    52,
+                    55,
+                    60
+                ]
+            },
+            {
+                "name": "C#dim7",
+                "role": "Normal",
+                "notes": [
+                    37,
+                    49,
+                    52,
+                    55,
+                    58
+                ]
+            },
+            {
+                "name": "Dmin7",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    48,
+                    53,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "C/E",
+                "role": "Normal",
+                "notes": [
+                    40,
+                    48,
+                    52,
+                    55,
+                    60
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    48,
+                    53,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "Dm7b5/G",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    50,
+                    53,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "C7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    52,
+                    55,
+                    58,
+                    60
+                ]
+            },
+            {
+                "name": "F79",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    48,
+                    51,
+                    55,
+                    57,
+                    60
+                ]
+            },
+            {
+                "name": "E79",
+                "role": "Normal",
+                "notes": [
+                    40,
+                    50,
+                    54,
+                    56,
+                    59
+                ]
+            },
+            {
+                "name": "A79",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    49,
+                    52,
+                    55,
+                    59
+                ]
+            },
+            {
+                "name": "D13",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    48,
+                    52,
+                    54,
+                    59
+                ]
+            },
+            {
+                "name": "G79",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    47,
+                    50,
+                    53,
+                    57
+                ]
+            },
+            {
+                "name": "C7",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    43,
+                    48,
+                    52,
+                    55,
+                    58,
+                    60
+                ]
+            },
+            {
+                "name": "F/G",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    53,
+                    57,
+                    60,
+                    65
+                ]
+            }
+        ]
+    }
+}

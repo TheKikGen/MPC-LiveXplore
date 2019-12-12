@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "Piano Pop 3",
+        "rootNote": "D",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "Dm", "role": "Root", "notes": [ 38, 50, 57, 62, 65 ] },
+            { "name": "A7", "role": "Normal", "notes": [ 33, 45, 55, 57, 61, 64 ] },
+            { "name": "Dm", "role": "Normal", "notes": [ 38, 50, 53, 57, 62 ] },
+            { "name": "Am/C", "role": "Normal", "notes": [ 36, 48, 52, 57, 60 ] },
+            { "name": "A#", "role": "Normal", "notes": [ 34, 46, 53, 58, 62 ] },
+            { "name": "F/A", "role": "Normal", "notes": [ 33, 45, 53, 57, 60 ] },
+            { "name": "Gm7", "role": "Normal", "notes": [ 31, 43, 53, 58, 62 ] },
+            { "name": "F", "role": "Normal", "notes": [ 29, 41, 53, 57, 60 ] }
+        ]
+    }
+}
+

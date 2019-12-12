@@ -1,0 +1,27 @@
+{
+    "progression": {
+        "name": "Keys Jazz 2",
+        "rootNote": "C",
+        "scale": "Chromatic",
+        "recordingOctave": 3,
+        "chords": [
+            { "name": "Cm6", "role": "Root", "notes": [ 48, 57, 62, 63 ] },
+            { "name": "D7", "role": "Normal", "notes": [ 50, 54, 60, 65 ] },
+            { "name": "G7b5", "role": "Normal", "notes": [ 43, 53, 59, 61 ] },
+            { "name": "Cm7", "role": "Normal", "notes": [ 36, 43, 58, 62, 63 ] },
+            { "name": "F#13", "role": "Normal", "notes": [ 45, 55, 63, 67, 74 ] },
+            { "name": "D#m13", "role": "Normal", "notes": [ 50, 60, 66, 70, 75 ] },
+            { "name": "Gmadd9", "role": "Normal", "notes": [ 43, 58, 69, 70, 74 ] },
+            { "name": "D11", "role": "Normal", "notes": [ 52, 58, 62, 69, 74, 78, 79, 81 ] },
+            { "name": "Gm7", "role": "Normal", "notes": [ 55, 61, 66, 70, 73, 77, 82 ] },
+            { "name": "Am7", "role": "Normal", "notes": [ 38, 50, 55, 69, 76, 77, 81 ] },
+            { "name": "F#maj7", "role": "Normal", "notes": [ 54, 60, 61, 65, 66, 70, 73, 77 ] },
+            { "name": "A#maj7", "role": "Normal", "notes": [ 46, 53, 62, 69, 74 ] },
+            { "name": "G#maj7", "role": "Normal", "notes": [ 44, 51, 60, 67, 72 ] },
+            { "name": "F#maj7", "role": "Normal", "notes": [ 42, 49, 58, 65, 70 ] },
+            { "name": "Emaj7", "role": "Normal", "notes": [ 40, 47, 56, 63, 68 ] },
+            { "name": "D#maj7", "role": "Normal", "notes": [ 39, 46, 55, 62, 67 ] }
+        ]
+    }
+}
+

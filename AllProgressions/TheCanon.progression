@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "The Canon",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 3,
+        "chords": [
+            { "name": "C",   "role": "Root",   "notes": [ 48, 55, 60, 64 ] },
+            { "name": "G/B", "role": "Normal", "notes": [ 47, 55, 59, 62 ] },
+            { "name": "Am7", "role": "Normal", "notes": [ 45, 55, 57, 60, 64 ] },
+            { "name": "Em",  "role": "Normal", "notes": [ 40, 55, 59, 64 ] },
+            { "name": "F",   "role": "Normal", "notes": [ 41, 53, 57, 60 ] },
+            { "name": "C/E", "role": "Normal", "notes": [ 40, 52, 55, 60 ] },
+            { "name": "D",   "role": "Normal", "notes": [ 31, 50, 53, 57 ] },
+            { "name": "G",   "role": "Normal", "notes": [ 43, 50, 55, 59, 62 ] }
+        ]
+    }
+}
+

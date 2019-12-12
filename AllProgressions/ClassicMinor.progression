@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "Classic Minor",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 4,
+        "chords": [
+            { "name": "Cm",  "role": "Root",   "notes": [ 72, 75, 77 ] },
+            { "name": "Fm",  "role": "Normal", "notes": [ 72, 77, 80 ] },
+            { "name": "Gm",  "role": "Normal", "notes": [ 70, 74, 79 ] },
+            { "name": "D#",  "role": "Normal", "notes": [ 70, 75, 79 ] },
+            { "name": "G#",  "role": "Normal", "notes": [ 72, 75, 80 ] },
+            { "name": "C#m", "role": "Normal", "notes": [ 73, 76, 80 ] },
+            { "name": "B",   "role": "Normal", "notes": [ 71, 75, 78 ] },
+            { "name": "G",   "role": "Normal", "notes": [ 71, 74, 79 ] }
+        ]
+    }
+}
+

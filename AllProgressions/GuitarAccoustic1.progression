@@ -1,0 +1,27 @@
+{
+    "progression": {
+        "name": "Guitar Acoustic 1",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "C", "role": "Root", "notes": [ 48, 52, 55, 60, 64 ] },
+            { "name": "Cadd9", "role": "Normal", "notes": [ 48, 52, 55, 62, 64 ] },
+            { "name": "Cadd9", "role": "Normal", "notes": [ 48, 52, 55, 62, 67 ] },
+            { "name": "D", "role": "Normal", "notes": [ 50, 57, 62, 66 ] },
+            { "name": "Dsus2", "role": "Normal", "notes": [ 50, 57, 62, 64 ] },
+            { "name": "Dsus4", "role": "Normal", "notes": [ 50, 57, 62, 67 ] },
+            { "name": "G", "role": "Normal", "notes": [ 43, 47, 50, 55, 59, 67 ] },
+            { "name": "Gadd11", "role": "Normal", "notes": [ 43, 47, 50, 55, 60, 67 ] },
+            { "name": "G", "role": "Normal", "notes": [ 43, 47, 50, 55, 62, 67 ] },
+            { "name": "Am", "role": "Normal", "notes": [ 45, 52, 57, 60, 64 ] },
+            { "name": "Am7", "role": "Normal", "notes": [ 45, 52, 55, 60, 67 ] },
+            { "name": "Asus2", "role": "Normal", "notes": [ 45, 52, 55, 59, 64 ] },
+            { "name": "Em", "role": "Normal", "notes": [ 40, 47, 52, 55, 59, 64 ] },
+            { "name": "Em7", "role": "Normal", "notes": [ 40, 47, 52, 55, 62, 64 ] },
+            { "name": "Em9", "role": "Normal", "notes": [ 40, 47, 52, 55, 62, 66 ] },
+            { "name": "F", "role": "Normal", "notes": [ 41, 48, 53, 57, 60, 65 ] }
+        ]
+    }
+}
+

@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "Piano Pop 2",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "C", "role": "Root", "notes": [ 36, 48, 55, 60, 64 ] },
+            { "name": "G", "role": "Normal", "notes": [ 31, 43, 55, 59, 62 ] },
+            { "name": "Am7", "role": "Normal", "notes": [ 33, 45, 52, 55, 57, 60 ] },
+            { "name": "F", "role": "Normal", "notes": [ 29, 41, 53, 57, 60 ] },
+            { "name": "G", "role": "Normal", "notes": [ 31, 43, 50, 55, 60 ] },
+            { "name": "Am7", "role": "Normal", "notes": [ 33, 45, 55, 57, 60 ] },
+            { "name": "Fmaj7", "role": "Normal", "notes": [ 29, 41, 52, 55, 57, 60 ] },
+            { "name": "G", "role": "Normal", "notes": [ 31, 43, 50, 55, 59 ] }
+        ]
+    }
+}
+

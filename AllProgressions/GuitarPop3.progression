@@ -1,0 +1,19 @@
+{
+    "progession": {
+        "name": "Guitar Pop 3",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "Cadd9", "role": "Root", "notes": [ 48, 55, 62, 64 ] },
+            { "name": "Amadd9", "role": "Normal", "notes": [ 45, 52, 59, 60 ] },
+            { "name": "Fsus2", "role": "Normal", "notes": [ 53, 60, 65, 67 ] },
+            { "name": "Gsus2", "role": "Normal", "notes": [ 55, 62, 67, 69 ] },
+            { "name": "Dmadd9", "role": "Normal", "notes": [ 50, 57, 64, 65 ] },
+            { "name": "Emadd9", "role": "Normal", "notes": [ 52, 59, 65, 67 ] },
+            { "name": "Gadd9", "role": "Normal", "notes": [ 55, 59, 62, 69 ] },
+            { "name": "G/F", "role": "Normal", "notes": [ 53, 59, 62, 67 ] }
+        ]
+    }
+}
+

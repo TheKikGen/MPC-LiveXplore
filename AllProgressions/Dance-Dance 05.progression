@@ -1,0 +1,188 @@
+{
+    "progression": {
+        "name": "Dance 05",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "Cmin",
+                "role": "Root",
+                "notes": [
+                    36,
+                    48,
+                    51,
+                    55,
+                    60
+                ]
+            },
+            {
+                "name": "Gsus4",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    50,
+                    55,
+                    60
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    51,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    51,
+                    56,
+                    60
+                ]
+            },
+            {
+                "name": "A#sus2",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    53,
+                    58,
+                    60
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    51,
+                    55,
+                    60
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Cmin7/G",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    55,
+                    58,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    55,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    60,
+                    63,
+                    67
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    55,
+                    58,
+                    62,
+                    65
+                ]
+            },
+            {
+                "name": "G#/A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    56,
+                    60,
+                    63
+                ]
+            },
+            {
+                "name": "G#/A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    60,
+                    63,
+                    68
+                ]
+            }
+        ]
+    }
+}

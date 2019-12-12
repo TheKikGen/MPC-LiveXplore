@@ -1,0 +1,169 @@
+{
+    "progression": {
+        "name": "Dance 04",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 1,
+        "chords": [
+            {
+                "name": "Cmin",
+                "role": "Root",
+                "notes": [
+                    36,
+                    48,
+                    51
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    48
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    50
+                ]
+            },
+            {
+                "name": "Gmin",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    46
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    51
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    51,
+                    55
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    50,
+                    53
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    50,
+                    53
+                ]
+            },
+            {
+                "name": "Cmin",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    51,
+                    55
+                ]
+            },
+            {
+                "name": "G#",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    48,
+                    51
+                ]
+            },
+            {
+                "name": "A#",
+                "role": "Normal",
+                "notes": [
+                    34,
+                    46,
+                    50,
+                    53
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    46,
+                    50,
+                    53
+                ]
+            },
+            {
+                "name": "G#maj7",
+                "role": "Normal",
+                "notes": [
+                    32,
+                    44,
+                    48,
+                    51,
+                    55
+                ]
+            },
+            {
+                "name": "Fmin7",
+                "role": "Normal",
+                "notes": [
+                    29,
+                    41,
+                    44,
+                    48,
+                    51
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    31,
+                    43,
+                    46,
+                    50,
+                    53
+                ]
+            },
+            {
+                "name": "Bdim7",
+                "role": "Normal",
+                "notes": [
+                    35,
+                    47,
+                    50,
+                    53,
+                    56
+                ]
+            }
+        ]
+    }
+}

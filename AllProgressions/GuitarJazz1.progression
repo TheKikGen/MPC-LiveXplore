@@ -1,0 +1,27 @@
+{
+    "progession": {
+        "name": "Guitar Jazz One",
+        "rootNote": "C",
+        "scale": "Natural Minor",
+        "recordingOctave": 2,
+        "chords": [
+            { "name": "Cm", "role": "Root", "notes": [ 48, 58, 63, 67 ] },
+            { "name": "A#/C", "role": "Normal", "notes": [ 48, 58, 62, 65 ] },
+            { "name": "Fm7", "role": "Normal", "notes": [ 53, 60, 63, 68 ] },
+            { "name": "Fm6", "role": "Normal", "notes": [ 53, 60, 63, 67 ] },
+            { "name": "Fm7", "role": "Normal", "notes": [ 53, 56, 63, 65 ] },
+            { "name": "Fm7", "role": "Normal", "notes": [ 51, 56, 63, 65 ] },
+            { "name": "Dm7b5", "role": "Normal", "notes": [ 50, 56, 60, 65 ] },
+            { "name": "Dm11b5", "role": "Normal", "notes": [ 50, 56, 60, 67 ] },
+            { "name": "G7b9", "role": "Normal", "notes": [ 55, 59, 65, 70 ] },
+            { "name": "G7b9", "role": "Normal", "notes": [ 55, 59, 65, 68 ] },
+            { "name": "Cm", "role": "Normal", "notes": [ 48, 55, 62, 65 ] },
+            { "name": "Cm7", "role": "Normal", "notes": [ 48, 55, 58, 63 ] },
+            { "name": "Cmadd9", "role": "Normal", "notes": [ 48, 51, 55, 62 ] },
+            { "name": "Cm", "role": "Normal", "notes": [ 48, 51, 55, 60 ] },
+            { "name": "Gm7", "role": "Normal", "notes": [ 43, 53, 58, 62 ] },
+            { "name": "Gmadd11", "role": "Normal", "notes": [ 43, 50, 58, 60 ] }
+        ]
+    }
+}
+

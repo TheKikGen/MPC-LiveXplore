@@ -1,0 +1,199 @@
+{
+    "progression": {
+        "name": "Pop 02",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "Dmin",
+                "role": "Root",
+                "notes": [
+                    38,
+                    50,
+                    62,
+                    65,
+                    69
+                ]
+            },
+            {
+                "name": "G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    62,
+                    67,
+                    71
+                ]
+            },
+            {
+                "name": "C",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    60,
+                    64,
+                    67,
+                    72
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    60,
+                    65,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "Dmin",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    50,
+                    62,
+                    65,
+                    69,
+                    74
+                ]
+            },
+            {
+                "name": "G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    62,
+                    67,
+                    71,
+                    74
+                ]
+            },
+            {
+                "name": "Amin",
+                "role": "Normal",
+                "notes": [
+                    45,
+                    57,
+                    60,
+                    64,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    60,
+                    65,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "C",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    60,
+                    64,
+                    67,
+                    72
+                ]
+            },
+            {
+                "name": "G/B",
+                "role": "Normal",
+                "notes": [
+                    35,
+                    47,
+                    59,
+                    62,
+                    67,
+                    71
+                ]
+            },
+            {
+                "name": "Amin7",
+                "role": "Normal",
+                "notes": [
+                    33,
+                    45,
+                    60,
+                    64,
+                    67,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    60,
+                    65,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "C",
+                "role": "Normal",
+                "notes": [
+                    36,
+                    48,
+                    60,
+                    64,
+                    67,
+                    72
+                ]
+            },
+            {
+                "name": "G/D",
+                "role": "Normal",
+                "notes": [
+                    38,
+                    50,
+                    59,
+                    62,
+                    67,
+                    71
+                ]
+            },
+            {
+                "name": "F",
+                "role": "Normal",
+                "notes": [
+                    41,
+                    53,
+                    60,
+                    65,
+                    69
+                ]
+            },
+            {
+                "name": "G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    62,
+                    67,
+                    71
+                ]
+            }
+        ]
+    }
+}

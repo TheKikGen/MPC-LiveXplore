@@ -1,0 +1,19 @@
+{
+    "progession": {
+        "name": "Rhodes Ballad",
+        "rootNote": "D",
+        "scale": "Major",
+        "recordingOctave": 1,
+        "chords": [
+            { "name": "Dmaj9", "role": "Root", "notes": [ 38, 50, 62, 64, 66, 69 ] },
+            { "name": "Dadd9", "role": "Normal", "notes": [ 38, 45, 54, 57, 64 ] },
+            { "name": "Am9", "role": "Normal", "notes": [ 55, 33, 45, 60, 59, 64 ] },
+            { "name": "Am11", "role": "Normal", "notes": [ 33, 45, 55, 59, 60, 62 ] },
+            { "name": "Gmaj9", "role": "Normal", "notes": [ 62, 54, 31, 59, 57, 43 ] },
+            { "name": "Gmaj13", "role": "Normal", "notes": [ 64, 31, 43, 54, 57, 59 ] },
+            { "name": "C9", "role": "Normal", "notes": [ 64, 67, 58, 36, 48, 62 ] },
+            { "name": "C13", "role": "Normal", "notes": [ 64, 48, 55, 58, 62, 69 ] }
+        ]
+    }
+}
+

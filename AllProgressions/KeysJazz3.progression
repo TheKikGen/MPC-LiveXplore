@@ -1,0 +1,19 @@
+{
+    "progression": {
+        "name": "Keys Jazz 3",
+        "rootNote": "C",
+        "scale": "Chromatic",
+        "recordingOctave": 3,
+        "chords": [
+            { "name": "Cm6", "role": "Root", "notes": [ 48, 57, 63, 67, 74 ] },
+            { "name": "A7#9", "role": "Normal", "notes": [ 45, 55, 61, 67, 72 ] },
+            { "name": "D7", "role": "Normal", "notes": [ 50, 60, 66, 70 ] },
+            { "name": "G7", "role": "Normal", "notes": [ 43, 50, 59, 65, 69 ] },
+            { "name": "Gm7", "role": "Normal", "notes": [ 43, 53, 58, 65, 69 ] },
+            { "name": "C7f13", "role": "Normal", "notes": [ 48, 55, 58, 64, 68 ] },
+            { "name": "F6", "role": "Normal", "notes": [ 41, 48, 57, 62, 67 ] },
+            { "name": "BfM7", "role": "Normal", "notes": [ 34, 41, 57, 60, 62, 65 ] }
+        ]
+    }
+}
+

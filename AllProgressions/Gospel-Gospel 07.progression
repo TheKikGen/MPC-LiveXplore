@@ -1,0 +1,200 @@
+{
+    "progression": {
+        "name": "Gospel 07",
+        "rootNote": "C",
+        "scale": "Major",
+        "recordingOctave": 2,
+        "chords": [
+            {
+                "name": "Dmin7",
+                "role": "Root",
+                "notes": [
+                    50,
+                    57,
+                    60,
+                    65,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "G7/F",
+                "role": "Normal",
+                "notes": [
+                    53,
+                    62,
+                    65,
+                    67,
+                    71
+                ]
+            },
+            {
+                "name": "Cadd9/E",
+                "role": "Normal",
+                "notes": [
+                    52,
+                    60,
+                    62,
+                    64,
+                    67
+                ]
+            },
+            {
+                "name": "Amin7",
+                "role": "Normal",
+                "notes": [
+                    45,
+                    57,
+                    60,
+                    64,
+                    67,
+                    72
+                ]
+            },
+            {
+                "name": "Dmin7",
+                "role": "Normal",
+                "notes": [
+                    50,
+                    57,
+                    60,
+                    65,
+                    69
+                ]
+            },
+            {
+                "name": "F/G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    60,
+                    65,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "Cmaj7",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    60,
+                    64,
+                    67,
+                    71,
+                    76
+                ]
+            },
+            {
+                "name": "F9/C",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    55,
+                    60,
+                    65,
+                    69,
+                    72,
+                    77
+                ]
+            },
+            {
+                "name": "Gmin7",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    58,
+                    62,
+                    65,
+                    70
+                ]
+            },
+            {
+                "name": "C13",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    58,
+                    60,
+                    62,
+                    64,
+                    69
+                ]
+            },
+            {
+                "name": "Fmaj7",
+                "role": "Normal",
+                "notes": [
+                    53,
+                    60,
+                    64,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "A#13",
+                "role": "Normal",
+                "notes": [
+                    46,
+                    56,
+                    58,
+                    60,
+                    62,
+                    67
+                ]
+            },
+            {
+                "name": "Cadd9/G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    52,
+                    55,
+                    60,
+                    62,
+                    64,
+                    67
+                ]
+            },
+            {
+                "name": "F/G",
+                "role": "Normal",
+                "notes": [
+                    43,
+                    55,
+                    57,
+                    60,
+                    65,
+                    67
+                ]
+            },
+            {
+                "name": "F/C",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    57,
+                    60,
+                    65,
+                    69,
+                    72
+                ]
+            },
+            {
+                "name": "Cadd9",
+                "role": "Normal",
+                "notes": [
+                    48,
+                    55,
+                    62,
+                    64,
+                    67,
+                    72
+                ]
+            }
+        ]
+    }
+}
