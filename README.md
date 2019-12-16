@@ -13,4 +13,4 @@ https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-conso
 https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSH-activation-and-flashing-the-rootfs-with-fastboot
 
 ## How to extract the rootfs image from an official Akai update img file
-
+https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img
