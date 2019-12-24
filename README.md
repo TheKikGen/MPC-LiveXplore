@@ -14,3 +14,6 @@ https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSH-activation-and-flashing-the
 
 ## How to extract the rootfs image from an official Akai update img file
 https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img
+
+## MPC Touch black screen syndrom (Windows 10)
+https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10)
