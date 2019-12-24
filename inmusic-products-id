@@ -13,13 +13,17 @@ JP08 SC5000M PRIME
 JP12 SC4000 PRIME
 JC11 PRIME 4
 JC16 PRIME 2
-Force
+Force (Aka ADA2)
 SC4000
 SC5000 PRIME Screen
 SC5000M PRIME Screen
 SC4000 PRIME Screen
 PRIME 4 Screen
 PRIME 2 Screen
+
+
+FCC ID is "Y40-(product code)". Ex : for MPC Live : Y40-ACV8.
+
 
 
 
