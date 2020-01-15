@@ -1,5 +1,5 @@
 # MPC-LiveXplore
-Akai MPC Live/X/Force technical explorations and hacks
+Akai MPC Live/X/Force/One technical explorations and hacks
 
 ## How to add 2 new midi ports C D : a quick guide with MIDI-OX.
 
