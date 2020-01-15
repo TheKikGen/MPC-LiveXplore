@@ -1,4 +1,10 @@
 # in directory /media/az01-internal/Settings/MPC
+#
+# It seems that a "developper mode" exists by enabling the MpcEditor.DebugMenu.Enabled
+# Some specifics menus should appears in the MPC app. Not tested...
+#
+
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <PROPERTIES>
