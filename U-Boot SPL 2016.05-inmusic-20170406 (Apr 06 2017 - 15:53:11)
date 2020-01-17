@@ -1,0 +1,580 @@
+U-Boot SPL 2016.05-inmusic-20170406 (Apr 06 2017 - 15:53:11)
+Trying to boot from MMC1
+
+
+U-Boot 2016.05-inmusic-20170406 (Apr 06 2017 - 15:53:11 +0000), Build: jenkins-SME0-trunk-linux-587
+
+Model: InMusic MPC ACV8
+DRAM:  2 GiB
+MMC:   dwmmc@ff0f0000: 0
+In:    gpio-keys
+Out:   serial
+Err:   serial
+Hit any key to stop autoboot:  0
+switch to partitions #0, OK
+mmc0(part 0) is current device
+Scanning mmc 0:6...
+Found /boot/extlinux/extlinux.conf
+Retrieving file: /boot/extlinux/extlinux.conf
+68 bytes read in 14 ms (3.9 KiB/s)
+1:      buildroot
+Retrieving file: /boot/zImage
+4432336 bytes read in 214 ms (19.8 MiB/s)
+Retrieving file: /boot/rk3288-az01-mpc-acv8.dtb
+43772 bytes read in 12 ms (3.5 MiB/s)
+Kernel image @ 0x2000000 [ 0x000000 - 0x43a1d0 ]
+## Flattened Device Tree blob at 01f00000
+   Booting using the fdt blob at 0x1f00000
+   Loading Device Tree to 1fff2000, end 1ffffafb ... OK
+
+Starting kernel ...
+
+Booting Linux on physical CPU 0x500
+Linux version 4.9.174-inmusic-2019-05-08-rt129 (buildroot@buildroot) (gcc version 7.4.0 (Buildroot 2019.02.2-05411-gf38c18c) ) #1 SMP PREEMPT RT Fri Nov 29 09:44:57 UTC 2019
+CPU: ARMv7 Processor [410fc0d1] revision 1 (ARMv7), cr=10c5387d
+CPU: div instructions available: patching division code
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+OF: fdt:Machine model: InMusic MPC ACV8
+OF: reserved mem: initialized node framebuffer, compatible id rockchip,framebuffer-memory
+Memory policy: Data cache writealloc
+percpu: Embedded 14 pages/cpu s28000 r8192 d21152 u57344
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 522752
+Kernel command line: root=PARTUUID=24d1deac-3434-1a4e-98d1-68ee2945a5f1 rootwait ro console=ttyS2,115200 rfkill.default_state=0
+PID hash table entries: 4096 (order: 2, 16384 bytes)
+Dentry cache hash table entries: 131072 (order: 8, 1048576 bytes)
+Inode-cache hash table entries: 65536 (order: 6, 262144 bytes)
+Memory: 2055804K/2097152K available (7168K kernel code, 370K rwdata, 1848K rodata, 1024K init, 311K bss, 29060K reserved, 12288K cma-reserved, 1298432K highmem)
+Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    fixmap  : 0xffc00000 - 0xfff00000   (3072 kB)
+    vmalloc : 0xf0800000 - 0xff800000   ( 240 MB)
+    lowmem  : 0xc0000000 - 0xf0000000   ( 768 MB)
+    pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+    modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+      .text : 0xc0008000 - 0xc0800000   (8160 kB)
+      .init : 0xc0a00000 - 0xc0b00000   (1024 kB)
+      .data : 0xc0b00000 - 0xc0b5c808   ( 371 kB)
+       .bss : 0xc0b5e000 - 0xc0babcf4   ( 312 kB)
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+Preemptible hierarchical RCU implementation.
+        RCU kthread priority: 1.
+NR_IRQS:16 nr_irqs:16 16
+rockchip: reset MMC AHB arbitor
+rockchip_mmc_get_phase: invalid clk rate
+rockchip_mmc_get_phase: invalid clk rate
+rockchip_mmc_get_phase: invalid clk rate
+rockchip_mmc_get_phase: invalid clk rate
+rockchip_mmc_get_phase: invalid clk rate
+rockchip_mmc_get_phase: invalid clk rate
+rockchip_mmc_get_phase: invalid clk rate
+rockchip_mmc_get_phase: invalid clk rate
+arm_arch_timer: Architected cp15 timer(s) running at 24.00MHz (phys).
+clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+Switching to timer-based delay loop, resolution 41ns
+Console: colour dummy device 80x30
+Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=24000)
+pid_max: default: 32768 minimum: 301
+Mount-cache hash table entries: 2048 (order: 1, 8192 bytes)
+Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes)
+CPU: Testing write buffer coherency: ok
+CPU0: thread -1, cpu 0, socket 5, mpidr 80000500
+Setting up static identity map for 0x100000 - 0x100058
+CPU1: thread -1, cpu 1, socket 5, mpidr 80000501
+CPU2: thread -1, cpu 2, socket 5, mpidr 80000502
+CPU3: thread -1, cpu 3, socket 5, mpidr 80000503
+Brought up 4 CPUs
+SMP: Total of 4 processors activated (192.00 BogoMIPS).
+CPU: All CPU(s) started in SVC mode.
+devtmpfs: initialized
+VFP support v0.3: implementor 41 architecture 3 part 30 variant d rev 0
+clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+futex hash table entries: 1024 (order: 4, 65536 bytes)
+pinctrl core: initialized pinctrl subsystem
+NET: Registered protocol family 16
+DMA: preallocated 256 KiB pool for atomic coherent allocations
+cpuidle: using governor menu
+No ATAGs?
+hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+hw-breakpoint: maximum watchpoint size is 4 bytes.
+vcc_mipi: supplied by vcc_sys
+vcc_sata: supplied by vcc_sys
+iommu: Adding device ff930000.vop to group 0
+SCSI subsystem initialized
+usbcore: registered new interface driver usbfs
+usbcore: registered new interface driver hub
+usbcore: registered new device driver usb
+pps_core: LinuxPPS API ver. 1 registered
+pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+PTP clock support registered
+Advanced Linux Sound Architecture Driver Initialized.
+Bluetooth: Core ver 2.22
+NET: Registered protocol family 31
+Bluetooth: HCI device and connection manager initialized
+Bluetooth: HCI socket layer initialized
+Bluetooth: L2CAP socket layer initialized
+Bluetooth: SCO socket layer initialized
+clocksource: Switched to clocksource arch_sys_counter
+NET: Registered protocol family 2
+TCP established hash table entries: 8192 (order: 3, 32768 bytes)
+TCP bind hash table entries: 8192 (order: 5, 229376 bytes)
+TCP: Hash tables configured (established 8192 bind 8192)
+UDP hash table entries: 512 (order: 3, 32768 bytes)
+UDP-Lite hash table entries: 512 (order: 3, 32768 bytes)
+NET: Registered protocol family 1
+hw perfevents: enabled with armv7_cortex_a12 PMU driver, 7 counters available
+workingset: timestamp_bits=30 max_order=19 bucket_order=0
+squashfs: version 4.0 (2009/01/31) Phillip Lougher
+fuse init (API version 7.26)
+bounce: pool size: 64 pages
+Block layer SCSI generic (bsg) driver version 0.4 loaded (major 248)
+io scheduler noop registered
+io scheduler deadline registered (default)
+dma-pl330 ff250000.dma-controller: Loaded driver for PL330 DMAC-241330
+dma-pl330 ff250000.dma-controller:      DBUFF-128x8bytes Num_Chans-8 Num_Peri-20 Num_Events-16
+dma-pl330 ffb20000.dma-controller: Loaded driver for PL330 DMAC-241330
+dma-pl330 ffb20000.dma-controller:      DBUFF-64x8bytes Num_Chans-5 Num_Peri-6 Num_Events-10
+Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+ff180000.serial: ttyS0 at MMIO 0xff180000 (irq = 38, base_baud = 1500000) is a 16550A
+ff690000.serial: ttyS2 at MMIO 0xff690000 (irq = 39, base_baud = 1500000) is a 16550A
+console [ttyS2] enabled
+ff1b0000.serial: ttyS3 at MMIO 0xff1b0000 (irq = 40, base_baud = 1500000) is a 16550A
+rk3x-i2c ff140000.i2c: Initialized RK3xxx I2C bus at f08b9000
+rk3x-i2c ff150000.i2c: Initialized RK3xxx I2C bus at f08bb000
+rk3x-i2c ff160000.i2c: Initialized RK3xxx I2C bus at f08bd000
+rk3x-i2c ff170000.i2c: Initialized RK3xxx I2C bus at f08bf000
+REG1: supplied by vcc_sys
+REG2: supplied by vcc_sys
+vcc_flash: supplied by VCC_IO
+vcc_sd: supplied by VCC_IO
+REG3: supplied by vcc_sys
+REG4: supplied by vcc_sys
+REG5: supplied by VCC_IO
+REG6: supplied by VCC_IO
+REG7: supplied by VCC_IO
+REG8: supplied by vcc_sys
+REG9: supplied by vcc_sys
+REG10: supplied by VCC_20
+REG11: supplied by VCC_20
+REG12: supplied by VCC_20
+fan53555-regulator 0-0040: FAN53555 Option[8] Rev[1] Detected!
+fan53555-reg: supplied by vcc_sys
+fan53555-regulator 0-0041: FAN53555 Option[8] Rev[1] Detected!
+fan53555-reg: supplied by vcc_sys
+rk3x-i2c ff650000.i2c: Initialized RK3xxx I2C bus at f08c1000
+[drm] Initialized
+rockchip_framebuffer_rmem_device_init: initializing with page address   (null)
+rockchip-drm display-subsystem: assigned reserved memory node framebuffer
+rockchip-vop ff940000.vop: enabled by bootloader
+rockchip-drm display-subsystem: bound ff940000.vop (ops 0xc08439bc)
+rockchip-drm display-subsystem: bound ff930000.vop (ops 0xc08439bc)
+rockchip-drm display-subsystem: bound ff960000.mipi (ops 0xc0843248)
+[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[drm] No driver support for vblank timestamp query.
+rockchip-drm display-subsystem: fb0:  frame buffer device
+random: fast init done
+mali ffa30000.gpu: GPU identified as 0x0750 r0p0 status 1
+mali ffa30000.gpu: Protected mode not available
+mali ffa30000.gpu: Using configured power model mali-simple-power-model, and fallback mali-simple-power-model
+mali ffa30000.gpu: Probed as mali0
+brd: module loaded
+loop: module loaded
+libphy: Fixed MDIO Bus: probed
+ff580000.usb supply vusb_d not found, using dummy regulator
+ff580000.usb supply vusb_a not found, using dummy regulator
+dwc2 ff580000.usb: EPs: 10, dedicated fifos, 972 entries in SPRAM
+dwc2 ff580000.usb: DWC OTG Controller
+dwc2 ff580000.usb: new USB bus registered, assigned bus number 1
+dwc2 ff580000.usb: irq 43, io mem 0xff580000
+usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+usb usb1: Product: DWC OTG Controller
+usb usb1: Manufacturer: Linux 4.9.174-inmusic-2019-05-08-rt129 dwc2_hsotg
+usb usb1: SerialNumber: ff580000.usb
+hub 1-0:1.0: USB hub found
+hub 1-0:1.0: 1 port detected
+ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+ehci-platform: EHCI generic platform driver
+ehci-platform ff500000.usb: EHCI Host Controller
+ehci-platform ff500000.usb: new USB bus registered, assigned bus number 2
+ehci-platform ff500000.usb: irq 42, io mem 0xff500000
+ehci-platform ff500000.usb: USB 2.0 started, EHCI 1.00
+usb usb2: New USB device found, idVendor=1d6b, idProduct=0002
+usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+usb usb2: Product: EHCI Host Controller
+usb usb2: Manufacturer: Linux 4.9.174-inmusic-2019-05-08-rt129 ehci_hcd
+usb usb2: SerialNumber: ff500000.usb
+hub 2-0:1.0: USB hub found
+hub 2-0:1.0: 1 port detected
+ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+ohci-platform: OHCI generic platform driver
+usbcore: registered new interface driver uas
+usbcore: registered new interface driver usb-storage
+usbcore: registered new interface driver usbserial
+usbcore: registered new interface driver usbserial_generic
+usbserial: USB Serial support registered for generic
+usbcore: registered new interface driver cp210x
+usbserial: USB Serial support registered for cp210x
+usbcore: registered new interface driver ftdi_sio
+usbserial: USB Serial support registered for FTDI USB Serial Device
+usbcore: registered new interface driver pl2303
+usbserial: USB Serial support registered for pl2303
+usbcore: registered new interface driver usb_serial_simple
+usbserial: USB Serial support registered for carelink
+usbserial: USB Serial support registered for zio
+usbserial: USB Serial support registered for funsoft
+usbserial: USB Serial support registered for flashloader
+usbserial: USB Serial support registered for google
+usbserial: USB Serial support registered for libtransistor
+usbserial: USB Serial support registered for vivopay
+usbserial: USB Serial support registered for moto_modem
+usbserial: USB Serial support registered for motorola_tetra
+usbserial: USB Serial support registered for novatel_gps
+usbserial: USB Serial support registered for hp4x
+usbserial: USB Serial support registered for suunto
+usbserial: USB Serial support registered for siemens_mpi
+usb5537 1-002d: Set state=0x87 on mask 0x8
+usb 2-1: new high-speed USB device number 2 using ehci-platform
+usb 2-1: New USB device found, idVendor=09e8, idProduct=503b
+usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+usb 2-1: Product: MPC Live Hub
+usb 2-1: Manufacturer: Akai Professional
+hub 2-1:1.0: USB hub found
+hub 2-1:1.0: 7 ports detected
+usb 2-1.2: new full-speed USB device number 3 using ehci-platform
+usb 2-1.2: New USB device found, idVendor=1eaf, idProduct=0003
+usb 2-1.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 2-1.2: Product: Maple 003
+usb 2-1.2: Manufacturer: LeafLabs
+usb 2-1.2: SerialNumber: LLM 003
+usb 2-1.4: new high-speed USB device number 4 using ehci-platform
+usb 2-1.4: New USB device found, idVendor=152d, idProduct=0578
+usb 2-1.4: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 2-1.4: Product: USB to ATA/ATAPI Bridge
+usb 2-1.4: Manufacturer: JMicron
+usb5537 1-002d: Set state=0x82 on mask 0x8
+usb5537 1-002d: Disabled SS ports matching 0x8
+usb5537 1-002d: switched to HUB mode
+usb5537 1-002d: usb5537_probe: probed in hub mode
+usb5537 1-002d: reg 0x3c00 = 0x03
+usb5537 1-002d: reg 0x3c04 = 0x03
+usb5537 1-002d: reg 0x3c08 = 0x03
+usb5537 1-002d: reg 0x3c0c = 0x03
+usb5537 1-002d: reg 0x3c10 = 0x04
+usb5537 1-002d: reg 0x3c14 = 0x03
+usb5537 1-002d: reg 0x3c18 = 0x03
+usb5537 1-002d: reg 0x3c1c = 0x00
+usb5537 1-002d: reg 0x3c20 = 0x01
+usb5537 1-002d: reg 0x3c24 = 0x01
+usb5537 1-002d: reg 0x3c28 = 0x01
+usb5537 1-002d: reg 0x3c2c = 0x01
+usb5537 1-002d: reg 0x3c30 = 0x01
+usb5537 1-002d: reg 0x3c34 = 0x01
+usb5537 1-002d: reg 0x3c38 = 0x01
+mousedev: PS/2 mouse device common for all mice
+usb 2-1.4: SerialNumber: 0123456789ABCDEF
+scsi host0: uas
+scsi 0:0:0:0: Direct-Access     JMicron  Generic          0106 PQ: 0 ANSI: 6
+sd 0:0:0:0: [sda] 976773168 512-byte logical blocks: (500 GB/466 GiB)
+sd 0:0:0:0: [sda] 4096-byte physical blocks
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] Disabling FUA
+sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+sd 0:0:0:0: [sda] Optimal transfer size 33553920 bytes not a multiple of physical block size (4096 bytes)
+ sda: sda1
+sd 0:0:0:0: [sda] Attached SCSI disk
+ili2116 4-0041: protocol version 02.03
+usb 2-1.5: new high-speed USB device number 5 using ehci-platform
+ili2116 4-0041: ILI2116 firmware version 0.0.4.0
+ili2116 4-0041: ILI2116 MCU kernel version 8.0.9.0.1
+input: ILI2116 Touchscreen as /devices/platform/ff160000.i2c/i2c-4/4-0041/input/input0
+rtc-hym8563 0-0051: rtc core: registered hym8563 as rtc0
+lirc_dev: IR Remote Control driver registered, major 245
+IR NEC protocol handler initialized
+IR RC5(x/sz) protocol handler initialized
+IR RC6 protocol handler initialized
+IR JVC protocol handler initialized
+IR Sony protocol handler initialized
+IR SANYO protocol handler initialized
+IR Sharp protocol handler initialized
+IR MCE Keyboard/mouse protocol handler initialized
+IR LIRC bridge handler initialized
+IR XMP protocol handler initialized
+power_supply sbs-3-000b: Not all required supplies found, defer probe
+sbs-battery 3-000b: sbs_probe: Failed to register power supply
+rk_tsadcv2_initialize: Missing rockchip,grf property
+Invalid the conversion, error=0
+Invalid the conversion, error=0
+Bluetooth: HCI UART driver ver 2.3
+Bluetooth: HCI UART protocol H4 registered
+hci_bcm bcm@0: BCM irq: -22
+hci_bcm bcm@0: bcm@0 device registered.
+usb 2-1.5: New USB device found, idVendor=09e8, idProduct=203b
+usb 2-1.5: New USB device strings: Mfr=1, Product=3, SerialNumber=0
+usb 2-1.5: Product: MPC Live Audio
+usb 2-1.5: Manufacturer: Akai Professional
+usb 2-1.6: new full-speed USB device number 6 using ehci-platform
+Bluetooth: HCI UART protocol Broadcom registered
+Synopsys Designware Multimedia Card Interface Driver
+usb 2-1.6: language id specifier not provided by device, defaulting to English
+dwmmc_rockchip ff0c0000.dwmmc: IDMAC supports 32-bit address mode.
+dwmmc_rockchip ff0c0000.dwmmc: Using internal DMA controller.
+dwmmc_rockchip ff0c0000.dwmmc: Version ID is 270a
+dwmmc_rockchip ff0c0000.dwmmc: DW MMC controller at irq 30,32 bit host data width,256 deep fifo
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=0 power_mode=0
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=0 power_mode=1
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_switch_voltage: signal_voltage=0
+dwmmc_rockchip ff0c0000.dwmmc: 1 slots initialized
+dwmmc_rockchip ff0d0000.dwmmc: IDMAC supports 32-bit address mode.
+dwmmc_rockchip ff0d0000.dwmmc: Using internal DMA controller.
+dwmmc_rockchip ff0d0000.dwmmc: Version ID is 270a
+dwmmc_rockchip ff0d0000.dwmmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+rockchip-iodomain ff770000.syscon:io-domains: Setting to 3300000 done
+rockchip-iodomain ff770000.syscon:io-domains: Setting to 3300000 done
+dwmmc_rockchip ff0d0000.dwmmc: allocated mmc-pwrseq
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=0 power_mode=1
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_switch_voltage: signal_voltage=0
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_switch_voltage: signal_voltage=1
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+mmc_host mmc0: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0d0000.dwmmc: 1 slots initialized
+dwmmc_rockchip ff0f0000.dwmmc: IDMAC supports 32-bit address mode.
+dwmmc_rockchip ff0f0000.dwmmc: Using internal DMA controller.
+dwmmc_rockchip ff0f0000.dwmmc: Version ID is 270a
+dwmmc_rockchip ff0f0000.dwmmc: DW MMC controller at irq 32,32 bit host data width,256 deep fifo
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: allocated mmc-pwrseq
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=0 power_mode=1
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_switch_voltage: signal_voltage=0
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_switch_voltage: signal_voltage=1
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+mmc_host mmc2: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+dwmmc_rockchip ff0f0000.dwmmc: 1 slots initialized
+hidraw: raw HID events driver (C) Jiri Kosina
+usbcore: registered new interface driver usbhid
+usbhid: USB HID core driver
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_command_complete: got RTO
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+mmc1: queuing unknown CIS tuple 0x80 (2 bytes)
+mmc1: queuing unknown CIS tuple 0x80 (3 bytes)
+mmc1: queuing unknown CIS tuple 0x80 (3 bytes)
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+mmc1: queuing unknown CIS tuple 0x80 (7 bytes)
+usbcore: registered new interface driver snd-usb-audio
+ip_tables: (C) 2000-2006 Netfilter Core Team
+NET: Registered protocol family 10
+sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+NET: Registered protocol family 17
+Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+Bluetooth: HIDP socket layer initialized
+Registering SWP/SWPB emulation handler
+power_supply sbs-3-000b: sbs-3-000b: Found supply : az01-ac-power
+sbs-battery 3-000b: bq40z50: battery gas gauge device registered
+input: gpio-keys as /devices/platform/gpio-keys/input/input1
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+rtc-hym8563 0-0051: setting system clock to 2020-01-17 14:13:16 UTC (1579270396)
+ALSA device list:
+  #0: Akai Professional MPC Live Audio at usb-ff500000.usb-1.5, high speed
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=1 clock=400000 power_mode=2
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=1 clock=52000000 power_mode=2
+mmc_host mmc2: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=3 timing=1 clock=52000000 power_mode=2
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_switch_voltage: signal_voltage=1
+dwmmc_rockchip ff0f0000.dwmmc: dw_mci_set_ios: bus_width=3 timing=8 clock=52000000 power_mode=2
+mmc2: new DDR MMC card at address 0001
+mmcblk2: mmc2:0001 SEM04G 3.69 GiB
+mmcblk2boot0: mmc2:0001 SEM04G partition 1 2.00 MiB
+mmcblk2boot1: mmc2:0001 SEM04G partition 2 2.00 MiB
+mmcblk2rpmb: mmc2:0001 SEM04G partition 3 2.00 MiB
+ mmcblk2: p1 p2 p3 p4 p5 p6 p7
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_set_ios: bus_width=2 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_set_ios: bus_width=2 timing=3 clock=400000 power_mode=2
+dwmmc_rockchip ff0d0000.dwmmc: dw_mci_set_ios: bus_width=2 timing=3 clock=25000000 power_mode=2
+mmc_host mmc1: Bus speed (slot 0) = 25000000Hz (slot req 25000000Hz, actual 25000000HZ div = 0)
+mmc1: new ultra high speed SDR12 SDIO card at address 0001
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=0 power_mode=2
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_switch_voltage: signal_voltage=1
+rockchip-iodomain ff770000.syscon:io-domains: Setting to 3300000 done
+rockchip-iodomain ff770000.syscon:io-domains: Setting to 1800000 done
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=0 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=2 timing=0 clock=400000 power_mode=2
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=2 timing=3 clock=400000 power_mode=2
+dwmmc_rockchip ff0c0000.dwmmc: dw_mci_set_ios: bus_width=2 timing=3 clock=25000000 power_mode=2
+mmc_host mmc0: Bus speed (slot 0) = 25000000Hz (slot req 25000000Hz, actual 25000000HZ div = 0)
+mmc0: new ultra high speed SDR12 SDHC card at address 59b4
+mmcblk0: mmc0:59b4 USD00 14.8 GiB
+ mmcblk0: p1
+ttyS2 - failed to request DMA
+usb 2-1.6: New USB device found, idVendor=09e8, idProduct=003b
+usb 2-1.6: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+usb 2-1.6: Product: MPC Live Controller
+usb 2-1.6: Manufacturer: Akai Pro
+usb 2-1.2: USB disconnect, device number 3
+EXT4-fs (mmcblk2p6): couldn't mount as ext3 due to feature incompatibilities
+EXT4-fs (mmcblk2p6): mounted filesystem with ordered data mode. Opts: (null)
+VFS: Mounted root (ext4 filesystem) readonly on device 179:6.
+devtmpfs: mounted
+Freeing unused kernel memory: 1024K
+cgroup: cgroup2: unknown option "nsdelegate"
+systemd[1]: systemd 240 running in system mode. (-PAM -AUDIT -SELINUX -IMA -APPARMOR -SMACK +SYSVINIT +UTMP -LIBCRYPTSETUP +GCRYPT -GNUTLS -ACL +XZ -LZ4 -SECCOMP +BLKID -ELFUTILS +KMOD -IDN2 -IDN -PCRE2 default-hierarchy=hybrid)
+usb 2-1.2: new full-speed USB device number 7 using ehci-platform
+systemd[1]: Detected architecture arm.
+
+Welcome to Buildroot 2019.02.2!
+
+systemd[1]: Set hostname to <buildroot>.
+random: systemd: uninitialized urandom read (16 bytes read)
+systemd[1]: Initializing machine ID from random generator.
+systemd[1]: Installed transient /etc/machine-id file.
+usb 2-1.2: New USB device found, idVendor=09e8, idProduct=003b
+usb 2-1.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+systemd[1]: File /usr/lib/systemd/system/systemd-journald.service:12 configures an IP firewall (IPAddressDeny=any), but the local system does not support BPF/cgroup based firewalling.
+systemd[1]: Proceeding WITHOUT firewalling in effect! (This warning is only shown for the first loaded unit using IP firewalling.)
+usb 2-1.2: Product: MPC Live Controller
+usb 2-1.2: Manufacturer: TheKiKGen Labs
+usb 2-1.2: SerialNumber: 07DA0908
+systemd[1]: dev-disk-by\x2dpath-platform\x2dff0c0000.dwmmc\x2dpart1.device: Dependency Before=-.mount ignored (.device units cannot be delayed)
+random: systemd: uninitialized urandom read (16 bytes read)
+random: systemd: uninitialized urandom read (16 bytes read)
+systemd[1]: Reached target Swap.
+[  OK  ] Reached target Swap.
+systemd[1]: Listening on Journal Socket (/dev/log).
+[  OK  ] Listening on Journal Socket (/dev/log).
+[  OK  ] Listening on udev Kernel Socket.
+[  OK  ] Started Forward Password Râ€¦uests to Wall Directory Watch.
+[  OK  ] Reached target Remote File Systems.
+[  OK  ] Listening on initctl Compatibility Named Pipe.
+[  OK  ] Listening on udev Control Socket.
+[  OK  ] Started Dispatch Password â€¦ts to Console Directory Watch.
+[  OK  ] Reached target Paths.
+[  OK  ] Listening on Journal Socket.
+         Mounting Kernel Debug File System...
+         Mounting Mount /media...
+         Starting Journal Service...
+         Mounting Temporary Directory (/tmp)...
+         Starting Create Static Device Nodes in /dev...
+[  OK  ] Reached target Slices.
+         Starting udev Coldplug all Devices...
+         Starting File System Check on Root Device...
+         Starting Mali GPU driver setup for AZ01...
+         Mounting FUSE Control File System...
+         Starting Apply Kernel Variables...
+         Mounting Kernel Configuration File System...
+[  OK  ] Created slice system-serial\x2dgetty.slice.
+[  OK  ] Mounted Kernel Debug File System.
+[  OK  ] Mounted Mount /media.
+[  OK  ] Mounted Temporary Directory (/tmp).
+[  OK  ] Started Create Static Device Nodes in /dev.
+[  OK  ] Started Mali GPU driver setup for AZ01.
+[  OK  ] Mounted FUSE Control File System.
+[  OK  ] Mounted Kernel Configuration File System.
+[  OK  ] Started Apply Kernel Variables.
+[  OK  ] Started File System Check on Root Device.
+         Starting Remount Root and Kernel File Systems...
+[  OK  ] Started Remount Root and Kernel File Systems.
+[  OK  ] Reached target Local File Systems (Pre).
+         Starting udev Kernel Device Manager...
+[  OK  ] Started udev Kernel Device Manager.
+[  OK  ] Started Journal Service.
+[  OK  ] Created slice system-btattach.slice.
+[  OK  ] Found device /dev/ttyS2.
+[  OK  ] Started udev Coldplug all Devices.
+[  OK  ] Found device /dev/disk/by-â€¦d-ad59-0849-833a-9bf00af5b60e.
+[  OK  ] Found device /dev/disk/by-â€¦platform-ff0c0000.dwmmc-part1.
+         Mounting /media/az01-internal-sd...
+         Starting Create /media/az0â€¦nal filesystem if necessary...
+[  OK  ] Started Create /media/az01â€¦ernal filesystem if necessary.
+         Mounting Mount /media/az01-internal...
+[  OK  ] Mounted Mount /media/az01-internal.
+         Starting Setup directories for overlayfs mounts...
+[  OK  ] Started Setup directories for overlayfs mounts.
+         Mounting Writable /var via OverlayFS...
+         Mounting Writable /etc via OverlayFS...
+[  OK  ] Mounted Writable /var via OverlayFS.
+[  OK  ] Mounted Writable /etc via OverlayFS.
+         Starting Fix transient machine-id after mounting /etc...
+         Starting Flush Journal to Persistent Storage...
+[  OK  ] Started Fix transient machine-id after mounting /etc.
+[  OK  ] Mounted /media/az01-internal-sd.
+[  OK  ] Reached target Local File Systems.
+         Starting Commit a transient machine-id on disk...
+[  OK  ] Started Flush Journal to Persistent Storage.
+         Starting Create Volatile Files and Directories...
+[  OK  ] Started Create Volatile Files and Directories.
+         Starting Update UTMP about System Boot/Shutdown...
+[  OK  ] Started Commit a transient machine-id on disk.
+[  OK  ] Started Update UTMP about System Boot/Shutdown.
+[  OK  ] Reached target System Initialization.
+[  OK  ] Listening on D-Bus System Message Bus Socket.
+[  OK  ] Reached target Sockets.
+[  OK  ] Reached target Basic System.
+[  OK  ] Started Serial Getty on ttyS2.
+[  OK  ] Reached target Login Prompts.
+[  OK  ] Started AZ01 JMicron USB-SATA bridge configuration fixer.
+         Starting Unsupported device detection service...
+[  OK  ] Started D-Bus System Message Bus.
+         Starting Network Connectivity...
+[  OK  ] Started AZ01 power button emergency shutdown service.
+[  OK  ] Started Bluetooth HCI attach on ttyS0.
+         Starting Remove all but the most recent core dump...
+[  OK  ] Reached target Sound Card.
+         Starting Bluetooth service...
+         Starting Firmware update for XMOS USB audio devices...
+         Starting Hostname setup for MPC...
+         Starting Firmware update for Ilitek touchscreens...
+[  OK  ] Started Daily Cleanup of Temporary Directories.
+[  OK  ] Reached target Timers.
+[  OK  ] Started Remove all but the most recent core dump.
+[  OK  ] Started Firmware update for XMOS USB audio devices.
+[  OK  ] Started Firmware update for Ilitek touchscreens.
+[  OK  ] Started Network Connectivity.
+[  OK  ] Started Unsupported device detection service.
+[  OK  ] Started Bluetooth service.
+         Starting Hostname Service...
+[  OK  ] Started Hostname Service.
+[  OK  ] Started Hostname setup for MPC.
+[  OK  ] Reached target Network (Pre).
+         Starting Connection service...
+[  OK  ] Started Connection service.
+[  OK  ] Reached target Network.
+[  OK  ] Started AZ01 script runner service.
+[  OK  ] Started AZ01 network MIDI service.
+[  OK  ] Started InMusic MPC Application.
+[  OK  ] Reached target Multi-User System.
+         Starting Update UTMP about System Runlevel Changes...
+         Starting WPA supplicant...
+[  OK  ] Started Update UTMP about System Runlevel Changes.
+[  OK  ] Reached target Bluetooth.
+[  OK  ] Started WPA supplicant.
+
+Welcome to Buildroot
