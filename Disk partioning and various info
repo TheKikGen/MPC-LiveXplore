@@ -1,0 +1,110 @@
+=> mmc info
+Device: dwmmc@ff0f0000
+Manufacturer ID: 45
+OEM: 100
+Name: SEM04
+Tran Speed: 52000000
+Rd Block Len: 512
+MMC version 4.5
+High Capacity: Yes
+Capacity: 3.7 GiB
+Bus Width: 8-bit
+Erase Group Size: 256 KiB
+HC WP Group Size: 8 MiB
+User Capacity: 3.7 GiB WRREL
+Boot Capacity: 2 MiB
+RPMB Capacity: 2 MiB
+=> mmc list
+dwmmc@ff0f0000: 0 (eMMC)
+
+Partitions setenv in UBoot :
+
+partitions=uuid_disk=02bebde5-b5a4-48cd-b262-512fe8b6ae06;
+name=uboot-spl,size=64KiB,start=32KiB,uuid=f6217a3c-1c7d-4969-8f05-88c0b9c0f0e6;
+name=env,size=8KiB,start=96KiB,uuid=be8b868f-89d8-4ff8-a64d-d077e73b4f09;
+name=uboot,size=384KiB,start=128KiB,uuid=461be792-3b29-4c0a-a6a2-3460c0119cbe;
+name=splash,size=4MiB,uuid=40bfa9cd-6d2c-4e22-a662-f0a803794462;
+name=recoverysplash,size=4MiB,uuid=e050b8e2-ee92-43ca-98ad-9aa4fbca8616;
+name=rootfs,bootable,size=500MiB,uuid=acded124-3434-4e1a-98d1-68ee2945a5f1;
+name=data,size=0,uuid=9dd41a93-59ad-4908-833a-9bf00af5b60e;
+
+=> mmc part
+
+Partition Map for MMC device 0  --   Partition Type: EFI
+
+Part    Start LBA       End LBA         Name
+        Attributes
+        Type GUID
+        Partition GUID
+  1     0x00000040      0x000000bf      "uboot-spl"
+        attrs:  0x0000000000000000
+        type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        guid:   3c7a21f6-7d1c-6949-8f05-88c0b9c0f0e6
+  2     0x000000c0      0x000000cf      "env"
+        attrs:  0x0000000000000000
+        type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        guid:   8f868bbe-d889-f84f-a64d-d077e73b4f09
+  3     0x00000100      0x000003ff      "uboot"
+        attrs:  0x0000000000000000
+        type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        guid:   92e71b46-293b-0a4c-a6a2-3460c0119cbe
+  4     0x00000400      0x000023ff      "splash"
+        attrs:  0x0000000000000000
+        type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        guid:   cda9bf40-2c6d-224e-a662-f0a803794462
+  5     0x00002400      0x000043ff      "recoverysplash"
+        attrs:  0x0000000000000000
+        type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        guid:   e2b850e0-92ee-ca43-98ad-9aa4fbca8616
+  6     0x00004400      0x000fe3ff      "rootfs"
+        attrs:  0x0000000000000004
+        type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        guid:   24d1deac-3434-1a4e-98d1-68ee2945a5f1
+  7     0x000fe400      0x0075ffde      "data"
+        attrs:  0x0000000000000000
+        type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        guid:   931ad49d-ad59-0849-833a-9bf00af5b60e
+=>
+/dev/mmcblk2: PTUUID="02bebde5-b5a4-48cd-b262-512fe8b6ae06" PTTYPE="gpt"
+/dev/mmcblk2p1: PARTLABEL="uboot-spl" PARTUUID="3c7a21f6-7d1c-6949-8f05-88c0b9c0f0e6"
+/dev/mmcblk2p2: PARTLABEL="env" PARTUUID="8f868bbe-d889-f84f-a64d-d077e73b4f09"
+/dev/mmcblk2p3: PARTLABEL="uboot" PARTUUID="92e71b46-293b-0a4c-a6a2-3460c0119cbe"
+/dev/mmcblk2p4: PARTLABEL="splash" PARTUUID="cda9bf40-2c6d-224e-a662-f0a803794462"
+/dev/mmcblk2p5: PARTLABEL="recoverysplash" PARTUUID="e2b850e0-92ee-ca43-98ad-9aa4fbca8616"
+/dev/mmcblk2p6: LABEL="root" UUID="a3bffe78-fd0c-4d1a-9e3d-f6101f733c0d" TYPE="ext4" PARTLABEL="rootfs" PARTUUID="24d1deac-3434-1a4e-98d1-68ee2945a5f1"
+/dev/mmcblk2p7: LABEL="az01-internal" UUID="e683aba9-6c41-4270-bed7-7f239ab8ac68" TYPE="ext4" PARTLABEL="data" PARTUUID="931ad49d-ad59-0849-833a-9bf00af5b60e"
+/dev/mmcblk0: PTTYPE="dos"
+/dev/mmcblk0p1: UUID="6df1ed3a-f152-49ee-b7de-b3d9662ca920" TYPE="ext4"
+/dev/sda1: LABEL="MPCLIVE500" UUID="9715-EFA7" TYPE="exfat" PTTYPE="dos" PARTUUID="a657bf9e-5d4d-4cfe-871c-45d80edfe72c"
+
+#fdisk -l
+
+Device           Start     End Sectors  Size Type
+/dev/mmcblk2p1      64     191     128   64K Microsoft basic data
+/dev/mmcblk2p2     192     207      16    8K Microsoft basic data
+/dev/mmcblk2p3     256    1023     768  384K Microsoft basic data
+/dev/mmcblk2p4    1024    9215    8192    4M Microsoft basic data
+/dev/mmcblk2p5    9216   17407    8192    4M Microsoft basic data
+/dev/mmcblk2p6   17408 1041407 1024000  500M Microsoft basic data
+/dev/mmcblk2p7 1041408 7733214 6691807  3.2G Microsoft basic data
+
+command (? for help): p
+Disk /dev/mmcblk2: 7733248 sectors, 3.7 GiB
+Sector size (logical/physical): 512/512 bytes
+Disk identifier (GUID): 02BEBDE5-B5A4-48CD-B262-512FE8B6AE06
+Partition table holds up to 128 entries
+Main partition table begins at sector 2 and ends at sector 33
+First usable sector is 34, last usable sector is 7733214
+Partitions will be aligned on 64-sector boundaries
+Total free space is 78 sectors (39.0 KiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1              64             191   64.0 KiB    0700  uboot-spl
+   2             192             207   8.0 KiB     0700  env
+   3             256            1023   384.0 KiB   0700  uboot
+   4            1024            9215   4.0 MiB     0700  splash
+   5            9216           17407   4.0 MiB     0700  recoverysplash
+   6           17408         1041407   500.0 MiB   0700  rootfs
+   7         1041408         7733214   3.2 GiB     0700  data
+
+
