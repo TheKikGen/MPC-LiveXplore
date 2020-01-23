@@ -64,7 +64,18 @@ Part    Start LBA       End LBA         Name
         attrs:  0x0000000000000000
         type:   ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
         guid:   931ad49d-ad59-0849-833a-9bf00af5b60e
-=>
+
+=> mmc hwpartition check
+Partition configuration:
+        No enhanced user data area
+        No GP1 partition
+        No GP2 partition
+        No GP3 partition
+        No GP4 partition
+        
+
+Under Linux :
+
 /dev/mmcblk2: PTUUID="02bebde5-b5a4-48cd-b262-512fe8b6ae06" PTTYPE="gpt"
 /dev/mmcblk2p1: PARTLABEL="uboot-spl" PARTUUID="3c7a21f6-7d1c-6949-8f05-88c0b9c0f0e6"
 /dev/mmcblk2p2: PARTLABEL="env" PARTUUID="8f868bbe-d889-f84f-a64d-d077e73b4f09"
@@ -106,5 +117,31 @@ Number  Start (sector)    End (sector)  Size       Code  Name
    5            9216           17407   4.0 MiB     0700  recoverysplash
    6           17408         1041407   500.0 MiB   0700  rootfs
    7         1041408         7733214   3.2 GiB     0700  data
+
+emmc devices :
+
+brw-rw----    1 root     disk      179, 128 Jan 23 18:28 /dev/mmcblk0
+brw-rw----    1 root     disk      179, 129 Jan 23 18:28 /dev/mmcblk0p1
+brw-rw----    1 root     disk      179,   0 Jan 23 18:28 /dev/mmcblk2
+brw-rw----    1 root     disk      179,  32 Jan 23 18:28 /dev/mmcblk2boot0
+brw-rw----    1 root     disk      179,  64 Jan 23 18:28 /dev/mmcblk2boot1
+brw-rw----    1 root     disk      179,   1 Jan 23 18:28 /dev/mmcblk2p1
+brw-rw----    1 root     disk      179,   2 Jan 23 18:28 /dev/mmcblk2p2
+brw-rw----    1 root     disk      179,   3 Jan 23 18:28 /dev/mmcblk2p3
+brw-rw----    1 root     disk      179,   4 Jan 23 18:28 /dev/mmcblk2p4
+brw-rw----    1 root     disk      179,   5 Jan 23 18:28 /dev/mmcblk2p5
+brw-rw----    1 root     disk      179,   6 Jan 23 18:28 /dev/mmcblk2p6
+brw-rw----    1 root     disk      179,   7 Jan 23 18:28 /dev/mmcblk2p7
+brw-rw----    1 root     disk      179,  96 Jan 23 18:28 /dev/mmcblk2rpmb
+
+# Linux presents the various emmc hardware partitions as separate devices:
+#  /dev/mmcblk2boot0 - emmc hardware BOOT0 partition 
+#  /dev/mmcblk2boot1 - emmc hardware BOOT1 partition
+#  /dev/mmcblk2rpmb - emmc RPMB partition
+#  /dev/mmcblk2 - emmc USER partition
+# BOOT partitions by default are read-only as they are typically used for sensitive boot firmware. 
+# To write to them you can disable force_ro in sysfs via: echo 0 > /sys/class/block/mmcblk0boot0/force_ro
+#  Harware partionning is permanent and irreversible !
+
 
 
