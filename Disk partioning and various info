@@ -1,3 +1,4 @@
+# In UBoot, after striking a key from the serial debug
 => mmc info
 Device: dwmmc@ff0f0000
 Manufacturer ID: 45
@@ -181,7 +182,13 @@ brw-rw----    1 root     disk      179,  96 Jan 23 18:28 /dev/mmcblk2rpmb
 # To write to them you can disable force_ro in sysfs via: echo 0 > /sys/class/block/mmcblk0boot0/force_ro
 #  Harware partionning is permanent and unreversible !
 
-#mmc tool compiled for ARM is in the bin dir
+# MMC is a A VERY DANGEROUS TOOL : can break the GPT (partition table).
+# In case of MPC looping on the Update Mode, it is probably because the GPT is corrupted (I had the case on mine).
+# Hopefully, the $partitions variable in UBoot env contains all partions info.
+# it is possible to use command "gpt write mmc 0 $partitions" in Uboot.
+# mmc tool compiled for ARM is in the bin dir
+# a "fastboot flash gpt gpt.img" should work with a gpt img file but not tested...
+
 # ./mmc extcsd read /dev/mmcblk2
 =============================================
   Extended CSD rev 1.6 (MMC 4.5)
