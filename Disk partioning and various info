@@ -99,6 +99,44 @@ Device           Start     End Sectors  Size Type
 /dev/mmcblk2p6   17408 1041407 1024000  500M Microsoft basic data
 /dev/mmcblk2p7 1041408 7733214 6691807  3.2G Microsoft basic data
 
+
+
+Disk /dev/mmcblk2boot1: 2 MiB, 2097152 bytes, 4096 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mmcblk2boot0: 2 MiB, 2097152 bytes, 4096 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mmcblk0: 14.8 GiB, 15918432256 bytes, 31090688 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x00000000
+
+Device         Boot Start      End  Sectors  Size Id Type
+/dev/mmcblk0p1       8192 31090687 31082496 14.8G 83 Linux
+
+
+Disk /dev/sda: 465.8 GiB, 500107862016 bytes, 976773168 sectors
+Disk model: Generic
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: 4658432A-28F5-471D-9DEE-7AAB19522732
+
+Device     Start       End   Sectors   Size Type
+/dev/sda1   2048 976773134 976771087 465.8G Microsoft basic data
+#
+
+
 command (? for help): p
 Disk /dev/mmcblk2: 7733248 sectors, 3.7 GiB
 Sector size (logical/physical): 512/512 bytes
@@ -139,11 +177,11 @@ brw-rw----    1 root     disk      179,  96 Jan 23 18:28 /dev/mmcblk2rpmb
 #  /dev/mmcblk2boot1 - emmc hardware BOOT1 partition
 #  /dev/mmcblk2rpmb - emmc RPMB partition
 #  /dev/mmcblk2 - emmc USER partition
-# BOOT partitions by default are read-only as they are typically used for sensitive boot firmware. 
+# emmc harware BOOT partitions by default are read-only as they are typically used for sensitive boot firmware. 
 # To write to them you can disable force_ro in sysfs via: echo 0 > /sys/class/block/mmcblk0boot0/force_ro
 #  Harware partionning is permanent and unreversible !
 
-#mmc rool compiled for ARM is in the bin dir
+#mmc tool compiled for ARM is in the bin dir
 # ./mmc extcsd read /dev/mmcblk2
 =============================================
   Extended CSD rev 1.6 (MMC 4.5)
