@@ -17,3 +17,6 @@ https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-i
 
 ## MPC Touch black screen syndrom (Windows 10)
 https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10)
+
+## MPC Live X internal EMMC disk informations
+https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations
