@@ -1,0 +1,32 @@
+# mount
+/dev/mmcblk2p6 on / type ext4 (ro,relatime)
+devtmpfs on /dev type devtmpfs (rw,relatime,size=1027904k,nr_inodes=189344,mode=755)
+sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev)
+devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000)
+tmpfs on /run type tmpfs (rw,nosuid,nodev,mode=755)
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup2 on /sys/fs/cgroup/unified type cgroup2 (rw,nosuid,nodev,noexec,relatime,nsdelegate)
+cgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,xattr,name=systemd)
+cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,cpu,cpuacct)
+cgroup on /sys/fs/cgroup/debug type cgroup (rw,nosuid,nodev,noexec,relatime,debug)
+cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,freezer)
+tmpfs on /etc/machine-id type tmpfs (ro,mode=755)
+debugfs on /sys/kernel/debug type debugfs (rw,relatime)
+configfs on /sys/kernel/config type configfs (rw,relatime)
+fusectl on /sys/fs/fuse/connections type fusectl (rw,relatime)
+tmpfs on /media type tmpfs (rw)
+tmpfs on /tmp type tmpfs (rw,nosuid,nodev)
+/dev/mmcblk2p7 on /media/az01-internal type ext4 (rw,relatime)
+overlay on /var type overlay (rw,relatime,lowerdir=/var,upperdir=/media/az01-internal/system/var/overlay,workdir=/media/az01-internal/system/var/.work)
+overlay on /etc type overlay (rw,relatime,lowerdir=/etc,upperdir=/media/az01-internal/system/etc/overlay,workdir=/media/az01-internal/system/etc/.work)
+/dev/mmcblk0p1 on /media/az01-internal-sd type ext4 (rw,relatime)
+/dev/sda1 on /media/MPCLIVE500 type exfat (rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,iocharset=utf8,namecase=0,errors=remount-ro,uhelper=udisks)
+# 
+
+
+ROOTFS -> /
+DATA -> az01-internal
+Overlay /var + /media/az01-internal/system/var/overlay => merged to /var , 
+Overlay /etc + /media/az01-internal/system/etc/overlay => merged to /etc , 
