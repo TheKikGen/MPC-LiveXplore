@@ -14,9 +14,7 @@ confirmed byt the existence of 2x4 dtb drivers in the /boot directory :
 
 we can therefore deduce that the 5 MPCs will share the same software platform.  This is very good news.
 
---------------------------------------------------------------------------------------------------------------------------
-
-
+----
 [How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
 
 [How to activate the linux console](https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-console)
