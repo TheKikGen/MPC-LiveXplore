@@ -1,0 +1,23 @@
+
+
+MPC --help -h --version --gui --remotescreen --touchtest --painttest
+
+MPC --gui
+MPC 2.7.2
+Found, link: TubeSynth
+Found, link: Bassline
+Found, link: Electric
+WIFI: TechnologyUpdate: path=/net/connman/technology/p2p
+WIFI: TechnologyUpdate: path=/net/connman/technology/wifi
+WIFI: TechnologyUpdate: set wifiPath=/net/connman/technology/wifi
+WIFI: found service at path /net/connman/service/wifi_94a1a2483273_546f72676e65742d776972656c657373_managed_psk
+BLUETOOTH: BluetoothObject: found object /org/bluez/hci0
+ButtonStates reply from firmware: {0,0,0,0}
+**** Audio 44100Hz; 2-in; 6-out; 128sample buffer
+**** Warning: inefficient input path: hardware=2 filter=8
+**** Warning: inefficient output path: hardware=6 filter=16
+WARNING: ClearChannels unoptimized channel count: 14
+# MPC --touchtest
+MPC 2.7.2
+# MPC --painttest
+MPC 2.7.2
