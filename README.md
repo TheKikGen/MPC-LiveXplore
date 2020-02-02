@@ -14,24 +14,16 @@ confirmed byt the existence of 2x4 dtb drivers in the /boot directory :
 
 we can therefore deduce that the 5 MPCs will share the same software platform.  This is very good news.
 
-## How to add 2 new midi ports C D : a quick guide with MIDI-OX.
+[How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
 
-https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX
+[How to activate the linux console](https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-console)
 
-## How to activate the linux console
+[SSH activation and flashing the rootfs with fastboot](https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSH-activation-and-flashing-the-rootfs-with-fastboot)
 
-https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-console
+How to extract the rootfs image from an official Akai update img file](https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img)
 
-## SSH activation and flashing the rootfs with fastboot
-https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSH-activation-and-flashing-the-rootfs-with-fastboot
+[MPC Touch black screen syndrom (Windows 10)](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10))
 
-## How to extract the rootfs image from an official Akai update img file
-https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img
-
-## MPC Touch black screen syndrom (Windows 10)
-https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10)
-
-## MPC Live X internal EMMC disk informations
-https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations
+[MPC Live X internal EMMC disk informations](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations=
 
 
