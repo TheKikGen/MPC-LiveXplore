@@ -20,10 +20,10 @@ we can therefore deduce that the 5 MPCs will share the same software platform.  
 
 [SSH activation and flashing the rootfs with fastboot](https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSH-activation-and-flashing-the-rootfs-with-fastboot)
 
-How to extract the rootfs image from an official Akai update img file](https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img)
+[How to extract the rootfs image from an official Akai update img file](https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img)
 
 [MPC Touch black screen syndrom (Windows 10)](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10))
 
-[MPC Live X internal EMMC disk informations](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations=
+[MPC Live X internal EMMC disk informations](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations=)
 
 
