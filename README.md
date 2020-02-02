@@ -6,10 +6,11 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 
 Some trace of a new MPC in the last 2.72 firmware :
 
-<img border="0" width="350" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/84102618_882090452220375_7210150333543088128_n.jpg?_nc_cat=106&_nc_ohc=z3gl3AKTi3gAX92AuhU&_nc_ht=scontent-cdt1-1.xx&oh=0d6fb9e5a964ff9a557f2711ed135717&oe=5EBEB9D5"  />
+<img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/84102618_882090452220375_7210150333543088128_n.jpg?_nc_cat=106&_nc_ohc=z3gl3AKTi3gAX92AuhU&_nc_ht=scontent-cdt1-1.xx&oh=0d6fb9e5a964ff9a557f2711ed135717&oe=5EBEB9D5"  />
 
 confirmed byt the existence of 2x4 dtb drivers in the /boot directory :
-<img border="0" width="350" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/84054703_882226772206743_6139209442400403456_n.jpg?_nc_cat=110&_nc_ohc=xLlWOZHcM7sAX_4w-Ks&_nc_ht=scontent-cdg2-1.xx&oh=a28ac0cd68f776431ca1d5806d293614&oe=5E8EB670" />
+
+<img border="0" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/84054703_882226772206743_6139209442400403456_n.jpg?_nc_cat=110&_nc_ohc=xLlWOZHcM7sAX_4w-Ks&_nc_ht=scontent-cdg2-1.xx&oh=a28ac0cd68f776431ca1d5806d293614&oe=5E8EB670" />
 
 we can therefore deduce that the 5 MPCs will share the same software platform.  This is very good news.
 
