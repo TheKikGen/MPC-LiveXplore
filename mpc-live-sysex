@@ -1,6 +1,6 @@
 # MPC Live Controller Midi messages
 # Cable 0 is used for system exclusive messages
-# Cbale 1 is used for common MIDI messages 
+# Cable 1 is used for common MIDI messages 
 
 # Sent at the start of MPC application :
 F0 7E 00 06 01 F7
@@ -11,18 +11,18 @@ F0 7E 00 06 02 47 3B 00 19 00 01 01 01 7F 00 00 00 00 XX XX XX XX XX XX XX XX XX
 # MIDI Initialisatio (extract)
 
 # HOST asks controller identification on cable 0
-0040   04 f0 7e 00 07 06 01 f7
-Cable 0 => f0 7e 00 06 01 f7
+Host to Cable 0 => f0 7e 00 06 01 f7
 
 # CTL sends id and serial (3B = MPC LIVE) to cable 0 and cable 1 
 0040   04 f0 7e 00 04 06 02 47 04 3b 00 19 04 00 01 01
 0050   04 01 7f 00 04 00 00 00 04 XX XX XX 04 XX XX XX
 0060   04 XX XX XX 04 XX XX XX 04 XX XX XX 06 00 f7 00
-Cable 0 => f0 7e 00 06 02 47 3b 00 19 00 01 01 01 7f 00 00 00 00 (15 bytes SERIAL) 00 f7
 
 0070   14 f0 7e 00 14 06 02 47 14 3b 00 19 14 00 01 01
 0040   14 01 7f 00 14 00 00 00 14 XX XX XX 14 XX XX XX
 0050   14 XX XX XX 14 XX XX XX 14 XX XX XX 16 00 f7 00
+
+Cable 0 => f0 7e 00 06 02 47 3b 00 19 00 01 01 01 7f 00 00 00 00 (15 bytes SERIAL) 00 f7
 Cable 1 => f0 7e 00 06 02 47 3b 00 19 00 01 01 01 7f 00 00 00 00 (15 bytes SERIAL) 00 f7
 
 HOST
@@ -68,12 +68,36 @@ HOST
 0050   1b b0 08 02 1b b0 73 02 1b b0 74 02 1b b0 23 03
 0060   1b b0 24 01 1b b0 25 01 1b b0 26 01 1b b0 27 01
 0070   1b b0 28 01 1b b0 2a 02 1b b0 2b 02 1b b0 2c 01
-Cable 1 => b0 02 02 b0 03 02 b0 05 02 b0 06 02 b0 08 02 b0 73 02 b0 74 02 b0 23 03 b0 24 01 b0 25 01 b0 26 01 b0 27 01 b0 28 01 b0 2a 02 b0 2b 02 b0 2c 01
+Cable 1 => 
+b0 02 02 
+b0 03 02 
+b0 05 02 
+b0 06 02 
+b0 08 02 
+b0 73 02 
+b0 74 02 
+b0 23 03 
+b0 24 01 
+b0 25 01 
+b0 26 01 
+b0 27 01 
+b0 28 01 
+b0 2a 02 
+b0 2b 02 
+b0 2c 01
 
 0040   04 f0 47 7f 04 3b 65 00 04 04 00 00 07 00 00 f7
 0050   04 f0 47 7f 04 3b 65 00 04 04 01 00 07 00 00 f7
 0060   04 f0 47 7f 04 3b 65 00 04 04 02 00 07 00 00 f7
 0070   04 f0 47 7f 04 3b 65 00 04 04 03 00 07 00 00 f7
+
+
+f0 47 7f 3b 65 00 04 00 00 00 00 f7
+f0 47 7f 3b 65 00 04 01 00 00 00 f7
+f0 47 7f 3b 65 00 04 02 00 00 00 f7
+f0 47 7f 3b 65 00 04 03 00 00 00 f7
+
+
 
 0040   1b b0 2d 01 1b b0 2e 01 1b b0 2f 01 1b b0 30 03
 0050   1b b0 49 01 1b b0 50 01 1b b0 51 03 1b b0 52 01
