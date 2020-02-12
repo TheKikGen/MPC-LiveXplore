@@ -25,6 +25,6 @@ we can therefore deduce that the 5 MPCs will share the same software platform.  
 
 [MPC Touch black screen syndrom (Windows 10)](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10))
 
-[MPC Live X internal EMMC disk informations](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations=)
+[MPC Live X internal EMMC disk informations](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations)
 
 
