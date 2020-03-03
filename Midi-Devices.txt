@@ -1,0 +1,7 @@
+The internal MIDI interface are named and identified as following, depending on the hardware :
+
+USB String name = "MPC X Controller",  USB VID:PID = "09e8:003a"
+USB String name = "MPC Live Controller", USB VID:PID = "09e8:003b"
+USB String name = "APC Live USB Device" or "Akai Pro Force", USB VID:PID = "09e8:0040"
+USB String name = "MPC One MIDI", USB VID:PID = "09e8:0046"
+USB String name = "MPC Live II", USB VID:PID = "09e8:0047"
