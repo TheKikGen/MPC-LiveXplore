@@ -14,6 +14,10 @@ confirmed by the existence of 2x4 dtb drivers in the /boot directory :
 
 we can therefore deduce that the 5 MPCs will share the same software platform.  This is very good news.
 
+ONE MONTH LATER : CONFIRMED. Look at the FCC web site : 
+https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB
+
+
 ----
 [How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
 
