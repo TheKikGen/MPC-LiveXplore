@@ -1,8 +1,12 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
+## BREAKING NEWS !! THE MPC LIVE MK II CONFIRMED (2020-03-18)
 
-## BREAKING NEWS !! THE MPC LIVE MK II SOON ?
+ONE MONTH LATER : CONFIRMED. Look at the FCC web site : 
+https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB
+
+## THE MPC LIVE MK II SOON (2020-02-01) ?
 
 Some trace of a new MPC in the last 2.72 firmware :
 
@@ -13,9 +17,6 @@ confirmed by the existence of 2x4 dtb drivers in the /boot directory :
 <img border="0" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/84054703_882226772206743_6139209442400403456_n.jpg?_nc_cat=110&_nc_ohc=xLlWOZHcM7sAX_4w-Ks&_nc_ht=scontent-cdg2-1.xx&oh=a28ac0cd68f776431ca1d5806d293614&oe=5E8EB670" />
 
 we can therefore deduce that the 5 MPCs will share the same software platform.  This is very good news.
-
-ONE MONTH LATER : CONFIRMED. Look at the FCC web site : 
-https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB
 
 
 ----
