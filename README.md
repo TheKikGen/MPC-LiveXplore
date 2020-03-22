@@ -29,6 +29,14 @@ https://www.facebook.com/groups/550328948678055/permalink/1024338721277073/  .
 
 The main MCU board (originally designed by Radxa) is strictly the same on the 4 products: only the internal USB peripherals are different (controller, sound card). The MPC One supposed to be "a new" product is in fact a Live/X rebranded !  
 
+The internal MIDI interface is named and identified as following, depending on the hardware :  
+
+      USB String name = "MPC X Controller",  USB VID:PID = "09e8:003a"
+      USB String name = "MPC Live Controller", USB VID:PID = "09e8:003b"
+      USB String name = "APC Live USB Device" or "Akai Pro Force", USB VID:PID = "09e8:0040"
+      USB String name = "MPC One MIDI", USB VID:PID = "09e8:0046"
+      USB String name = "MPC Live II", USB VID:PID = "09e8:0047"
+
 Akai (InMusic) will certainly capitalize on the evolutions of its embedded software (it's very expensive to develop), and make the software of its products converge to a 3.x ... Personally, I speculate on a Live MPC MKII based on the same hardware but using the good recipes of the 4 previous MPC/Force (drums, CV gates, square format ...) + a significant evolution of the software: addition of plugin, Clip mode improved like what is done on the force, improved midi, etc. ...  
 
 I also noticed that Akai was starting to lock its firmware more seriously...you can probably expect features to be enabled depending on the model you acquired...ex: X: everything. Live MK 2: almost everything, MK1/One nothing more...  Right now, it is clearly stated in the latest MPC (2.72) user manual that the MPC ONE does not have the standalone Ableton controller, even though the firmware is exactly the same as on the Live.
