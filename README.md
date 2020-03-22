@@ -17,16 +17,22 @@ and confirmed by the existence of 2x4 dtb linux drivers in the /boot directory :
 <img border="0" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/84054703_882226772206743_6139209442400403456_n.jpg?_nc_cat=110&_nc_ohc=xLlWOZHcM7sAX_4w-Ks&_nc_ht=scontent-cdg2-1.xx&oh=a28ac0cd68f776431ca1d5806d293614&oe=5E8EB670" />
 
 we can therefore deduce that the 5 MPCs will share the same software platform and mainly the same hardware.
-This is very good news for MPC Live owners as that means updates and new features probably in a next future for all
-(note that the Force software is a bit different).
+This is very good news for MPC Live owners as that means updates and new features probably in a next future for all.   The Force softwaree is very close: it is probably a branch of the MPC one (by the way, the executable runs on a Live MPC...and is also called "MPC"). 
 
-However, this may also mean that some features will not be available on all MPCs.  For example, it is clearly stated in the latest user 
-manual that the MPC ONE does not have the standalone Ableton controller, even though the firmware is exactly the same as on the Live.   
-
-<img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/85106040_889619251467495_2131203209392291840_n.jpg?_nc_cat=106&_nc_sid=1480c5&_nc_ohc=i9EmeYz5MZMAX8Rq8ff&_nc_ht=scontent-cdt1-1.xx&oh=27e9aad0ca843261a8a4f43d04195f19&oe=5E9C7341" />
+The hardware core is strictly the same on the 3 products: only the internal USB peripherals are different (controller, sound card). The MPC One supposed to be "a new" product is in fact a Live/X rebranded !
 
 I have also seen areas mentioning new plugins that I think will be present in new releases or reserved for the new MPC?
 => NEW :   MPC:DrumSynth    MPC:Xpand     MPC:OrganB3
+
+Akai will certainly capitalize on the evolutions of its embedded software (it's very expensive to develop), and make the software of its products converge to a 3.x ... Personally, I speculate on a Live MPC MKII based on the same hardware but using the good recipes of the 4 previous MPC/Force (drums, CV gates, square format ...) + a significant evolution of the software: addition of plugin, Clip mode improved like what is done on the force, improved midi, etc. ...  
+
+I also noticed that Akai was starting to lock its firmware more seriously...you can probably expect features to be enabled depending on the model you acquired...ex: X: everything. Live MK 2: almost everything, MK1/One nothing more...
+Right now, it is clearly stated in the latest MPC (2.72) user manual that the MPC ONE does not have the standalone Ableton controller, even though the firmware is exactly the same as on the Live.
+
+<img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/85106040_889619251467495_2131203209392291840_n.jpg?_nc_cat=106&_nc_sid=1480c5&_nc_ohc=i9EmeYz5MZMAX8Rq8ff&_nc_ht=scontent-cdt1-1.xx&oh=27e9aad0ca843261a8a4f43d04195f19&oe=5E9C7341" />
+
+We'll see that in 6 months...
+
 
 -----------------------------------------------------------------------------------------------------------------------
 [How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
