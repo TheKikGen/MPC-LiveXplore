@@ -9,6 +9,7 @@ https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&Reque
 ## THE MPC LIVE MK II SOON (2020-02-01) ?
 
 Beyond my previous post in gearslutsz regarding a shell script mentioning the MPC Live MKII) :
+https://www.gearslutz.com/board/showthread.php?p=14503941
 
     set -ex
     NAME_PATH=/var/lib/inMusic/9E0C3419-93E1-4E92-B8E3-79141B049228/DCS_UserDefinedDeviceName.var
