@@ -3,13 +3,12 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 
 THE MPC LIVE MK II CONFIRMED (2020-03-18)
 
-ONE MONTH LATER : CONFIRMED. Look at the FCC web site : 
-https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB
+ONE MONTH LATER : CONFIRMED. Look at [fcc web site](https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB) : 
 
 ## THE MPC LIVE MK II SOON (2020-02-01) ?
 
-Beyond my previous post in gearslutsz regarding a shell script mentioning the MPC Live MKII) :
-https://www.gearslutz.com/board/showthread.php?p=14503941
+Beyond my [previous post in gearslutsz](https://www.gearslutz.com/board/showthread.php?p=14503941) regarding a shell script mentioning the MPC Live MKII) :
+
 
 other traces of a new MPC in the last 2.72 firmware MPC binary were found after deeper analysis :
 
