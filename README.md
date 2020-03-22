@@ -45,6 +45,16 @@ I also noticed that Akai was starting to lock its firmware more seriously...you 
 
 We'll see that in 6 months...
 
+All these InMusic (FCC ID Y40) products seem to share the same core hardware :
+
+      ACV0 MPC Rnaissance     ACV1 MPC Studio               ACV3 MPC Element
+      ACV5 MPC X              ACV6 MPC Kitten Mattress      ACV7 MPC Touch
+      ACV8 MPC Live           ACV9 MPC Studio Black         ACVA MPC Studio Live
+      ADA2 Borris The Turtle  JP07 SC5000 PRIME             JP08 SC5000M PRIME
+      JP12 SC4000 PRIME       JC11 PRIME 4                  JC16 PRIME 2
+      Force (Aka ADA2)        SC4000                        SC5000 PRIME Screen
+      SC5000M PRIME Screen    SC4000 PRIME Screen           PRIME 4 Screen
+      PRIME 2 Screen   
 
 -----------------------------------------------------------------------------------------------------------------------
 [How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
