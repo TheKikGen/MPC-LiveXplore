@@ -1,7 +1,8 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
-THE MPC LIVE MK II CONFIRMED (2020-03-18)
+
+## THE MPC LIVE MK II CONFIRMED (2020-03-18)
 
 ONE MONTH LATER : CONFIRMED. Look at [fcc web site](https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB) : 
 
