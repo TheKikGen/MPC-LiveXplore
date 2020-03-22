@@ -18,10 +18,10 @@ and confirmed by the existence of 2x4 dtb linux drivers in the /boot directory :
 
 we can therefore deduce that the 5 MPCs will share the same software platform and mainly the same hardware.
 This is very good news for MPC Live owners as that means updates and new features probably in a next future for all
-(note taht the Force software is a bit different).
+(note that the Force software is a bit different).
 
 However, this may also mean that some features will not be available on all MPCs.  For example, it is clearly stated in the latest user 
-manual that the ONE MPC does not have the Ableton controller, even though the firmware is exactly the same as on the Live.   
+manual that the MPC ONE does not have the standalone Ableton controller, even though the firmware is exactly the same as on the Live.   
 
 <img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/85106040_889619251467495_2131203209392291840_n.jpg?_nc_cat=106&_nc_sid=1480c5&_nc_ohc=i9EmeYz5MZMAX8Rq8ff&_nc_ht=scontent-cdt1-1.xx&oh=27e9aad0ca843261a8a4f43d04195f19&oe=5E9C7341" />
 
