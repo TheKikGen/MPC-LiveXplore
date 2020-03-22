@@ -8,10 +8,7 @@ ONE MONTH LATER : CONFIRMED. Look at [fcc web site](https://apps.fcc.gov/oetcf/e
 
 ## THE MPC LIVE MK II SOON (2020-02-01) ?
 
-Beyond my [previous post in gearslutsz](https://www.gearslutz.com/board/showthread.php?p=14503941) regarding a shell script mentioning the MPC Live MKII) :
-
-
-other traces of a new MPC in the last 2.72 firmware MPC binary were found after deeper analysis :
+Beyond my [previous post in gearslutsz](https://www.gearslutz.com/board/showthread.php?p=14503941) regarding a shell script mentioning the MPC Live MKII, other traces of a new MPC in the last 2.72 firmware MPC binary were found after deeper analysis :
 
 <img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/84102618_882090452220375_7210150333543088128_n.jpg?_nc_cat=106&_nc_ohc=z3gl3AKTi3gAX92AuhU&_nc_ht=scontent-cdt1-1.xx&oh=0d6fb9e5a964ff9a557f2711ed135717&oe=5EBEB9D5"  />
 
