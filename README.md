@@ -11,48 +11,6 @@ https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&Reque
 Beyond my previous post in gearslutsz regarding a shell script mentioning the MPC Live MKII) :
 https://www.gearslutz.com/board/showthread.php?p=14503941
 
-    set -ex
-    NAME_PATH=/var/lib/inMusic/9E0C3419-93E1-4E92-B8E3-79141B049228/DCS_UserDefinedDeviceName.var
-    SERIAL_NUM_PATH=/sys/firmware/devicetree/base/serial-number
-    mkdir -p /var/lib/inMusic/9E0C3419-93E1-4E92-B8E3-79141B049228/
-    if [ ! -f $NAME_PATH ]
-    then
-    DEVICE=" "
-    # Check USB control surface for it's ID.
-    for LINE in `lsusb`
-    do
-    if [[ $LINE == "09e8:003a" ]]
-    then
-    DEVICE="mpc x "
-    break
-    elif [[ $LINE == "09e8:003b" ]]
-    then
-    DEVICE="MPC Live "
-    break
-    elif [[ $LINE == "09e8:0040" ]]
-    then
-    DEVICE="Force "
-    break
-    elif [[ $LINE == "09e8:0046" ]]
-    then
-    DEVICE="MPC One "
-    break
-    elif [[ $LINE == "09e8:0047" ]]
-    then
-    DEVICE="MPC Live Mk II "
-    break
-    fi
-    done
-    if [ -f $SERIAL_NUM_PATH ]
-    then
-    echo -n "$DEVICE " > $NAME_PATH && cat $SERIAL_NUM_PATH >> $NAME_PATH
-    else
-    # If is likely some development units won't have serial numbers
-    echo -n "$DEVICE INVALID SERIAL NUMBER" > $NAME_PATH
-    fi
-    fi
-    exec /bin/DeviceControlServer.bin DeviceID=\"DeviceID01020304E8090000534D0000DECAFBAD00000000000000000000000000000001\
-
 other traces of a new MPC in the last 2.72 firmware MPC binary were found after deeper analysis :
 
 <img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/84102618_882090452220375_7210150333543088128_n.jpg?_nc_cat=106&_nc_ohc=z3gl3AKTi3gAX92AuhU&_nc_ht=scontent-cdt1-1.xx&oh=0d6fb9e5a964ff9a557f2711ed135717&oe=5EBEB9D5"  />
