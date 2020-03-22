@@ -26,14 +26,7 @@ manual that the ONE MPC does not have the Ableton controller, even though the fi
 <img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/85106040_889619251467495_2131203209392291840_n.jpg?_nc_cat=106&_nc_sid=1480c5&_nc_ohc=i9EmeYz5MZMAX8Rq8ff&_nc_ht=scontent-cdt1-1.xx&oh=27e9aad0ca843261a8a4f43d04195f19&oe=5E9C7341" />
 
 I have also seen areas mentioning new plugins that I think will be present in new releases or reserved for the new MPC?
-
-MPC:Bassline
-MPC:Electric
-MPC:TubeSynth
-=> NEW
-MPC:DrumSynth
-MPC:Xpand
-MPC:OrganB3
+=> NEW :   MPC:DrumSynth    MPC:Xpand     MPC:OrganB3
 
 -----------------------------------------------------------------------------------------------------------------------
 [How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
