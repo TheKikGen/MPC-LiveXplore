@@ -46,8 +46,7 @@ I also noticed that Akai was starting to lock its firmware more seriously...you 
 We'll see that in 6 months...
 
 All these InMusic (FCC ID Y40) products seem to share the same core hardware :
-
-      ACV0 MPC Rnaissance     ACV1 MPC Studio               ACV3 MPC Element
+      
       ACV5 MPC X              ACV6 MPC Kitten Mattress      ACV7 MPC Touch
       ACV8 MPC Live           ACV9 MPC Studio Black         ACVA MPC Studio Live (aka ONE)
       ADA2 Borris The Turtle  JP07 SC5000 PRIME             JP08 SC5000M PRIME
