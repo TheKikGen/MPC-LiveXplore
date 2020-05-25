@@ -19,8 +19,6 @@ This is very good news for MPC Live owners as that means updates and new feature
 
 The Force softwaree is very close: it is probably a branch of the MPC one. By the way, the executable runs on a MPC Live...and is also called "MPC". 
 
-https://www.facebook.com/groups/550328948678055/permalink/1024338721277073/  . 
-
 The main MCU board (originally designed by Radxa) is strictly the same on the 4 products: only the internal USB peripherals are different (controller, sound card). The MPC One supposed to be "a new" product is in fact a Live/X rebranded !  
 
 The internal MIDI interface is named and identified as following, depending on the hardware :  
