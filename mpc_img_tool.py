@@ -1,7 +1,21 @@
 #!/usr/bin/env python3
-# Do not trust this script it will brick your mpc
-# credit to Pierre Lulé
-# https://gist.github.com/plule/67e1c542e2f16d92ddda0ac479010c39
+# __ __| |           |  /_) |     ___|             |           |
+#    |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
+#    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
+#   _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
+#   -----------------------------------------------------------------------------
+#   MPC LIVE/X/Force Image extractor, and maker
+#   Credits :
+#       Pierre Lule for the first version of that script
+#       Matthieu Le Corre for discovering that Akai img is a dtb
+#
+# The authors disclaim all warranties with regard to this software, including
+# all implied warranties of merchantability and fitness. In no event shall
+# the authors be liable for any special, indirect or consequential damages or
+# any damages whatsoever resulting from loss of use of your hardware, data or
+# profits, whether in an action of contract, negligence or other tortious action,
+# arising out of or in connection with the use or performance of this software.
+# YOU USE THIS SOFTWARE AT YOUR OWN RISK !
 
 import hashlib
 import sys
@@ -9,8 +23,10 @@ import lzma
 import subprocess
 
 def print_usage():
-    print("mpc_img_tool.py extract <in update.img> <out img>")
-    print("mpc_img_tool.py create <in update.img> <in img> <out update.img>")
+    print("Usage :")
+    print("mpc_img_tool.py extract <Akai img> <rootfs img>")
+    print("mpc_img_tool.py make-live <rootfs img> <Akai MPC Live/One/X img>")
+    print("mpc_img_tool.py make-force <rootfs src img file name> <Akai MPC Force img>")
 
 def extract(in_update_img, out_img):
     print("Extracting {} from {}:".format(out_img, in_update_img))
@@ -21,16 +37,44 @@ def extract(in_update_img, out_img):
 
     print("Decompressing and writing...")
     lzd = lzma.LZMADecompressor(format=lzma.FORMAT_XZ)
+    b = 0
     with open(out_img, "wb") as f:
         for unsigned in output:
             compressed_bytes = int(unsigned).to_bytes(4, byteorder="big", signed=False)
-            f.write(lzd.decompress(compressed_bytes))
+            b += f.write(lzd.decompress(compressed_bytes))
+            if(b % 100 == 0):
+                print(b," bytes written\r",end=" ")
+    print(b," bytes written")
+    print("done !")
 
-def create(in_img, out_update_img):
+def create(mpc,in_img, out_update_img):
     print("Creating {} from {}".format(out_update_img, in_img))
-
-    tmpl = """/dts-v1/;
-
+    if mpc == "make-force":
+        print("MPC Force image maker.")
+        tmpl = """/dts-v1/;
+/ {{
+timestamp = <0x5dee18e1>;
+description = "Akai Professional FORCE upgrade image";
+compatible = "inmusic,ada2";
+inmusic,devices = <0x9e84040>;
+inmusic,version = "3.0.4.44";
+images {{
+rootfs {{
+description = "Root filesystem";
+data = <{data}>;
+partition = "rootfs";
+compression = "xz";
+hash {{
+value = <{sha}>;
+algo = "sha1";
+}};
+}};
+}};
+}};
+"""
+    else:
+        print("MPC Live/X/One image maker.")
+        tmpl = """/dts-v1/;
 / {{
 	timestamp = <0x5ebac103>;
 	description = "MPC upgrade image";
@@ -61,24 +105,36 @@ def create(in_img, out_update_img):
     lzc = lzma.LZMACompressor(format=lzma.FORMAT_XZ)
     with open(in_img, "rb") as f:
         compressed_in_data = lzc.compress(f.read())
+        print(".",end=" ")
     compressed_in_data += lzc.flush()
     sha.update(compressed_in_data)
     compressed_in_data_words = [hex(int.from_bytes(compressed_in_data[i:i+4], byteorder="big", signed=False)) for i in range(0, len(compressed_in_data), 4)]
     sha_bytes = sha.digest()
     sha_words = [hex(int.from_bytes(sha_bytes[i:i+4], byteorder="big", signed=False)) for i in range(0, len(sha_bytes), 4)]
-    
+
     dtc_input = tmpl.format(data = " ".join(compressed_in_data_words), sha = " ".join(sha_words)).encode()
     dtc_cmd = ["dtc", "-I", "dts", "-O", "dtb", "-o", out_update_img, "-"]
     print(" ".join(dtc_cmd))
     subprocess.run(dtc_cmd, input = dtc_input)
 
-if sys.argv[1] == "extract" and len(sys.argv) == 4:
-    extract(sys.argv[2], sys.argv[3])
-    exit()
+# --------------------------------------------
+# main
+print("---------------------------------------------------------------------")
+print("MPC LIVE IMAGE EXTRACTOR")
+print("https://github.com/TheKikGen/MPC-LiveXplore\n")
+print("Credit : The KikGen labs, Pierre Lule, Matthieu Le Corre")
+print("NB : the dtc utility must be acessible from the current path !")
+print("---------------------------------------------------------------------\n")
 
-if sys.argv[1] == "create" and len(sys.argv) == 4:
-    create(sys.argv[2], sys.argv[3])
-    exit()
+if len(sys.argv) > 1:
+    if sys.argv[1] == "extract" and len(sys.argv) == 4:
+        extract(sys.argv[2], sys.argv[3])
+        exit()
+
+    if (sys.argv[1] == "make-live" or sys.argv[1] == "make-force")  and len(sys.argv) == 4:
+        create(sys.argv[1],sys.argv[2], sys.argv[3])
+        exit()
 
 print_usage()
+
 exit()
