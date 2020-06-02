@@ -7,7 +7,7 @@
 #   MPC LIVE/X/Force Image extractor, and maker
 #   Credits :
 #       Pierre Lule for the first version of that script
-#       Matthieu Le Corre for discovering that Akai img is a dtb
+#       Mamatt for discovering that Akai img is a dtb
 #
 # The authors disclaim all warranties with regard to this software, including
 # all implied warranties of merchantability and fitness. In no event shall
