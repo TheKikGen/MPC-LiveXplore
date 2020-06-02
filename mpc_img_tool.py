@@ -122,7 +122,7 @@ algo = "sha1";
 print("---------------------------------------------------------------------")
 print("MPC LIVE IMAGE EXTRACTOR")
 print("https://github.com/TheKikGen/MPC-LiveXplore\n")
-print("Credit : The KikGen labs, Pierre Lule, Matthieu Le Corre")
+print("Credit : The KikGen labs, Pierre Lule, Mamatt")
 print("NB : the dtc utility must be acessible from the current path !")
 print("---------------------------------------------------------------------\n")
 
