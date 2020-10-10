@@ -61,6 +61,7 @@ All these InMusic (FCC ID Y40) products seem to share the same core hardware :
 You will find all arp patterns and progressions here.
 You must copy pattern files to '/usr/share/Akai/SME0/Arp Patterns',
 and progressions to '/usr/share/Akai/SME0/Progressions'.
+Don't forget to remount the partition read/write with a "mount remount / -o rw,remount" command.
 
 -----------------------------------------------------------------------------------------------------------------------
 [How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
