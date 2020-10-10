@@ -55,6 +55,13 @@ All these InMusic (FCC ID Y40) products seem to share the same core hardware :
       SC5000M PRIME Screen    SC4000 PRIME Screen           PRIME 4 Screen
       PRIME 2 Screen          ACVB MPC LIVE MKII
 
+
+## MPC Arp patterns and progressions
+
+You will find all arp patterns and progressions here.
+You must copy pattern files to '/usr/share/Akai/SME0/Arp Patterns',
+and progressions to '/usr/share/Akai/SME0/Progressions'.
+
 -----------------------------------------------------------------------------------------------------------------------
 [How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
 
