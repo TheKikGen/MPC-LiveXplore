@@ -35,7 +35,7 @@ usage: MPC <params>
     --remotescreen      (-r)
 
 => No more display of embedded plugins
-=> still available : --version --gui --touchtest --painttest  
+=> still available :  --gui --remotescreen  --touchtest --painttest  
 
 
 
