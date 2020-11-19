@@ -44,7 +44,7 @@
   <VALUE name="folder3" val="/media/az01-internal-sd/Expansions"/>
   <VALUE name="folder4" val="/media/az01-internal-sd/MPC Documents/Projects"/>
   <VALUE name="folder5" val="/media/az01-internal-sd/MPC Documents/Programs"/>
-  <VALUE name="452t0f" val="(21)A11710178703504"/>
+  <VALUE name="452t0f" val="(21)A11xxxxxxxxxxx"/>
   <VALUE name="92sdf3" val="4F45VHHUTEFCAGXL"/>
   <VALUE name="audioSetup">
     <DEVICESETUP deviceType="ALSA" audioOutputDeviceName="MPC X Audio, USB Audio; Front speakers"
