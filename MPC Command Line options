@@ -1,5 +1,7 @@
+You need to top the MPC software with the "systemctl stop inmusic-mpc" command line.
 
-
+VERSION 2.72 :
+---------------------------
 MPC --help -h --version --gui --remotescreen --touchtest --painttest
 
 MPC --gui
@@ -21,3 +23,19 @@ WARNING: ClearChannels unoptimized channel count: 14
 MPC 2.7.2
 # MPC --painttest
 MPC 2.7.2
+
+VERSION 2.8.1 :
+---------------------------
+MPC 2.8.1
+usage: MPC <params>
+  where params are:
+    --version           (-v)
+    --help              (-h)
+    --project           (-p)
+    --remotescreen      (-r)
+
+=> No more display of embedded plugins
+=> still available : --version --gui --touchtest --painttest  
+
+
+
