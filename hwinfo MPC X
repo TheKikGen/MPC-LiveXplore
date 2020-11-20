@@ -118,7 +118,7 @@ shm: attached segment 32768 at 0xb6985000
   
   Hardware	: Rockchip (Device Tree)
   Revision	: 0000
-  Serial		: A11710178703504
+  Serial		: A1xxxxxxxxxxxxx
 ----- /proc/cpuinfo end -----
 >> memory.1: main memory size
   kcore mem:  0x0
