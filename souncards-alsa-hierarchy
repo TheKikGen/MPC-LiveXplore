@@ -1,0 +1,54 @@
+/proc/asound# tree
+.
+|-- Audio -> card0
+|-- Controller -> card2
+|-- Studio -> card3
+|-- U4x4 -> card1
+|-- card0
+|   |-- id
+|   |-- pcm0c
+|   |   |-- info
+|   |   `-- sub0
+|   |       |-- hw_params
+|   |       |-- info
+|   |       |-- status
+|   |       `-- sw_params
+|   |-- pcm0p
+|   |   |-- info
+|   |   `-- sub0
+|   |       |-- hw_params
+|   |       |-- info
+|   |       |-- status
+|   |       `-- sw_params
+|   |-- stream0
+|   |-- usbbus
+|   |-- usbid
+|   `-- usbmixer
+|-- card1
+|   |-- id
+|   |-- midi0
+|   |-- usbbus
+|   |-- usbid
+|   `-- usbmixer
+|-- card2
+|   |-- id
+|   |-- midi0
+|   |-- usbbus
+|   |-- usbid
+|   `-- usbmixer
+|-- card3
+|   |-- id
+|   |-- midi0
+|   |-- usbbus
+|   `-- usbid
+|-- cards
+|-- devices
+|-- hwdep
+|-- pcm
+|-- seq
+|   |-- clients
+|   |-- drivers
+|   |-- queues
+|   `-- timer
+|-- timers
+`-- version
