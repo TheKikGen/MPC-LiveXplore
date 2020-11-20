@@ -1311,7 +1311,7 @@ unknown non-USB input device
   
   Hardware	: Rockchip (Device Tree)
   Revision	: 0000
-  Serial		: A11710178703504
+  Serial		: A11xxxxxxxxxxxxx
 ----- /proc/cpuinfo end -----
 >> kbd.3: serial console
 >> fb.1: read info
