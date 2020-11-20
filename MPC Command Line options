@@ -1,4 +1,4 @@
-You need to top the MPC software with the "systemctl stop inmusic-mpc" command line.
+You need to stop the MPC software with the "systemctl stop inmusic-mpc" command line.
 
 VERSION 2.72 :
 ---------------------------
