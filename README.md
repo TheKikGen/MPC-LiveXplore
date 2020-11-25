@@ -2,18 +2,29 @@
 Akai MPC Live/X/Force/One technical explorations and hacks
 
 
-## SSH ACCESS for MPC LIVE AND FORCE (2020-05-30)
+## IMG WITH SSH ACCESS for MPC LIVE AND FORCE (2020-11-25)
 
-If you want to get a remote Linux command line with SSH instead of opening your MPC, you can download :
+If you want to get a remote Linux command line with SSH instead of opening your MPC, 
+patched images are available are 
 
-2.8.1 img here : 
-https://drive.google.com/drive/folders/1knNU8aND6o2RIamnWioiiNh4F1ou7c3D?usp=sharing
+MPC 2.9.0  https://drive.google.com/file/d/1w2PrG479zZvaH6tQfaboZSMNkIRv1L_d/view?usp=sharing
 
-2.8 img here : 
-https://drive.google.com/drive/folders/1ZZVQT1f-D156KYx1DKEsKCp6KV2snpqq?usp=sharing
+MPC 2.8.1  https://drive.google.com/drive/folders/1knNU8aND6o2RIamnWioiiNh4F1ou7c3D?usp=sharing
 
-and 3.0.4 Force img here : 
-https://drive.google.com/drive/folders/1Pdj-liZmR5Pa0Qy9Dcj_nF7q-TXS1D4Y?usp=sharing
+Force 3.0.4 https://drive.google.com/drive/folders/1Pdj-liZmR5Pa0Qy9Dcj_nF7q-TXS1D4Y?usp=sharing
+
+Nothing else than ssh activation was modified.
+Remove the "ssh" trailer and copy the img to the root of an usb key.
+A non-empty key will work contrary to what is stated in the documentation.
+
+## MPC V2.9.0 IS HERE AND THE DRUMSYNTH PLUGIN IS IN ! (2020-11-25)
+
+The latest 2.9.0 MPC firmware features an 8-track DrumSynth, reminiscent of Roland's TRs, and Korg ER-1 that many will have forgotten! 
+Honestly, this plugin is a success, and it is certain that many MPCs will be sold at Christmas!
+Akai: Publish your APIs so third-party developers could create more plugins . Why not a MPC plugins market place ?
+
+[![Akai Drumsynth intro](https://img.youtube.com/vi/lPDg5_H2eLA/0.jpg)](https://www.youtube.com/watch?v=lPDg5_H2eLA)
+
 
 ## THE MPC LIVE MK II CONFIRMED (2020-03-18)
 
