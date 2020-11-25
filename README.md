@@ -5,7 +5,7 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 ## IMG WITH SSH ACCESS for MPC LIVE AND FORCE (2020-11-25)
 
 If you want to get a remote Linux command line with SSH instead of opening your MPC, 
-patched images are available are 
+patched images are available :
 
 MPC 2.9.0  https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing
 
