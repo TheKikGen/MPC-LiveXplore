@@ -7,7 +7,7 @@
 #   MPC LIVE/X/Force Image extractor, and maker
 #   Credits :
 #       Pierre Lule for the first version of that script
-#       Mamatt for discovering that Akai img is a dtb
+#       Matthieu Le Corre for discovering that Akai img is a dtb
 #
 # The authors disclaim all warranties with regard to this software, including
 # all implied warranties of merchantability and fitness. In no event shall
@@ -20,119 +20,252 @@
 import hashlib
 import sys
 import lzma
+import shutil
 import subprocess
+import os
+import mmap
+
+comp = ""
+version = ""
 
 def print_usage():
     print("Usage :")
-    print("mpc_img_tool.py extract <Akai img> <rootfs img>")
-    print("mpc_img_tool.py make-live <rootfs img> <Akai MPC Live/One/X img>")
-    print("mpc_img_tool.py make-force <rootfs src img file name> <Akai MPC Force img>")
+    print("mpc_img_tool.py info <Akai img>")
+    print("mpc_img_tool.py extract <Akai img>")
+    print("mpc_img_tool.py make-mpc <input rootfs img file name> <MPC img file name to generate> <version string>")
+    print("mpc_img_tool.py make-force <input rootfs img file name> <Force img file name to generate> <version string>")
+
+def info(in_update_img):
+    print("Akai image [{}] details :\n".format(in_update_img))
+    global comp
+    global version
+
+    # Get all root properties
+    cmd = ["fdtget","-p",in_update_img, "/"]
+    #print(" ".join(cmd))
+    properties = subprocess.run(cmd, stdout=subprocess.PIPE,universal_newlines=True).stdout.strip("\n").split()
+    #print("Found properties : {} \n".format(properties))
+
+    for property in properties:
+        if property == "timestamp" or property == "inmusic,devices":
+            type = 'x'
+        else :
+            type = 's'
+
+        val = subprocess.run(["fdtget","-t",type, in_update_img, "/", property], stdout=subprocess.PIPE,universal_newlines=True).stdout.strip("\n")
+        print("{:20} : {}".format(property,val))
+        if property == "inmusic,version" : version = val
+
+    cmd = ["fdtget", "-t", "x", in_update_img, "/images/rootfs/hash", "value"]
+    hash = subprocess.run(cmd, stdout=subprocess.PIPE,universal_newlines=True).stdout.strip("\n")
+    print("{:20} : {}".format("hash value",hash))
+
+    cmd = ["fdtget","-d","none","-t","s", in_update_img, "/images/rootfs", "compression"]
+    comp = subprocess.run(cmd, stdout=subprocess.PIPE,universal_newlines=True).stdout.strip("\n")
+    if comp != "none":
+        print("\nRoofs image is compressed with {}.".format(comp))
 
 def extract(in_update_img, out_img):
-    print("Extracting {} from {}:".format(out_img, in_update_img))
 
-    fdtget = ["fdtget", "-t", "u", in_update_img, "/images/rootfs", "data"]
-    print(" ".join(fdtget))
-    output = subprocess.run(fdtget, stdout=subprocess.PIPE).stdout.split()
+    tmp_filename = "imgdata.tmp"
 
-    print("Decompressing and writing...")
-    lzd = lzma.LZMADecompressor(format=lzma.FORMAT_XZ)
+    print("Extracting {} from {}:\n".format(out_img, in_update_img))
+    info(in_update_img)
+
+    fdtget = ["fdtget", "-t", "x", in_update_img, "/images/rootfs", "data"]
+
+    print("1/3.Extracting hexadecimal text data...please wait...")
+    tmpfile = open(tmp_filename,'wt')
+    subprocess.run(fdtget, stdout=tmpfile,universal_newlines=True)
+    tmpfile.close()
+
+    print("2/3.Generating binary data...")
+
+    tmpfile = open(tmp_filename,'rt')
+    binfile = open(tmp_filename + ".bin", "wb")
+    tmpfile.seek(0,2)
+    filesize = tmpfile.tell()
+    if filesize == 0:
+        print("Error : data temp file is empty.")
+        return
+
+    tmpfile.seek(0)
+    print("Size :",filesize)
+
+    word = "";
+    wordstr = ""
     b = 0
-    with open(out_img, "wb") as f:
-        for unsigned in output:
-            compressed_bytes = int(unsigned).to_bytes(4, byteorder="big", signed=False)
-            b += f.write(lzd.decompress(compressed_bytes))
-            if(b % 100 == 0):
-                print(b," bytes written\r",end=" ")
+    nbwriteword = 4096
+    nbword = 0
+    blocksize = 1*512*1024
+
+    buffer = tmpfile.read(blocksize)
+    while buffer:
+        for hexastr in buffer:
+            if hexastr != " ":
+                if hexastr != "\n":
+                    word = word + hexastr
+            else :
+                nbword = nbword + 1
+                wordstr = wordstr + word.zfill(8)
+                word = ""
+                if nbword == nbwriteword:
+                    binfile.write(bytearray.fromhex(wordstr))
+                    wordstr = ""
+                    nbword = 0
+            b = b + 1
+        print("Pos  :",b,end="\r")
+        buffer = tmpfile.read(blocksize)
+
+    if word != "" : wordstr = wordstr + word.zfill(8)
+    if wordstr != "" : binfile.write(bytearray.fromhex(wordstr))
+
+    print("Pos  :",tmpfile.tell())
+
+    binfile.close()
+    tmpfile.close()
+
+    # remove data text file
+    os.remove(tmp_filename)
+
+    # rename rootfs img file if no compression
+    if comp == "none" :
+        print("3/3.Renaming rootfs img...")
+        os.rename(tmp_filename + ".bin",out_img + "_" + version + ".img")
+        return # no compression
+
+    # Uncompress the temporary file
+    print("3/3.Decompressing rootfs img...please wait...")
+    #filters = [{"id": lzma.FILTER_LZMA2, "preset": 7 | lzma.PRESET_DEFAULT},
+
+    with lzma.open(tmp_filename + ".bin",format=lzma.FORMAT_XZ) as compressed:
+        with open(out_img + "_" + version + ".img", 'wb') as destination:
+            shutil.copyfileobj(compressed, destination)
+
+    print("File ", out_img + "_" + version + ".img"," ready in the current directory.")
+
     print(b," bytes written")
-    print("done !")
+    os.remove(tmp_filename + ".bin")
 
-def create(mpc,in_img, out_update_img):
-    print("Creating {} from {}".format(out_update_img, in_img))
+
+def create(mpc,in_img, out_update_img,version_string):
+
+    tmpl_header = "/dts-v1/;\n/ {{\n"
+    tmpl_header = tmpl_header + "timestamp = <0x5dee18e1>;\n"
+
     if mpc == "make-force":
-        print("MPC Force image maker.")
-        tmpl = """/dts-v1/;
-/ {{
-timestamp = <0x5dee18e1>;
-description = "Akai Professional FORCE upgrade image";
-compatible = "inmusic,ada2";
-inmusic,devices = <0x9e84040>;
-inmusic,version = "3.0.4.44";
-images {{
-rootfs {{
-description = "Root filesystem";
-data = <{data}>;
-partition = "rootfs";
-compression = "xz";
-hash {{
-value = <{sha}>;
-algo = "sha1";
-}};
-}};
-}};
-}};
-"""
+        print("Force image maker.")
+        tmpl_header = tmpl_header + "description = \"Akai Professional FORCE upgrade image\";\n"
+        tmpl_header = tmpl_header + "compatible = \"inmusic,ada2\";\n"
+        tmpl_header = tmpl_header + "inmusic,devices = <0x9e84040>;\n"
+
     else:
-        print("MPC Live/X/One image maker.")
-        tmpl = """/dts-v1/;
-/ {{
-	timestamp = <0x5ebac103>;
-	description = "MPC upgrade image";
-	compatible = "inmusic,acv5", "inmusic,acv8", "inmusic,acva", "inmusic,acvb";
-	inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047>;
-	inmusic,version = "2.8.0.56";
+        print("MPC image maker.")
+        tmpl_header = tmpl_header + "description = \"MPC upgrade image\";\n"
+        tmpl_header = tmpl_header + "compatible = \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acvb\";\n"
+        tmpl_header = tmpl_header + "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047>;\n"
 
-	images {{
 
-		rootfs {{
-			description = "Root filesystem";
-			data = <{data}>;
-            partition = "rootfs";
-			compression = "xz";
+    tmpl_header = tmpl_header + "inmusic,version = \"{version}\";\n"
+    tmpl_header = tmpl_header + "images {{\n      rootfs {{\n"
+    tmpl_header = tmpl_header + "          description = \"Root filesystem\";\n"
+    tmpl_header = tmpl_header + "          data = <"
 
-			hash {{
-				value = <{sha}>;
-				algo = "sha1";
-			}};
-		}};
-	}};
-}};
-"""
+    tmpl_footer = ">;\n"
+    tmpl_footer = tmpl_footer + "          partition = \"rootfs\";\n"
+    tmpl_footer = tmpl_footer + "          compression = \"xz\";\n\n"
+    tmpl_footer = tmpl_footer + "          hash {{\n"
+    tmpl_footer = tmpl_footer + "            value = <{sha}>;\n"
+    tmpl_footer = tmpl_footer + "            algo = \"sha1\";\n   }};\n  }};\n }};\n}};\n"
+
+
+    tmp_filename = "imgdata.tmp"
+
+    print("Creating {} from {}".format(out_update_img, in_img))
+
+    print("1/4.Compressing root fs file {}...please wait...".format(in_img))
+
+    with open(in_img, 'rb') as f_in:
+        with lzma.open(tmp_filename+".xz",mode="wb",format=lzma.FORMAT_XZ) as f_out:
+                shutil.copyfileobj(f_in, f_out)
+
+    print("2/4.Hashing compressed file...please wait...")
+
+    blocksize = 1*64*1024
 
     sha = hashlib.new("sha1")
+    f_in = open(tmp_filename+".xz", 'rb')
+    # Size 0 will read the ENTIRE file into memory!
+    m = mmap.mmap(f_in.fileno(), 0, prot=mmap.PROT_READ) #File is open read-only
 
-    print("Reading {}...".format(in_img))
-    lzc = lzma.LZMACompressor(format=lzma.FORMAT_XZ)
-    with open(in_img, "rb") as f:
-        compressed_in_data = lzc.compress(f.read())
-        print(".",end=" ")
-    compressed_in_data += lzc.flush()
-    sha.update(compressed_in_data)
-    compressed_in_data_words = [hex(int.from_bytes(compressed_in_data[i:i+4], byteorder="big", signed=False)) for i in range(0, len(compressed_in_data), 4)]
+    buffer = m.read(blocksize)
+    while buffer:
+        sha.update(buffer)
+        buffer = m.read(blocksize)
+
     sha_bytes = sha.digest()
     sha_words = [hex(int.from_bytes(sha_bytes[i:i+4], byteorder="big", signed=False)) for i in range(0, len(sha_bytes), 4)]
 
-    dtc_input = tmpl.format(data = " ".join(compressed_in_data_words), sha = " ".join(sha_words)).encode()
-    dtc_cmd = ["dtc", "-I", "dts", "-O", "dtb", "-o", out_update_img, "-"]
-    print(" ".join(dtc_cmd))
-    subprocess.run(dtc_cmd, input = dtc_input)
+    print("3/4.Generating dts file...")
+    f_out = open(tmp_filename+".dts", 'wb')
+    f_out.write(tmpl_header.format(version = version_string).encode())
+
+    # write data field
+    m.seek(0)
+    print("Size ",m.size())
+
+    b = 0
+    buffer = m.read(blocksize)
+    while buffer :
+        i = 0
+        data = ""
+        while i < len(buffer) :
+            # make words as it is the format supported by dts
+            data =  data + hex(int.from_bytes(buffer[i:i+4], byteorder="big", signed=False)) + " "
+            i = i + 4
+        b = b + len(buffer)
+        f_out.write(data.encode())
+        buffer = m.read(blocksize)
+        print("Pos  ",b,end="\r")
+
+    f_out.write(tmpl_footer.format(sha = " ".join(sha_words)).encode())
+    f_out.close()
+    m.close()
+
+    print("4/4.Compiling dts file to final image...please wait...")
+
+    cmd = ["dtc","-I","dts","-O","dtb", "-o",out_update_img, tmp_filename+".dts"]
+    subprocess.run(cmd)
+    print("File ", out_update_img ," ready in the current directory.")
+
+    os.remove(tmp_filename+".xz")
+    os.remove(tmp_filename+".dts")
+
 
 # --------------------------------------------
 # main
 print("---------------------------------------------------------------------")
-print("MPC LIVE IMAGE EXTRACTOR")
-print("https://github.com/TheKikGen/MPC-LiveXplore\n")
-print("Credit : The KikGen labs, Pierre Lule, Mamatt")
+print("AKA MPC/FORCE IMAGE TOOL - V1.1")
+print("https://github.com/TheKikGen/MPC-LiveXplore")
+print("(c) The KikGen labs.\n")
 print("NB : the dtc utility must be acessible from the current path !")
 print("---------------------------------------------------------------------\n")
 
 if len(sys.argv) > 1:
-    if sys.argv[1] == "extract" and len(sys.argv) == 4:
-        extract(sys.argv[2], sys.argv[3])
+
+    if sys.argv[1] == "info" and len(sys.argv) == 3:
+        info(sys.argv[2])
+        print("\nDone !")
         exit()
 
-    if (sys.argv[1] == "make-live" or sys.argv[1] == "make-force")  and len(sys.argv) == 4:
-        create(sys.argv[1],sys.argv[2], sys.argv[3])
+    if sys.argv[1] == "extract" and len(sys.argv) == 3:
+        extract(sys.argv[2], "rootfs")
+        print("\nDone !")
+        exit()
+
+    if (sys.argv[1] == "make-mpc" or sys.argv[1] == "make-force")  and len(sys.argv) == 5:
+        create(sys.argv[1],sys.argv[2], sys.argv[3],sys.argv[4])
+        print("\nDone !")
         exit()
 
 print_usage()
