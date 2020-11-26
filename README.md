@@ -16,9 +16,7 @@ patched images are available :
 
 MPC 2.9.0  https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing
 
-MPC 2.8.1  https://drive.google.com/drive/folders/1knNU8aND6o2RIamnWioiiNh4F1ou7c3D?usp=sharing
-
-Force 3.0.4 https://drive.google.com/drive/folders/1Pdj-liZmR5Pa0Qy9Dcj_nF7q-TXS1D4Y?usp=sharing
+Force 3.0.6 https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing
 
 Nothing else than ssh activation was modified.
 Remove the "ssh" trailer and copy the img to the root of an usb key.
