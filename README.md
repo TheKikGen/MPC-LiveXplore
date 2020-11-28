@@ -22,7 +22,8 @@ Nothing else than ssh activation was modified.
 Remove the "ssh" trailer and copy the img to the root of an usb key.
 A non-empty usb key will work contrary to what is stated in the documentation.
 
-[https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force](SSH activation Wiki page)
+[SSH activation Wiki page](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
+
 
 ## MPC V2.9.0 IS HERE AND THE DRUMSYNTH PLUGIN IS IN ! (2020-11-25)
 
