@@ -53,7 +53,7 @@ The Force softwaree is very close: it is probably a branch of the MPC one. By th
 
 The main MCU board (originally designed by Radxa) is strictly the same on the 4 products: only the internal USB peripherals are different (controller, sound card). The MPC One supposed to be "a new" product is in fact a Live/X rebranded !  
 
-The internal MIDI interface is named and identified as following, depending on the hardware :  
+The internal MIDI interfaces are named and identified as following, depending on the hardware :  
 
       USB String name = "MPC X Controller",  USB VID:PID = "09e8:003a"
       USB String name = "MPC Live Controller", USB VID:PID = "09e8:003b"
