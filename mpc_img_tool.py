@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 # __ __| |           |  /_) |     ___|             |           |
 #    |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
 #    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
@@ -29,11 +29,11 @@ comp = ""
 version = ""
 
 def print_usage():
-    print("Usage :")
-    print("mpc_img_tool.py info <Akai img>")
-    print("mpc_img_tool.py extract <Akai img>")
-    print("mpc_img_tool.py make-mpc <input rootfs img file name> <MPC img file name to generate> <version string>")
-    print("mpc_img_tool.py make-force <input rootfs img file name> <Force img file name to generate> <version string>")
+    print("Usage :\n")
+    print("mpcimg  info [image file]\n")
+    print("        extract  [image file in] [rootfs file out]")
+    print("                 \"rootfs_\" is added to the rootfs file name.\n")
+    print("        make-mpc | make-force [rootfs file in] [img file out] [version string]\n")
 
 def info(in_update_img):
     print("Akai image [{}] details :\n".format(in_update_img))
@@ -114,7 +114,7 @@ def extract(in_update_img, out_img):
                     wordstr = ""
                     nbword = 0
             b = b + 1
-        print("Pos  :",b,end="\r")
+        print("Pos  :",b, end = "\r")
         buffer = tmpfile.read(blocksize)
 
     if word != "" : wordstr = wordstr + word.zfill(8)
@@ -131,7 +131,7 @@ def extract(in_update_img, out_img):
     # rename rootfs img file if no compression
     if comp == "none" :
         print("3/3.Renaming rootfs img...")
-        os.rename(tmp_filename + ".bin",out_img + "_" + version + ".img")
+        os.rename(tmp_filename + ".bin",out_img  )
         return # no compression
 
     # Uncompress the temporary file
@@ -139,10 +139,10 @@ def extract(in_update_img, out_img):
     #filters = [{"id": lzma.FILTER_LZMA2, "preset": 7 | lzma.PRESET_DEFAULT},
 
     with lzma.open(tmp_filename + ".bin",format=lzma.FORMAT_XZ) as compressed:
-        with open(out_img + "_" + version + ".img", 'wb') as destination:
+        with open(out_img + ".img", 'wb') as destination:
             shutil.copyfileobj(compressed, destination)
 
-    print("File ", out_img + "_" + version + ".img"," ready in the current directory.")
+    print("File ", out_img ," ready in the current directory.")
 
     print(b," bytes written")
     os.remove(tmp_filename + ".bin")
@@ -245,7 +245,7 @@ def create(mpc,in_img, out_update_img,version_string):
 # --------------------------------------------
 # main
 print("---------------------------------------------------------------------")
-print("AKA MPC/FORCE IMAGE TOOL - V1.1")
+print("AKAI MPC/FORCE IMAGE TOOL - V1.1")
 print("https://github.com/TheKikGen/MPC-LiveXplore")
 print("(c) The KikGen labs.\n")
 print("NB : the dtc utility must be acessible from the current path !")
@@ -258,8 +258,8 @@ if len(sys.argv) > 1:
         print("\nDone !")
         exit()
 
-    if sys.argv[1] == "extract" and len(sys.argv) == 3:
-        extract(sys.argv[2], "rootfs")
+    if sys.argv[1] == "extract" and len(sys.argv) == 4:
+        extract(sys.argv[2], "rootfs_" + sys.argv[3])
         print("\nDone !")
         exit()
 
