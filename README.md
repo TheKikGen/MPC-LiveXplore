@@ -14,9 +14,10 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 If you want to get a remote Linux command line with SSH instead of opening your MPC, 
 patched images are available :
 
-MPC 2.9.0  https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing
+[MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing)
 
-Force 3.0.6 https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing
+[Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)
+
 
 Nothing else than ssh activation was modified.
 Remove the "ssh" trailer and copy the img to the root of an usb key.
