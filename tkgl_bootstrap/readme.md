@@ -12,7 +12,7 @@ How to install :
 
 1. Copy to the tkgl_bootstrap directory to the root of an sdcard/usb stick, preferably formatted with ext4 filesystem    
 
-   Important : rename it to ".tkgl_bootstrap" to effectiveley launch and hide it, so you will not see the folder when browsing files on the sdcard.
+   Important : rename it to ".tkgl_bootstrap" to effectively launch and hide it, so you will not see the folder when browsing files on the sdcard.
 
 2. Update as usual (usb procedure) with the last MPC / Force modded image to enable the bootstrap script :
 
