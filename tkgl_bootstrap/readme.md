@@ -11,6 +11,7 @@ You need to update your MPC/Force with a modded image that will launch the boots
 How to install :
 
 1. Copy to the tkgl_bootstrap directory to the root of an sdcard/usb stick, preferably formatted with ext4 filesystem
+   Important : rename it to ".tkgl_bootstrap" to hide it, so you will not see it when brosing files on the sdcard.
 
 2. Update as usual (usb procedure) with the last MPC / Force modded image to enable the bootstrap script :
 
@@ -23,7 +24,7 @@ How to install :
 3. Adapt the /tkgl_bootstrap/scripts/tkgl_bootstrap script to your needs 
 
    By default, an overlay on the Arp Patterns/Progression directory is created to allow loading of your own patterns from the sdcard.
-   (check Akai directory that will be created on the root directory after a first boot). 
+   (check "Arp Patterns" and "Progressions" links at the root directory that will be created after a first boot). 
 
 4. Place any binary in the /tkgl_bootstrap/bin
 
