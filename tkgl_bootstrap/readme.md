@@ -5,7 +5,7 @@
 
 # MPC / Force bootstrap scripts
 
-This is a bootstrap implementation on the Akai MPCs / Force allowing system customization : linux application, data rescue, settings backup, ... 
+This is a bootstrap implementation on the Akai MPCs / Force allowing system customization at boot time : linux application, data rescue, settings backup, ... 
 You need to download a modded image that will launch it on the external sd card, before starting the MPC application.
 
 1. Copy to the tkgl_bootstrap directory to the root of an sdcard/usb stick, preferably formatted with ext4 filesystem
