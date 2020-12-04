@@ -1,0 +1,95 @@
+#!/bin/sh
+#
+# __ __| |           |  /_) |     ___|             |           |
+#    |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
+#    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
+#   _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
+#
+# BOOTSTRAP script for MPC device.  /usr/binaz01-launch-MPC patched
+# https://github.com/TheKikGen/MPC-LiveXplore
+#
+# This shell script will :
+# - identify the current device from USB PID:VID
+# - mount all external USB storage devices
+# - run the first "/tkgl_bootstrap/tkgl_bootstrap" script found on usb device
+# - launch the MPC application as usual
+
+echo "*** TKGL MPC BOOTSTRAP ***"
+
+# Detect hardware type from usb PID:VID
+DEVICE="UNKNOW"
+for LINE in $(lsusb) ; do
+  if [[ $LINE == "09e8:003a" ]]   ; then DEVICE="MPC X"          ; break ;
+  elif [[ $LINE == "09e8:003b" ]] ; then DEVICE="MPC Live"       ; break ;
+  elif [[ $LINE == "09e8:0040" ]] ; then DEVICE="Force"          ; break ;
+  elif [[ $LINE == "09e8:0046" ]] ; then DEVICE="MPC One"        ; break ;
+  elif [[ $LINE == "09e8:0047" ]] ; then DEVICE="MPC Live Mk II" ; break ;
+  fi
+done
+echo "$DEVICE detected"
+
+# clean sshd config on the /etc overlay so we are sure to use the right one
+SSHD_OVCONF=/media/az01-internal/system/etc/overlay/ssh/sshd_config
+[ -f "$SSHD_OVCONF" ] && rm $SSHD_OVCONF
+
+# Mount all disk partitions
+# search for unmounted usb disks
+UNMOUNT_LIST=$(lsblk -o path,SUBSYSTEMS,partuuid,mountpoint| grep 'usb\S*\s*\S*-\S*\s*$' | cut -d' ' -f1)
+if [ "x$UNMOUNT_LIST" != "x" ]
+then
+ for DISK_PATH in $UNMOUNT_LIST ; do
+  # mount external usb with udisks
+  if [ "x$DISK_PATH" != "x" ]
+  then
+    echo "Mouting $DISK_PATH"s
+    udisks --mount $DISK_PATH
+  fi
+ done
+fi
+
+# Search for tkgl_bootstrap script on usb disk
+MOUNT_LIST=$(lsblk -o mountpoint,SUBSYSTEMS,partuuid | grep 'usb\S*\s*\S*-\S*$' | cut -d' ' -f1)
+echo "Mounted usb disks : "$MOUNT_LIST
+if [ "x$MOUNT_LIST" != "x" ]
+then
+ for MOUNT_POINT in $MOUNT_LIST ; do
+   TKGL_ROOT=$MOUNT_POINT/tkgl_bootstrap
+   TKGL_SCRIPT=$TKGL_ROOT/scripts
+   TKGL_BIN=$TKGL_ROOT/bin
+   TKGL_BOOTSTRAP=$TKGL_SCRIPT/tkgl_bootstrap
+
+   # Check if the tkgl_bootstrap script is existing and source it
+   # to preserve environment variables, so they can be used.
+
+   if [ -f "$TKGL_BOOTSTRAP" ]
+   then
+     echo "bootstrap script found : $TKGL_BOOTSTRAP"
+     source "$TKGL_BOOTSTRAP"
+     break # only the first one
+   fi
+ done
+fi
+
+# Launch MPC application as usual, but take command line difference in account
+# The Force has one.., MPCs haven't. Don't know if this is important.
+ARGV=""
+[ "$DEVICE" == "Force" ] && ARGV="$@"
+
+#------------------ original script start here---------------------------------
+# find dfu util info
+DFUUTILINFO=$(dfu-util -l | grep "0x08000000")
+
+#if in dfu-update mode run firmware update script
+[ "x$DFUUTILINFO" != "x" ] && sh /usr/share/Akai/SME0/Firmware/update.sh
+
+if type systemd-inhibit >/dev/null 2>&1
+then
+    exec systemd-inhibit --what=handle-power-key /usr/bin/MPC $ARGV
+else
+    # Reduce the soft stack size limit to 1MiB (from the default 8MiB).  This
+    # is used as the default stack size for new threads and since MPC is
+    # locked in memory this memory is allocated.  Since the limit is read
+    # before main, we cannot set it in the application and must do so here.
+    ulimit -S -s 1024
+    exec /usr/bin/MPC $ARGV
+fi

@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# __ __| |           |  /_) |     ___|             |           |
+#    |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
+#    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
+#   _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
+#
+# BOOTSTRAP script for MPC device.
+# POST AZ01-LAUNCH-MPC script
+
+# This shell script will :
+# - Add the tkgl bin to the path
+# - create and mount an overlay for Arp patterns and progressions on this sd card.
+
+# Available variables :
+#   $DEVICE : Device name
+
+# MOUNT_POINT=/media/tkgl # for debugging purpose. Should be commented.
+# TKGL_ROOT=$MOUNT_POINT/tkgl_bootstrap # for debugging purpose
+# TKGL_SCRIPT=$TKGL_ROOT/scripts
+# TKGL_BIN=$TKGL_ROOT/bin
+# TKGL_BOOTSTRAP=$TKGL_SCRIPT/tkgl_bootstrap
+
+echo "*** In bootstrap script $TKGL_BOOTSTRAP ***"
+
+# Add tkgl bin first into the path only one time
+echo $PATH | grep /tkgl >/dev/null || export PATH=$TKGL_BIN:$PATH
+
+# create an overlay for the Arp Patterns/Progressions and others
+# That trick only works on ext4 part type, so it is installed on the sdcard here
+AKAI_SME0=/usr/share/Akai/SME0
+AKAI_SME0_OVR=$MOUNT_POINT/Akai
+
+if [ ! -d $AKAI_SME0_OVR/overlay ]
+then
+  mkdir -p  "$AKAI_SME0_OVR/overlay"  "$AKAI_SME0_OVR/.work"
+  mkdir -p  "$AKAI_SME0_OVR/overlay/Arp Patterns"
+  mkdir -p  "$AKAI_SME0_OVR/overlay/Progressions"
+fi
+# mount the overlay
+mount -t overlay overlay -o \
+lowerdir=$AKAI_SME0,\
+upperdir=$AKAI_SME0_OVR/overlay,\
+workdir=$AKAI_SME0_OVR/.work \
+$AKAI_SME0
