@@ -40,7 +40,8 @@ How to install :
     ssh root@(your MPC ip addr) reboot
     
 A full root access to the system is granted within tkgl_bootstrap, however the file system is mounted read-only for security reasons.
-I do not recommend to install software and/or to deeply customize the internal file system. You will loose everything at the next update.
+I do not recommend to install software to (and/or deeply customize) the internal file system. You will loose everything at the next update.
 Instead implement your custom app on the sdcard, to ensure isolation with the filesystem, and to preserve your work.
+It also allows you to return to normal operation of your MPC by simply removing the external sdcard.
 
 
