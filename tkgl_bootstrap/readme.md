@@ -5,12 +5,14 @@
 
 # MPC / Force bootstrap scripts
 
-This is a bootstrap implementation on the Akai MPCs / Force allowing system customization at boot time : linux application, data rescue, settings backup, ... 
-You need to download a modded image that will launch it on the external sd card, before starting the MPC application.
+This "bootstrap" implementation allows Akai MPCs / Force system customization at boot time as linux application launching, data rescue, backup settings,... 
+You need to update your MPC/Force with a modded image that will launch the bootstrap from the internal filesystem, before the MPC application starts.
+
+How to install :
 
 1. Copy to the tkgl_bootstrap directory to the root of an sdcard/usb stick, preferably formatted with ext4 filesystem
 
-2. Update with the last MPC / Force modded image to enable the bootstrap script :
+2. Update as usual (usb procedure) with the last MPC / Force modded image to enable the bootstrap script :
 
           [MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing)
 
@@ -20,14 +22,19 @@ You need to download a modded image that will launch it on the external sd card,
 
 3. Adapt the /tkgl_bootstrap/scripts/tkgl_bootstrap script to your needs 
 
-   By default, the script creates an overlay on the Arp Patterns directory to allows loading of your own ones from the MPC application.
+   By default, an overlay on the Arp Patterns/Progression directory is created to allow loading of your own patterns from the sdcard.
+   (check Akai directory that will be created on the root directory after a first boot). 
 
 4. Place any binary in the /tkgl_bootstrap/bin
 
 5. Test locally via ssh before running in nominal mode
 
+    ssh root@(your MPC ip addr)
+
 6. Reboot your MPC !
 
+    ssh root@(your MPC ip addr) reboot
+    
 A full root access to the system is granted within tkgl_bootstrap, however the file system is mounted read-only for security reasons.
 I do not recommend to install software and/or to deeply customize the internal file system. You will loose everything at the next update.
 Instead implement your custom app on the sdcard, to ensure isolation with the filesystem, and to preserve your work.
