@@ -23,14 +23,16 @@ How to install :
 
 3. Adapt the /tkgl_bootstrap/scripts/tkgl_bootstrap script to your needs 
 
-   By default, an overlay on the Arp Patterns/Progression directory is created to allow loading of your own patterns from the sdcard.
+   By default, an overlay on the Arp Patterns/Progression directory is created to allow you to load your own patterns from the sdcard.
    (check "Arp Patterns" and "Progressions" links at the root directory that will be created after a first boot). 
 
 4. Place any binary in the /tkgl_bootstrap/bin
 
 5. Test locally via ssh before running in nominal mode
 
-    ssh root@(your MPC ip addr)
+    ssh root@(your MPC ip addr), then cd to /media(your sdcard name)/tkgl_bootstrap/scripts.
+    You must uncomment some environments variables declaration.
+    You need to comment again after your tests.
 
 6. Reboot your MPC !
 
