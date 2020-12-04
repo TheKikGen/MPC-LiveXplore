@@ -53,7 +53,7 @@ echo "Mounted usb disks : "$MOUNT_LIST
 if [ "x$MOUNT_LIST" != "x" ]
 then
  for MOUNT_POINT in $MOUNT_LIST ; do
-   TKGL_ROOT=$MOUNT_POINT/tkgl_bootstrap
+   TKGL_ROOT=$MOUNT_POINT/.tkgl_bootstrap # note the dot before the name = hidden
    TKGL_SCRIPT=$TKGL_ROOT/scripts
    TKGL_BIN=$TKGL_ROOT/bin
    TKGL_BOOTSTRAP=$TKGL_SCRIPT/tkgl_bootstrap

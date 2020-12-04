@@ -16,7 +16,7 @@
 #   $DEVICE : Device name
 
 # MOUNT_POINT=/media/tkgl # for debugging purpose. Should be commented.
-# TKGL_ROOT=$MOUNT_POINT/tkgl_bootstrap # for debugging purpose
+# TKGL_ROOT=$MOUNT_POINT/.tkgl_bootstrap # for debugging purpose
 # TKGL_SCRIPT=$TKGL_ROOT/scripts
 # TKGL_BIN=$TKGL_ROOT/bin
 # TKGL_BOOTSTRAP=$TKGL_SCRIPT/tkgl_bootstrap
@@ -29,14 +29,19 @@ echo $PATH | grep /tkgl >/dev/null || export PATH=$TKGL_BIN:$PATH
 # create an overlay for the Arp Patterns/Progressions and others
 # That trick only works on ext4 part type, so it is installed on the sdcard here
 AKAI_SME0=/usr/share/Akai/SME0
-AKAI_SME0_OVR=$MOUNT_POINT/Akai
+AKAI_SME0_OVR=$MOUNT_POINT/.SME0 # hidden
 
 if [ ! -d $AKAI_SME0_OVR/overlay ]
 then
   mkdir -p  "$AKAI_SME0_OVR/overlay"  "$AKAI_SME0_OVR/.work"
   mkdir -p  "$AKAI_SME0_OVR/overlay/Arp Patterns"
   mkdir -p  "$AKAI_SME0_OVR/overlay/Progressions"
+  # Create links in the root directory to hidden directories
+  # This avoids to pollute display when browsing the sdcard
+  ln -s "$AKAI_SME0_OVR/overlay/Arp Patterns" "$MOUNT_POINT/Arp Patterns"
+  ln -s "$AKAI_SME0_OVR/overlay/Progressions" "$MOUNT_POINT/Progressions"
 fi
+
 # mount the overlay
 mount -t overlay overlay -o \
 lowerdir=$AKAI_SME0,\
