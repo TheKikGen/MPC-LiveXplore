@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# __ __| |           |  /_) |     ___|             |           |
+#    |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
+#    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
+#   _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
+#
+# BOOTSTRAP script for MPC device.
+# POST AZ01-LAUNCH-MPC script
+
+# This shell script will :
+# - Add the tkgl bin to the path
+# - create and mount an overlay for Arp patterns and progressions on this sd card.
+
+# for debugging purpose locally:
+if [ "x$TKGL_PATH_FILE" == "x" ]
+then
+  export TKGL_PATH_FILE=$(dirname $(readlink -f "$0"))/tkgl_path
+fi
+
+source $TKGL_PATH_FILE
+
+# Add tkgl bin first into the path only one time
+echo $PATH | grep /tkgl >/dev/null || export PATH=$TKGL_BIN:$PATH
+
+echo "*** In bootstrap script $TKGL_BOOTSTRAP ***">$TKGL_LOG
+date>>$TKGL_LOG
+uname -a>>$TKGL_LOG
+
+# submodules launcher : add to the doer , separated by space
+# arp_overlay  : create an overlay of Arp Patterns on the sdcard (if ext4)
+# telnetd      : launch a telnetd server (root access)
+# etcovr_clean : clean passwords files and ssh config on the /etc overlay
+
+TKGL_DOER="etcovr_clean arp_overlay telnetd"
+
+for MODULE in $TKGL_DOER ; do
+   echo "-- Module $MODULE --">>$TKGL_LOG
+   sh "$TKGL_SCRIPT/tkgl_mod_$MODULE.sh">>$TKGL_LOG
+done

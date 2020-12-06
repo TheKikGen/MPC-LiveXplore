@@ -4,11 +4,8 @@
 #    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
 #   _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
 #   -----------------------------------------------------------------------------
-#   MPC LIVE/X/Force Image extractor, and maker
-#   Credits :
-#       Pierre Lule for the first version of that script
-#       Matthieu Le Corre for discovering that Akai img is a dtb
-#
+#   MPC LIVE/X/Force Image extractor, and maker by The KikGen Labs
+#   additional credits : Pierre Lule / Matthieu Le Corre
 # The authors disclaim all warranties with regard to this software, including
 # all implied warranties of merchantability and fitness. In no event shall
 # the authors be liable for any special, indirect or consequential damages or

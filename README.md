@@ -18,12 +18,18 @@ patched images are available :
 
 [Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)
 
+Very few things have been modified in that mod :
+- empty password for root. Recent version of Force Firmaware added a password to root acount.
+- permananent activation of ssh at boot (multi-user.target.wants/sshd.service)
+- ssh root empty password authentication in sshd_config
+- bootstrap to launch a custom scripts on a sdcard before starting MPC
 
-Nothing else than ssh activation was modified.
 Remove the "ssh" trailer and copy the img to the root of an usb key.
 A non-empty usb key will work contrary to what is stated in the documentation.
 
-[SSH activation Wiki page](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
+Check here to launch your own script : [tkgl_bootstrap](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap) 
+
+And here for more details about [SSH activation](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
 
 
 ## MPC V2.9.0 IS HERE AND THE DRUMSYNTH PLUGIN IS IN ! (2020-11-25)
