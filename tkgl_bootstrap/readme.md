@@ -22,26 +22,28 @@ How to install :
 
    The launch script on the internal ssd will find the tkgl_bootstrap script automatically. 
 
-3. Adapt the /tkgl_bootstrap/scripts/tkgl_bootstrap script to your needs 
+3. Create your module and adapt the /tkgl_bootstrap/scripts/tkgl_bootstrap script to your needs 
 
-   By default, an overlay on the Arp Patterns/Progression directory is created to allow you to load your own patterns from the sdcard.
-   (check "Arp Patterns" and "Progressions" links at the root directory that will be created after a first boot). 
+   Copy paste a script module example (for example the mod_telnetd) to create your own. 
+   Your module must be then added to the $DOER variable in the tkgl_bootstrap script.
+
+   Have a look to the tkgl_mod_kgl_mod_arp_overlay.sh : it creates an overlay on the Arp Patterns/Progression directory to allow you to load your own patterns  
+   from the sdcard (check "Arp Patterns" and "Progressions" links at the root directory that will be created after a first boot). 
+
+   A full root access to the system is granted within tkgl_bootstrap, however the file system is mounted read-only for security reasons.
+   I do not recommend to install software to (and/or deeply customize) the internal file system. You will loose everything at the next update.
+   Instead implement your custom app on the sdcard, to ensure isolation with the filesystem, and to preserve your work.
+   It also allows you to return to normal operation of your MPC by simply removing the external sdcard/usb key.
 
 4. Place any binary in the /tkgl_bootstrap/bin
 
 5. Test locally via ssh before running in nominal mode
 
-    ssh root@(your MPC ip addr), then cd to /media(your sdcard name)/tkgl_bootstrap/scripts.
-    You must uncomment some environments variables declaration.
-    You need to comment again after your tests.
-
+    ssh root@(your MPC ip addr), then cd to /media(your sdcard name)/tkgl_bootstrap/scripts and run tkgl_bootstrap.
+    
 6. Reboot your MPC !
 
     ssh root@(your MPC ip addr) reboot
     
-A full root access to the system is granted within tkgl_bootstrap, however the file system is mounted read-only for security reasons.
-I do not recommend to install software to (and/or deeply customize) the internal file system. You will loose everything at the next update.
-Instead implement your custom app on the sdcard, to ensure isolation with the filesystem, and to preserve your work.
-It also allows you to return to normal operation of your MPC by simply removing the external sdcard.
-
+    if your MPC is stuck, remove the sdcard and reboot.  You will find a log in the tkgl_bootstrap/logs.
 
