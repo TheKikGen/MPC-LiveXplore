@@ -26,10 +26,9 @@ How to install :
 
    Copy paste a script module example (for example the mod_telnetd) to create your own. 
    Your module must be then added to the $DOER variable in the tkgl_bootstrap script.
-
-   Have a look to the tkgl_mod_kgl_mod_arp_overlay.sh : it creates an overlay on the Arp Patterns/Progression directory to allow you to load your own patterns  
-   from the sdcard (check "Arp Patterns" and "Progressions" links at the root directory that will be created after a first boot). 
-
+   Have a look to the tkgl_mod_kgl_mod_arp_overlay.sh : it creates an overlay on the Arp Patterns/Progression directory to allow you to load 
+   your own patterns from the sdcard (check "Arp Patterns" and "Progressions" links at the root directory that will be created after a first boot).
+   
    A full root access to the system is granted within tkgl_bootstrap, however the file system is mounted read-only for security reasons.
    I do not recommend to install software to (and/or deeply customize) the internal file system. You will loose everything at the next update.
    Instead implement your custom app on the sdcard, to ensure isolation with the filesystem, and to preserve your work.
