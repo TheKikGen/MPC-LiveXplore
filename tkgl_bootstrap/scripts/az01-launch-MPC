@@ -28,13 +28,9 @@ for LINE in $(lsusb) ; do
 done
 echo "$DEVICE detected"
 
-# clean sshd config on the /etc overlay so we are sure to use the right one
-SSHD_OVCONF=/media/az01-internal/system/etc/overlay/ssh/sshd_config
-[ -f "$SSHD_OVCONF" ] && rm $SSHD_OVCONF
-
 # Mount all disk partitions
 # search for unmounted usb disks
-UNMOUNT_LIST=$(lsblk -o path,SUBSYSTEMS,partuuid,mountpoint| grep 'usb\S*\s*\S*-\S*\s*$' | cut -d' ' -f1)
+UNMOUNT_LIST=$(lsblk -o PATH,SUBSYSTEMS,PARTUUID,MOUNTPOINT| grep 'usb\S*\s*\S*-\S*\s*$' | cut -d' ' -f1)
 if [ "x$UNMOUNT_LIST" != "x" ]
 then
  for DISK_PATH in $UNMOUNT_LIST ; do
@@ -47,8 +43,11 @@ then
  done
 fi
 
+# wait for udevd to process the device creation events for all hardware devices
+udevadm settle
+
 # Search for tkgl_bootstrap script on usb disk
-MOUNT_LIST=$(lsblk -o mountpoint,SUBSYSTEMS,partuuid | grep 'usb\S*\s*\S*-\S*$' | cut -d' ' -f1)
+MOUNT_LIST=$(lsblk -o MOUNTPOINT,SUBSYSTEMS,PARTUUID | grep 'usb\S*\s*\S*-\S*$' | cut -d' ' -f1)
 echo "Mounted usb disks : "$MOUNT_LIST
 if [ "x$MOUNT_LIST" != "x" ]
 then
@@ -56,15 +55,32 @@ then
    TKGL_ROOT=$MOUNT_POINT/.tkgl_bootstrap # note the dot before the name = hidden
    TKGL_SCRIPT=$TKGL_ROOT/scripts
    TKGL_BIN=$TKGL_ROOT/bin
+   TKGL_CONF=$TKGL_ROOT/conf
+   TKGL_LOGS=$TKGL_ROOT/logs
+   TKGL_LOG=$TKGL_LOGS/tkgl_log.txt
    TKGL_BOOTSTRAP=$TKGL_SCRIPT/tkgl_bootstrap
 
-   # Check if the tkgl_bootstrap script is existing and source it
-   # to preserve environment variables, so they can be used.
+   # Check if the tkgl_bootstrap script is existing and run it
 
    if [ -f "$TKGL_BOOTSTRAP" ]
    then
      echo "bootstrap script found : $TKGL_BOOTSTRAP"
-     source "$TKGL_BOOTSTRAP"
+
+     # Create tkgl_path file variables to source on sub scripts
+     export TKGL_PATH_FILE=$TKGL_SCRIPT/tkgl_path
+
+     echo "#!/bin/sh">$TKGL_PATH_FILE
+     echo "DEVICE=\"$DEVICE\"">>$TKGL_PATH_FILE
+     echo "MOUNT_POINT=\"$MOUNT_POINT\"">>$TKGL_PATH_FILE
+     echo "TKGL_ROOT=\"$TKGL_ROOT\"">>$TKGL_PATH_FILE
+     echo "TKGL_SCRIPT=\"$TKGL_SCRIPT\"">>$TKGL_PATH_FILE
+     echo "TKGL_BIN=\"$TKGL_BIN\"">>$TKGL_PATH_FILE
+     echo "TKGL_CONF=\"$TKGL_CONF\"">>$TKGL_PATH_FILE
+     echo "TKGL_LOGS=\"$TKGL_LOGS\"">>$TKGL_PATH_FILE
+     echo "TKGL_LOG=\"$TKGL_LOG\"">>$TKGL_PATH_FILE
+     echo "TKGL_BOOTSTRAP=\"$TKGL_BOOTSTRAP\"">>$TKGL_PATH_FILE
+
+     "$TKGL_BOOTSTRAP"
      break # only the first one
    fi
  done
