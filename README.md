@@ -23,10 +23,11 @@ Very few things have been modified in that mod :
 - permananent activation of ssh at boot (multi-user.target.wants/sshd.service)
 - ssh root empty password authentication in sshd_config
 - bootstrap to launch a custom scripts on a sdcard before starting MPC
-- full option busybox binary in usr/bin including telnet and ftp
 
 Remove the "ssh" trailer and copy the img to the root of an usb key.
 A non-empty usb key will work contrary to what is stated in the documentation.
+
+Check here to launch your own script : https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap
 
 [SSH activation Wiki page](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
 
