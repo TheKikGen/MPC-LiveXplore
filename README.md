@@ -27,9 +27,8 @@ Very few things have been modified in that mod :
 Remove the "ssh" trailer and copy the img to the root of an usb key.
 A non-empty usb key will work contrary to what is stated in the documentation.
 
-Check here to launch your own script : https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap
-
-[SSH activation Wiki page](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
+Check here to launch your own script : [tkgl_bootstrap](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap)
+And here for more details about [SSH activation](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
 
 
 ## MPC V2.9.0 IS HERE AND THE DRUMSYNTH PLUGIN IS IN ! (2020-11-25)
