@@ -30,7 +30,7 @@ echo "$DEVICE detected"
 
 # Mount all disk partitions
 # search for unmounted usb disks
-UNMOUNT_LIST=$(lsblk -o PATH,SUBSYSTEMS,PARTUUID,MOUNTPOINT| grep 'usb\S*\s*\S*-\S*\s*$' | cut -d' ' -f1)
+UNMOUNT_LIST=$(lsblk -o PATH,SUBSYSTEMS,TYPE,MOUNTPOINT| grep 'usb.*part\s*$' | cut -d' ' -f1)
 if [ "x$UNMOUNT_LIST" != "x" ]
 then
  for DISK_PATH in $UNMOUNT_LIST ; do
@@ -47,7 +47,7 @@ fi
 udevadm settle
 
 # Search for tkgl_bootstrap script on usb disk
-MOUNT_LIST=$(lsblk -o MOUNTPOINT,SUBSYSTEMS,PARTUUID | grep 'usb\S*\s*\S*-\S*$' | cut -d' ' -f1)
+MOUNT_LIST=$(lsblk -o MOUNTPOINT,SUBSYSTEMS | grep '^\/.*usb' | cut -d' ' -f1)
 echo "Mounted usb disks : "$MOUNT_LIST
 if [ "x$MOUNT_LIST" != "x" ]
 then
