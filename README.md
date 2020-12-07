@@ -24,7 +24,7 @@ Very few things have been modified in that mod :
 - ssh root empty password authentication in sshd_config
 - bootstrap to launch a custom scripts on a sdcard before starting MPC
 
-Remove the "ssh" trailer and copy the img to the root of an usb key.
+Remove any trailer after ".img" and copy the img to the root of an usb key.
 A non-empty usb key will work contrary to what is stated in the documentation.
 
 Check here to launch your own script : [tkgl_bootstrap](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap) 
