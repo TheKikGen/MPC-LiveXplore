@@ -32,14 +32,19 @@ You can even consider making a dedicated DIY usb controller to add missing addit
 
 Copy the tkgl_anyctrl.so library on a usb stick of a smartcard.  
 Create a shell script named "tkgl_anyctrl_cxscript.sh" to initiate midi connections, and place it in the same directory than the library. 
-The script must contain at a minimum the following command to enable the standard MPC controller :
+The script must contain at a minimum the following command to enable the standard MPC/Force controller :
   
-	  # MPC controller 
+    # MPC controller 
     aconnect 20:1 135:0
 
-You can add then any connection you may need after that line, for example :
+or for the Force :
 
-	  # MPC controller 
+    # Akai Pro Force
+    aconnect 24:1 135:0
+
+You can then add any connection you may need after that line, for example :
+    
+    # MPC controller 
     aconnect 20:1 135:0
     # Nanokey studio 
     aconnect 24:0 135:0
