@@ -19,6 +19,9 @@ __ __| |           |  /_) |     ___|             |           |
 	Preload syntax is :
 	LD_PRELOAD=/full/path/to/tkgl_anyctrl.so /usr/bin/MPC
 
+	Compile with :
+	arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC
+
   -----------------------------------------------------------------------------
 
   Disclaimer.
@@ -77,8 +80,9 @@ typedef long (*orig_snd_midi_event_decode_type)	(	snd_midi_event_t * 	dev,unsign
 orig_snd_midi_event_decode_type orig_snd_midi_event_decode;
 
 void tkgl_banner() {
-	printf( "-----------------------------------\n");
+	printf( "------------------------------------\n");
 	printf ("TKGL_ANYCTRL V1.0 by the KikGen Labs\n");
+	printf( "------------------------------------\n");
 }
 
 int snd_rawmidi_open(snd_rawmidi_t **inputp, snd_rawmidi_t **outputp, const char *name, int mode)
@@ -119,7 +123,7 @@ ssize_t snd_rawmidi_write(snd_rawmidi_t * 	rawmidi,const void * 	buffer,size_t 	
 			system(connect_cmd);
 			connect_ctrl = 1;
 			printf ("MPC controller port connected to virtual client.\n");
-			printf( "-----------------------------------\n");
+			printf( "------------------------------------\n");
 	}
 
 	return orig_snd_rawmidi_write(rawmidi,buffer,size);
