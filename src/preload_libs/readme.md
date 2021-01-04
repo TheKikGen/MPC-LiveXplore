@@ -42,6 +42,8 @@ or for the Force :
     # Akai Pro Force
     aconnect 24:1 135:0
 
+The "aconnect -l" command allows you to find easily the "Private" port adress.
+
 You can then add any connection you may need after that line, for example :
     
     # MPC controller 
