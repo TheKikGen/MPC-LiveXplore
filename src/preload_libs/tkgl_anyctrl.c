@@ -3,26 +3,29 @@ __ __| |           |  /_) |     ___|             |           |
   |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
   |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
  _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
-  -----------------------------------------------------------------------------
-	TKGL_ANYCTRL MPC LD_PRELOAD library.
-	This "low-level" library used allows you to set up any controller as a control
-	surface in addition to standard hardware to drive the standalone MPC app.
-	By a simple midi message mapping in your own controller, 	it is possible to
-	simulate "buttons" press, and get more shortut like those of the MPC X
-	(track mute, pad mixer, solo, mute, etc...) or to add more pads.
+-----------------------------------------------------------------------------
+TKGL_ANYCTRL MPC LD_PRELOAD library.
+This "low-level" library allows you to set up any controller as a control
+surface in addition to standard hardware to drive the standalone MPC app.
+By a simple midi message mapping in your own controller, 	it is possible to
+simulate "buttons" press, and get more shortut like those of the MPC X
+(track mute, pad mixer, solo, mute, etc...) or to add more pads.
 
-  You must create a connect script named "tkgl_anyctrl_cxscript.sh" and place
-	it in the same directory than the library. The script must contain at a minimum
-	the	following command to enable standard MPC controller :
-	  aconnect 20:1 135:0
-	You can add any connection you may need after that line.
-	Preload syntax is :
+You must create a connect script named "tkgl_anyctrl_cxscript.sh" and place
+it in the same directory than the library. The script must contain at a minimum
+the following command to enable standard MPC controller :
+
+	aconnect 20:1 135:0
+
+You can add any connection you may need after that line.
+
+Preload syntax is :
 	LD_PRELOAD=/full/path/to/tkgl_anyctrl.so /usr/bin/MPC
 
-	Compile with :
+Compile with :
 	arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC
 
-  -----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 
   Disclaimer.
   This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
