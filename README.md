@@ -25,7 +25,7 @@ patched images are available :
 [Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)
 
 Very few things have been modified in that mod :
-- empty password for root. Recent version of Force Firmaware added a password to root acount.
+- empty password for root. Recent version of Force Firmware added a password to root acount.
 - permananent activation of ssh at boot (multi-user.target.wants/sshd.service)
 - ssh root empty password authentication in sshd_config
 - bootstrap to launch a custom scripts on a sdcard before starting MPC
