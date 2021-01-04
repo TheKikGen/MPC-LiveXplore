@@ -43,7 +43,9 @@ You can add then any connection you may need after that line, for example :
     aconnect 20:1 135:0
     # Nanokey studio 
     aconnect 24:0 135:0
-	
+
+I strongly recommend to disable all MPC and virtual input/output "135" midi ports in the MPC midi settings to avoid midi feedback when in a midi track.
+
 Stop MPC application with "systemctl stop inmusic-mpc", and use the following preload syntax :
 
     LD_PRELOAD=/(path to the tkgl library)/tkgl_anyctrl.so /usr/bin/MPC
