@@ -11,6 +11,8 @@
 
 This "low-level" library allows you to set up any controller as a control surface to drive the MPC standalone application. 
 
+NB: you need ssh access to your MPC.
+
 When pressing buttons  (START,STOP, MAIN, SHIFT, qlinks, pads, etc...), the hardware MPC/Force surface controller sends a corresponding note on / note off or a cc  midi msg.
 By a simple midi message mapping in your own controller, it is possible now to simulate "buttons" press, and get more shortut like those of the MPC X 
 (track mute, pad mixer, solo, mute, etc...) or to add more pads or qlinks. 
@@ -50,3 +52,4 @@ Stop MPC application with "systemctl stop inmusic-mpc", and use the following pr
 
 	  arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC 
 
+You can also use the "tkgl_anyctrl" module of the tkgl_bootstrap.
