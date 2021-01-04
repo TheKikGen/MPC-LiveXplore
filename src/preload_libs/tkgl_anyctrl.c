@@ -7,9 +7,9 @@ __ __| |           |  /_) |     ___|             |           |
 TKGL_ANYCTRL MPC LD_PRELOAD library.
 This "low-level" library allows you to set up any controller as a control
 surface in addition to standard hardware to drive the standalone MPC app.
-By a simple midi message mapping in your own controller, 	it is possible to
+By a simple midi message mapping in your own controller, it is possible to
 simulate "buttons" press, and get more shortut like those of the MPC X
-(track mute, pad mixer, solo, mute, etc...) or to add more pads.
+(track mute, pad mixer, solo, mute, etc...) or to add more pads or qlinks.
 
 You must create a connect script named "tkgl_anyctrl_cxscript.sh" and place
 it in the same directory than the library. The script must contain at a minimum
