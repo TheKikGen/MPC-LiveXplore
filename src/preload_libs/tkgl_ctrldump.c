@@ -9,10 +9,10 @@ This "low-level" library allows you todump all in/ou message from the MPC privat
 and public port of the Akai controller.
 
 Preload syntax is :
-	LD_PRELOAD=/full/path/to/tkgl_anyctrl.so /usr/bin/MPC
+	LD_PRELOAD=/full/path/to/tkgl_ctrldump.so /usr/bin/MPC
 
 Compile with :
-	arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC
+	arm-linux-gnueabihf-gcc tkgl_ctrldump.c -o tkgl_ctrldump.so -shared -fPIC
 
 -----------------------------------------------------------------------------
 
@@ -79,9 +79,9 @@ static void tkgl_init()
 
 	sprintf(mpc_private_port,"hw:%c,0,1",mpc_cardid);
 	sprintf(mpc_public_port,"hw:%c,0,0",mpc_cardid);
-	fprintf(stdout,"(tkgl_anyctrl) MPC card id hw:%c found\n",mpc_cardid);
-	fprintf(stdout,"(tkgl_anyctrl) MPC Private port is %s\n",mpc_private_port);
-	fprintf(stdout,"(tkgl_anyctrl) MPC Public port is %s\n",mpc_public_port);
+	fprintf(stdout,"(tkgl_ctrldump) MPC card id hw:%c found\n",mpc_cardid);
+	fprintf(stdout,"(tkgl_ctrldump) MPC Private port is %s\n",mpc_private_port);
+	fprintf(stdout,"(tkgl_ctrldump) MPC Public port is %s\n",mpc_public_port);
 
 }
 
@@ -150,7 +150,7 @@ int snd_rawmidi_open(snd_rawmidi_t **inputp, snd_rawmidi_t **outputp, const char
 		tkgl_init();
 	}
 
-	fprintf(stdout,"(tkgl_anyctrl) snd_rawmidi_open name %s mode %d\n",name,mode);
+	fprintf(stdout,"(tkgl_ctrldump) snd_rawmidi_open name %s mode %d\n",name,mode);
 
 	// do open as usual
 	return orig_snd_rawmidi_open(inputp, outputp, name, mode);
