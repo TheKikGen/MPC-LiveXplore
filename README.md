@@ -13,7 +13,7 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 This is a hack of the MPC standalone software, using LD_PRELOAD and a special library launched with the MPC binary allowing the use of any usb midi controller as a secondary control surface. It is thus possible to extend available buttons, pads or qlinks like those of the MPC X or MPC One (track mute, pad mixer, solo, mute, etc...).   
 Check the github repo here :https://github.com/TheKikGen/MPC-LiveXplore/tree/master/src/preload_libs  
 
-[![tkglctrl video](https://img.youtube.com/vi/305kxDg3UO4/0.jpg)](https://www.youtube.com/watch?v=305kxDg3UO4)
+[![tkglctrl video](https://img.youtube.com/vi/PQ-h3_DM6EI/0.jpg)](https://www.youtube.com/watch?v=PQ-h3_DM6EI)
 
 ## IMG WITH SSH ACCESS for MPC LIVE AND FORCE (2020-11-25)
 
