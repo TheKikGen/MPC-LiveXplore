@@ -88,7 +88,7 @@ You can also use the "tkgl_anyctrl" module of the tkgl_bootstrap (under construc
 
 ### TKGL_CTRLDUMP
 
-This "low-level" library allows you to spy the traffic between the MPC application ad the Akai controller.
+This "low-level" library allows you to spy the traffic between the MPC application and the Akai controller.
 
 ```
 # LD_PRELOAD=/media/tkgl/mpcroot/root/preload_libs/tkgl_ctrldump.so /usr/bin/MPC
