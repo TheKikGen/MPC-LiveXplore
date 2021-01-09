@@ -30,35 +30,48 @@ You can even consider making a dedicated DIY usb controller to add missing addit
 
 #### Quick setup
 
-Copy the tkgl_anyctrl.so library on a usb stick of a smartcard.  
-Create a shell script named "tkgl_anyctrl_cxscript.sh" to initiate midi connections, and place it in the same directory than the library. 
-The script must contain at a minimum the following command to enable the standard MPC/Force controller :
-  
-    # MPC controller 
-    aconnect 20:1 135:0
+Copy the tkgl_anyctrl.so library on a usb stick of a smartcard.
+The "ANYCTRL_NAME" can contains a string / substring matching the name of the midi controller you want to use to simulate a MPC controller.   
+To avoid crashes due to infinite loops, that controller will be disabled from the MPC application point of view, so you will not see it anymore in midi devices. 
+If that variable is not defined, the application will start as usual, but will still use virtual ports in place of hardware ports.
+You can retrieve the name of your midi controller with a "aconnect -l | grep client" command.
+If you do this in an ssh session manually, don't forget to stop the MPC application with a "systemctl stop inmusic-mpc" command.
 
-or for the Force :
+Example (after a fresh boot) : 
 
-    # Akai Pro Force
-    aconnect 24:1 135:0
+	# systemctl stop inmusic-mpc"
 
-The "aconnect -l" command allows you to find easily the "Private" port adress.
+	# aconnect -l | grep client
+	client 0: 'System' [type=kernel]
+	client 20: 'MPC Live Controller' [type=kernel,card=1]
+	client 24: 'KIKPAD' [type=kernel,card=2]
+	client 130: 'Virtual MIDI Output 1 Input' [type=user,pid=265]
+	client 131: 'Virtual MIDI Output 2 Input' [type=user,pid=265]
+	client 132: 'Virtual MIDI Input 1 Output' [type=user,pid=265]
+	client 133: 'Virtual MIDI Input 2 Output' [type=user,pid=265]
+	
+	# export ANYCTRL_NAME="KIKPAD";LD_PRELOAD=/media/tkgl/mpcroot/root/preload_libs/tkgl_anyctrl.so /usr/bin/MPC
+	MPC 2.9.0
+	------------------------------------
+	TKGL_ANYCTRL V1.0 by the KikGen Labs
+	------------------------------------
+	(tkgl_anyctrl) MPC card id hw:1 found
+	(tkgl_anyctrl) MPC Private port is hw:1,0,1
+	(tkgl_anyctrl) MPC Public port is hw:1,0,0
+	(tkgl_anyctrl) First virtual seq client available address is 135
+	(tkgl_anyctrl) KIKPAD connect port is 24:0
+	(tkgl_anyctrl) Port creation was already disabled for : KIKPAD
+	**** Audio 44100Hz; 2-in; 6-out; 128sample buffer
+	**** Warning: inefficient input path: hardware=2 filter=4
+	**** Warning: inefficient output path: hardware=6 filter=8
+	ButtonStates reply from firmware: {0,0,0,0}
+	(tkgl_anyctrl) Port creation disabled for : Client-136 Virtual RawMIDI
+	(tkgl_anyctrl) Port creation disabled for : Client-137 Virtual RawMIDI
+	(tkgl_anyctrl) Port creation disabled for : Client-135 Virtual RawMIDI
 
-You can then add any connection you may need after that line, for example :
-    
-    # MPC controller 
-    aconnect 20:1 135:0
-    # Nanokey studio 
-    aconnect 24:0 135:0
 
-I strongly recommend to disable all MPC and virtual input/output "135" midi ports in the MPC midi settings to avoid midi feedback when in a midi track.
+#### Make
 
-Stop MPC application with "systemctl stop inmusic-mpc", and use the following preload syntax :
+You need to setup a 2.30 glibc to incompatibility issues and undefined symbols when using LD_PRELOAD.  The best option is to build  chroot system dedicated for that.   Usually you will cross compile with "arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC -ldl" 
 
-    LD_PRELOAD=/(path to the tkgl library)/tkgl_anyctrl.so /usr/bin/MPC
-
-#### Compile with :
-
-	  arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC 
-
-You can also use the "tkgl_anyctrl" module of the tkgl_bootstrap.
+You can also use the "tkgl_anyctrl" module of the tkgl_bootstrap (under construction).
