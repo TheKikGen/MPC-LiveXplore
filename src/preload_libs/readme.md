@@ -7,7 +7,7 @@
 # MPC LD_PRELOAD libraries
 
 
-###	TKGL_ANYCTRL MPC LD_PRELOAD library.
+###	TKGL_ANYCTRL
 
 This "low-level" library allows you to set up any controller as a control surface to drive the MPC standalone application. 
 
