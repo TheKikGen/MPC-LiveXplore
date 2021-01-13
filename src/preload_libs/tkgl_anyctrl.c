@@ -11,14 +11,6 @@ By a simple midi message mapping in your own controller, it is possible to
 simulate "buttons" press, and get more shortut like those of the MPC X
 (track mute, pad mixer, solo, mute, etc...) or to add more pads or qlinks.
 
-You must create a connect script named "tkgl_anyctrl_cxscript.sh" and place
-it in the same directory than the library. The script must contain at a minimum
-the following command to enable standard MPC controller :
-
-	aconnect 20:1 135:0
-
-You can add any connection you may need after that line.
-
 Preload syntax is :
 	LD_PRELOAD=/full/path/to/tkgl_anyctrl.so /usr/bin/MPC
 
@@ -59,242 +51,501 @@ Compile with :
 #include <alsa/asoundlib.h>
 #include <dlfcn.h>
 #include <libgen.h>
+#include <regex.h>
 
-// connect script file name. place it in the same directory than the lib
-#define CONNECT_SCRIPT "tkgl_anyctrl_cxscript.sh"
+// MPC Controller names
+#define CTRL_FORCE "Akai Pro Force"
+#define CTRL_MPC_X "MPC X Controller"
+#define CTRL_MPC_LIVE "MPC Live Controller"
+#define CTRL_MPC_ALL ".*(MPC.*Controller|Akai Pro Force).*"
+
 
 // Function prototypes
 
 // Globals
-static int mpc_cardid = -1;
-static char mpc_private_port[12];
-static char mpc_public_port[12];
-static snd_rawmidi_t *tkgl_inputp ;
-static snd_rawmidi_t *tkgl_outputp ;
-static int first_seqvirtual_addr=-1;
-static int seqvirtual_addr_index=-1;
-static int anyctrl_seqport=-1;
 
+// Internal MPC product id
+enum MPCIds {
+    MPC_X,MPC_LIVE,MPC_FORCE,MPC_ONE,MPC_LIVE_MK2,_END_MPCID
+};
+
+const uint8_t MPCSysexId[] = {0x3a,0x3b,0x40,0x46,0x47};
+const char * MPCProductString[] = {
+	"MPC X",
+	"MPC Live",
+	"Force",
+	"MPC One",
+	"MPC Live Mk II"
+};
+
+// Systex patterns. 0xFF means any value
+static const char MPCToCTLSysex[] = {0xF0,0x47, 0x7F,0XFF};
+static const char CTLIdentitySysex[] = {0xF0,0x7E,0x00,0x06,0x02,0x47,0XFF};
+static uint8_t MPCId = 0;
+
+// MPC alsa informations
+static int  mpc_midi_card = -1;
+static int  mpc_seq_client = -1;
+static char mpc_midi_private_alsa_name[20];
+static char mpc_midi_public_alsa_name[20];
+
+// Midi controller seq client
+static int seqanyctrl_client=-1;
+
+// Virtual rawmidi pointers
+static snd_rawmidi_t *rawvirt_inpriv  = NULL;
+static snd_rawmidi_t *rawvirt_outpriv = NULL ;
+static snd_rawmidi_t *rawvirt_outpub  = NULL ;
+
+// Sequencers virtual client addresses
+static int seqvirt_client_inpriv  = -1;
+static int seqvirt_client_outpriv = -1;
+static int seqvirt_client_outpub  = -1;
 
 // Alsa API
 static typeof(&snd_rawmidi_open) orig_snd_rawmidi_open;
+static typeof(&snd_rawmidi_read) orig_snd_rawmidi_read;
 static typeof(&snd_rawmidi_write) orig_snd_rawmidi_write;
 static typeof(&snd_seq_create_simple_port) orig_snd_seq_create_simple_port;
 static typeof(&snd_midi_event_decode) orig_snd_midi_event_decode;
 
-
-// Get a one line positive int value from a system command
-static int getcmd_int(char* cmd)
+///////////////////////////////////////////////////////////////////////////////
+// Match string against a regular expression
+///////////////////////////////////////////////////////////////////////////////
+int match(const char *string, char *pattern)
 {
-    FILE *fp;
-    char result[128];
+    int    status;
+    regex_t    re;
 
-    // Open the command for reading
-	fflush(0);
-	fp = popen(cmd, "r");
+    if (regcomp(&re, pattern, REG_EXTENDED|REG_NOSUB) != 0) {
+        return(0);      /* Report error. */
+    }
+    status = regexec(&re, string, (size_t) 0, NULL, 0);
+    regfree(&re);
+    if (status != 0) {
+        return(0);      /* Report error. */
+    }
+    return(1);
+}
 
-	if (fp == NULL) {
-	  fprintf(stderr,"**** Error : failed to run command %s\n",cmd );
-	  exit(1);
+///////////////////////////////////////////////////////////////////////////////
+// Get an ALSA sequencer client containing a name
+///////////////////////////////////////////////////////////////////////////////
+int GetSeqClientFromPortName(const char * name) {
+
+	if ( name == NULL) return -1;
+	char port_name[128];
+
+	snd_seq_t *seq;
+	if (snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
+		fprintf(stderr,"(tkgl_anyctrl) impossible to open default seq\n");
+		return -1;
 	}
 
-	while ( fgets(result, sizeof(result), fp) ) ;
+	snd_seq_client_info_t *cinfo;
+	snd_seq_port_info_t *pinfo;
 
-	pclose(fp);
+	snd_seq_client_info_alloca(&cinfo);
+	snd_seq_port_info_alloca(&pinfo);
+	snd_seq_client_info_set_client(cinfo, -1);
+	while (snd_seq_query_next_client(seq, cinfo) >= 0) {
+		/* reset query info */
+		snd_seq_port_info_set_client(pinfo, snd_seq_client_info_get_client(cinfo));
+		snd_seq_port_info_set_port(pinfo, -1);
+		while (snd_seq_query_next_port(seq, pinfo) >= 0) {
+			sprintf(port_name,"%s %s",snd_seq_client_info_get_name(cinfo),snd_seq_port_info_get_name(pinfo));
+			if (strstr(port_name,name)) {
+				snd_seq_close(seq);
+				return snd_seq_client_info_get_client(cinfo) ;
+			}
+		}
+	}
 
-	// Read the last line of output
-    char * endPtr;
-    long value = strtol( result, &endPtr, 10 );
-
-    if ( endPtr == result ) return -1 ;
-
-	return value;
+	snd_seq_close(seq);
+	return  -1;
 }
 
-// Get Private and public card #
-// MPC Alsa Card # can change, depending on the number of controller connected
-// amidi system call is the "lazy" but simple way to do it
-// Do not remove unset LD_PRELOAD to avoid recursive calls !
-static int MPC_get_cardid( )
-{
-	return getcmd_int("unset LD_PRELOAD ; amidi -l | grep Private | cut -d' ' -f3 | cut -d':' -f2");
+///////////////////////////////////////////////////////////////////////////////
+// Get the last ALSA sequencer client
+///////////////////////////////////////////////////////////////////////////////
+int GetLastSeqClient() {
+
+	int r = -1;
+
+	snd_seq_t *seq;
+	if (snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
+		fprintf(stderr,"(tkgl_anyctrl) impossible to open default seq\n");
+		return -1;
+	}
+
+	snd_seq_client_info_t *cinfo;
+	snd_seq_port_info_t *pinfo;
+
+	snd_seq_client_info_alloca(&cinfo);
+	snd_seq_port_info_alloca(&pinfo);
+	snd_seq_client_info_set_client(cinfo, -1);
+	while (snd_seq_query_next_client(seq, cinfo) >= 0) {
+		/* reset query info */
+		snd_seq_port_info_set_client(pinfo, snd_seq_client_info_get_client(cinfo));
+		snd_seq_port_info_set_port(pinfo, -1);
+		while (snd_seq_query_next_port(seq, pinfo) >= 0) {
+				r = snd_seq_client_info_get_client(cinfo) ;
+		}
+	}
+
+	snd_seq_close(seq);
+	return  r;
 }
 
-// Get Last seq client number to guess virtual ports
-// Do not remove unset LD_PRELOAD to avoid recursive calls !
-static int MPC_get_last_seqclient( )
-{
-	return getcmd_int("unset LD_PRELOAD ; aconnect -l | grep 'client .*:.*' | cut -d':' -f1 | cut -d' ' -f2");
+///////////////////////////////////////////////////////////////////////////////
+// Get an ALSA card from a matching regular expression pattern
+///////////////////////////////////////////////////////////////////////////////
+int GetCardFromShortName(char *pattern) {
+   int card = -1;
+   char* shortname = NULL;
+
+   if ( snd_card_next(&card) < 0) return -1;
+   while (card >= 0) {
+   	  if ( snd_card_get_name(card, &shortname) == 0 && match(shortname,pattern) ) return card;
+   	  if ( snd_card_next(&card) < 0) break;
+   }
+   return -1;
 }
 
-// Get client port by name
-// Do not remove unset LD_PRELOAD to avoid recursive calls !
-static int MPC_get_seqport(char *name)
-{
-	char cmd[128];
+///////////////////////////////////////////////////////////////////////////////
+// ALSA aconnect utility API equivalent
+///////////////////////////////////////////////////////////////////////////////
+int aconnect(int src_client, int src_port, int dest_client, int dest_port) {
+	int queue = 0, convert_time = 0, convert_real = 0, exclusive = 0;
+	snd_seq_port_subscribe_t *subs;
+	snd_seq_addr_t sender, dest;
+	int client;
+	char addr[10];
 
-	sprintf(cmd,"unset LD_PRELOAD ; aconnect -l | grep \"client .*: '%s' .*card=.*\" | cut -d' ' -f2 | cut -d':' -f1",name);
-	return getcmd_int(cmd);
+	snd_seq_t *seq;
+	if (snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
+		fprintf(stderr,"(tkgl_anyctrl) impossible to open default seq\n");
+		return -1;
+	}
+
+	if ((client = snd_seq_client_id(seq)) < 0) {
+		fprintf(stderr,"(tkgl_anyctrl) impossible to get seq client id\n");
+		snd_seq_close(seq);
+		return - 1;
+	}
+
+	/* set client info */
+	if (snd_seq_set_client_name(seq, "ALSA Connector") < 0) {
+		fprintf(stderr,"(tkgl_anyctrl) set client name failed\n");
+		snd_seq_close(seq);
+		return -1;
+	}
+
+	/* set subscription */
+	sprintf(addr,"%d:%d",src_client,src_port);
+	if (snd_seq_parse_address(seq, &sender, addr) < 0) {
+		snd_seq_close(seq);
+		fprintf(stderr,"(tkgl_anyctrl) invalid source address %s\n", addr);
+		return -1;
+	}
+
+	sprintf(addr,"%d:%d",dest_client,dest_port);
+	if (snd_seq_parse_address(seq, &dest, addr) < 0) {
+		snd_seq_close(seq);
+		fprintf(stderr,"(tkgl_anyctrl) invalid destination address %s\n", addr);
+		return -1;
+	}
+
+	snd_seq_port_subscribe_alloca(&subs);
+	snd_seq_port_subscribe_set_sender(subs, &sender);
+	snd_seq_port_subscribe_set_dest(subs, &dest);
+	snd_seq_port_subscribe_set_queue(subs, queue);
+	snd_seq_port_subscribe_set_exclusive(subs, exclusive);
+	snd_seq_port_subscribe_set_time_update(subs, convert_time);
+	snd_seq_port_subscribe_set_time_real(subs, convert_real);
+
+	fprintf(stdout,"(tkgl_anyctrl) connection %d:%d to %d:%d",src_client,src_port,dest_client,dest_port);
+	if (snd_seq_get_port_subscription(seq, subs) == 0) {
+		snd_seq_close(seq);
+		fprintf(stdout," already subscribed\n");
+		return 0;
+	}
+	if (snd_seq_subscribe_port(seq, subs) < 0) {
+		snd_seq_close(seq);
+		fprintf(stderr," failed !\n");
+		return 1;
+	}
+
+	fprintf(stdout," successfull\n");
+
+	snd_seq_close(seq);
 }
 
-// Initialize almost everything
+
+///////////////////////////////////////////////////////////////////////////////
+// Get MPC hardware name from sysex id
+///////////////////////////////////////////////////////////////////////////////
+
+static int GetIndexOfMPCId(uint8_t id){
+	for (int i = 0 ; i < sizeof(MPCSysexId) ; i++ )
+		if ( MPCSysexId[i] == id ) return i;
+	return -1;
+}
+
+const char * GetHwNameFromMPCId(uint8_t id){
+	int i = GetIndexOfMPCId(id);
+	if ( i >= 0) return MPCProductString[i];
+	else return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Setup tkgl anyctrl
+///////////////////////////////////////////////////////////////////////////////
 static void tkgl_init()
 {
 	fprintf(stdout,"------------------------------------\n");
 	fprintf (stdout,"TKGL_ANYCTRL V1.0 by the KikGen Labs\n");
 	fprintf(stdout,"------------------------------------\n");
 
+	// Alsa hooks
+	orig_snd_rawmidi_open = dlsym(RTLD_NEXT, "snd_rawmidi_open");
+	orig_snd_rawmidi_read = dlsym(RTLD_NEXT,"snd_rawmidi_read");
+	orig_snd_rawmidi_write = dlsym(RTLD_NEXT, "snd_rawmidi_write");
+	orig_snd_seq_create_simple_port = dlsym(RTLD_NEXT, "snd_seq_create_simple_port");
+	orig_snd_midi_event_decode = dlsym(RTLD_NEXT, "snd_midi_event_decode");
+
 	// Initialize card id for public and private
-	if ( (mpc_cardid = MPC_get_cardid()) < 0 ) {
-			fprintf(stderr,"**** Error : MPC card not found\n");
+	mpc_midi_card = GetCardFromShortName(CTRL_MPC_ALL);
+	if ( mpc_midi_card < 0 ) {
+			fprintf(stderr,"(tkgl_anyctrl) **** Error : MPC card not found\n");
 			exit(1);
 	}
 
-	sprintf(mpc_private_port,"hw:%d,0,1",mpc_cardid);
-	sprintf(mpc_public_port,"hw:%d,0,0",mpc_cardid);
-	fprintf(stdout,"(tkgl_anyctrl) MPC card id hw:%d found\n",mpc_cardid);
-	fprintf(stdout,"(tkgl_anyctrl) MPC Private port is %s\n",mpc_private_port);
-	fprintf(stdout,"(tkgl_anyctrl) MPC Public port is %s\n",mpc_public_port);
-
-	if ( (first_seqvirtual_addr = MPC_get_last_seqclient()) < 0 ) {
-			fprintf(stderr,"**** Error : Last seq client not found\n");
-			exit(1);
+	// Get MPC seq
+	// Public is port 0, Private is port 1
+	mpc_seq_client = GetSeqClientFromPortName("Private");
+	if ( mpc_seq_client  < 0 ) {
+		fprintf(stderr,"(tkgl_anyctrl) **** Error : MPC seq client not found\n");
+		exit(1);
 	}
-	seqvirtual_addr_index = first_seqvirtual_addr ;
-	first_seqvirtual_addr++;
 
-	fprintf(stdout,"(tkgl_anyctrl) First virtual seq client available address is %d\n",first_seqvirtual_addr);
+	sprintf(mpc_midi_private_alsa_name,"hw:%d,0,1",mpc_midi_card);
+	sprintf(mpc_midi_public_alsa_name,"hw:%d,0,0",mpc_midi_card);
+	fprintf(stdout,"(tkgl_anyctrl) MPC card id hw:%d found\n",mpc_midi_card);
+	fprintf(stdout,"(tkgl_anyctrl) MPC Private port is %s\n",mpc_midi_private_alsa_name);
+	fprintf(stdout,"(tkgl_anyctrl) MPC Public port is %s\n",mpc_midi_public_alsa_name);
+	fprintf(stdout,"(tkgl_anyctrl) MPC seq client is %d\n",mpc_seq_client);
 
-
-	char * port_name = getenv("ANYCTRL_NAME") ;
+	// Get our controller seq  port client
+	const char * port_name = getenv("ANYCTRL_NAME") ;
 	if ( port_name == NULL) {
 		fprintf(stdout,"(tkgl_anyctrl) ANYCTRL_NAME environment variable not set.\n") ;
 	}
 	else {
 		// Initialize card id for public and private
-		anyctrl_seqport = MPC_get_seqport(port_name);
-		if ( anyctrl_seqport  < 0 ) {
-			fprintf(stderr,"**** Error : %s seq client not found\n",port_name);
+		seqanyctrl_client = GetSeqClientFromPortName(port_name);
+		if ( seqanyctrl_client  < 0 ) {
+			fprintf(stderr,"(tkgl_anyctrl) **** Error : %s seq client not found\n",port_name);
 			exit(1);
 		}
-		fprintf(stdout,"(tkgl_anyctrl) %s connect port is %d:0\n",port_name,anyctrl_seqport);
-		fprintf(stdout,"(tkgl_anyctrl) Port creation was already disabled for : %s\n",port_name);
+		fprintf(stdout,"(tkgl_anyctrl) %s connect port is %d:0\n",port_name,seqanyctrl_client);
+	}
+
+	// Create 3 virtuals ports : Private I/O, Public O
+	// This will trig snd_seq_create_simple_port for the first time outside MPC app
+
+	// Private In
+	if ( orig_snd_rawmidi_open(&rawvirt_inpriv, NULL, "virtual", 2) == 0 ) {
+		seqvirt_client_inpriv = GetLastSeqClient();
+		fprintf(stdout,"(tkgl_anyctrl) Virtual private input port %d created.\n",seqvirt_client_inpriv);
+	}
+
+	// Private Out
+	if ( orig_snd_rawmidi_open(NULL, &rawvirt_outpriv, "virtual", 3) == 0) {
+		seqvirt_client_outpriv = GetLastSeqClient();
+		fprintf(stdout,"(tkgl_anyctrl) Virtual private output port %d created.\n",seqvirt_client_outpriv);
+	}
+
+	// Public Out
+	if ( orig_snd_rawmidi_open(NULL, &rawvirt_outpub,  "virtual", 3) == 0) {
+		seqvirt_client_outpub =  GetLastSeqClient();
+		fprintf(stdout,"(tkgl_anyctrl) Virtual public output port %d created.\n",seqvirt_client_outpub);
+	}
+
+	if ( seqvirt_client_inpriv < 0 || seqvirt_client_outpriv < 0 || seqvirt_client_outpub < 0 ) {
+		fprintf(stderr,"(tkgl_anyctrl) **** Error : impossible to create virtual ports\n");
+		exit(1);
+	}
+
+	// Make connections of our virtuals ports
+
+	// Private MPC controller port 1 to virtual In 0
+	aconnect(	mpc_seq_client, 1, seqvirt_client_inpriv, 0);
+
+	// Virtual out priv 0 to Private MPC controller port 1
+	aconnect(	seqvirt_client_outpriv, 0, mpc_seq_client, 1);
+
+	// Virtual out public to Public MPC controller port 1
+	aconnect(	seqvirt_client_outpub, 0, mpc_seq_client, 0);
+
+	// Connect our controller if used
+	if (seqanyctrl_client >= 0) {
+		// port 0 to virtual In 0,
+		aconnect(	seqanyctrl_client, 0, seqvirt_client_inpriv, 0);
+
+		// Virtual out priv 0 to our controller port 0
+		aconnect(	seqvirt_client_outpriv, 0, seqanyctrl_client, 0);
+
+		// Virtual out public to our controller port 0
+		aconnect(	seqvirt_client_outpub, 0, seqanyctrl_client, 0);
 	}
 
 
 	fflush(stdout);
 }
 
-// API hooks
+////////////////////////////////////////////////////////////////////////////////
+// Clean DUMP of a buffer to screen
+////////////////////////////////////////////////////////////////////////////////
+static void ShowBufferHexDump(const uint8_t* data, uint16_t sz, uint8_t nl)
+{
+    uint8_t b;
+    char asciiBuff[33];
+    uint8_t c=0;
+    for (uint16_t idx = 0 ; idx < sz; idx++) {
+		//		if ( c == 0 && idx > 0) fprintf(stdout,"                        ");
+        b = (*data++);
+  		fprintf(stdout,"%02X ",b);
+        asciiBuff[c++] = ( b >= 0x20 && b< 127? b : '.' ) ;
+        if ( c == nl || idx == sz -1 ) {
+          asciiBuff[c] = 0;
+		  for (  ; c < nl; c++  ) fprintf(stdout,"   ");
+          c = 0;
+          fprintf(stdout," | %s\n", asciiBuff);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// MPC Main hook
+///////////////////////////////////////////////////////////////////////////////
+int __libc_start_main(
+    int (*main)(int, char **, char **),
+    int argc,
+    char **argv,
+    int (*init)(int, char **, char **),
+    void (*fini)(void),
+    void (*rtld_fini)(void),
+    void *stack_end)
+{
+
+    /* Find the real __libc_start_main()... */
+    typeof(&__libc_start_main) orig = dlsym(RTLD_NEXT, "__libc_start_main");
+
+	tkgl_init();
+
+    /* ... and call it with our custom main function */
+    return orig(main, argc, argv, init, fini, rtld_fini, stack_end);
+}
+
+///////////////////// ALSA API HOOKS //////////////////////////////////////////
 
 int snd_rawmidi_open(snd_rawmidi_t **inputp, snd_rawmidi_t **outputp, const char *name, int mode)
 {
 
-	orig_snd_rawmidi_open = dlsym(RTLD_NEXT, "snd_rawmidi_open");
-	static int do_init = 1;
+	fprintf(stdout,"(tkgl_anyctrl) snd_rawmidi_open name %s mode %d\n",name,mode);
 
-	if ( do_init) {
-		do_init = 0 ;
-		tkgl_init();
+	// Substitute the hardware private input port by our input virtual ports
+
+	if ( strcmp(mpc_midi_private_alsa_name,name) == 0   ) {
+
+		// Private In
+		if (inputp) *inputp = rawvirt_inpriv;
+		else if (outputp) *outputp = rawvirt_outpriv ;
+		else return -1;
+		fprintf(stdout,"(tkgl_anyctrl) %s substitution by virtual rawmidi successfull\n",name);
+
+		return 0;
 	}
 
-	//fprintf(stdout,"(tkgl_anyctrl) snd_rawmidi_open name %s mode %d\n",name,mode);
+	else if ( strcmp(mpc_midi_public_alsa_name,name) == 0   ) {
 
-	// Substitute the hardware private input/ouput port by our input virtual port
-	// and connect it to the hardware port again
-	int r = orig_snd_rawmidi_open(inputp, outputp, "virtual", mode);
+		if (outputp) *outputp = rawvirt_outpub;
+		else return -1;
+		fprintf(stdout,"(tkgl_anyctrl) %s substitution by virtual rawmidi successfull\n",name);
 
-	if ( r != 0 ) return r;
-    seqvirtual_addr_index++;
-
-	char cmd[128];
-	// Substitute the hardware private input port by our input virtual port
-	// Do not remove unset LD_PRELOAD to avoid recursive calls !
-
-	if ( strcmp(mpc_private_port,name) == 0   ) {
-		if (inputp) {
-			sprintf(cmd,"unset LD_PRELOAD ; aconnect 20:1 %d:0",seqvirtual_addr_index);
-			system(cmd);
-			// Connect our midi device  port 0 is used.
-			if (anyctrl_seqport >= 0) {
-				sprintf(cmd,"unset LD_PRELOAD ; aconnect %d:0 %d:0",anyctrl_seqport,seqvirtual_addr_index);
-				system(cmd);
-			}
-
-			return 0;
-		}
-
-		if (outputp) {
-			sprintf(cmd,"unset LD_PRELOAD ; aconnect %d:0 20:1",seqvirtual_addr_index);
-			system(cmd);
-			return 0;
-		}
+		return 0;
 	}
 
-	if ( strcmp(mpc_public_port,name) == 0   ) {
-		if (inputp) {
-			sprintf(cmd,"unset LD_PRELOAD ; aconnect 20:0 %d:0",seqvirtual_addr_index);
-			system(cmd);
-			return 0;
-		}
-
-		if (outputp) {
-			sprintf(cmd,"unset LD_PRELOAD ; aconnect %d:0 20:0",seqvirtual_addr_index);
-			system(cmd);
-			return 0;
-		}
-	}
-
-
-	return 0;
-
+	return orig_snd_rawmidi_open(inputp, outputp, name, mode);
 }
+
+ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
+
+	static int pa = 0;
+	ssize_t r = orig_snd_rawmidi_read(rawmidi, buffer, size);
+
+	if ( ! MPCId ) {
+		for ( int i = 0 ; i < r ; i++ ) {
+			if (   ( (uint8_t *)buffer ) [i] == CTLIdentitySysex[pa] || CTLIdentitySysex[pa] == 0xFF ) {
+				pa++;
+				if ( pa == sizeof(CTLIdentitySysex) ) {
+					MPCId = ( (uint8_t *)buffer) [i];
+					fprintf(stdout, "%s detected\n",GetHwNameFromMPCId(MPCId));
+					break;
+				}
+			} else pa = 0;
+		}
+	}
+
+	return r;
+}
+
 
 // ssize_t snd_rawmidi_write(snd_rawmidi_t * 	rawmidi,const void * 	buffer,size_t 	size) {
 
-// 	orig_snd_rawmidi_write = dlsym(RTLD_NEXT, "snd_rawmidi_write");
 
+// 	static int pa = 0;
+// 	uint8_t myBuff[128];
 
-// 	return orig_snd_rawmidi_write(rawmidi,buffer,size);
+// 	for ( int i = 0 ; i < size ; i++ ) {
+// 		myBuff[i] = ( (uint8_t *)buffer )[i] ;
+
+// 		if (   myBuff[i] == MPCToCTLSysex[pa] || MPCToCTLSysex[pa] == 0xFF ) {
+// 			pa++;
+// 			if ( pa == sizeof(MPCToCTLSysex) ) {
+// 				printf("Sysex captured %d\n",myBuff[i]);
+// 				pa = 0 ;
+// 				myBuff[i] = MPCId;
+// 			}
+// 		} else pa = 0;
+// 	}
+
+// 	ShowBufferHexDump(myBuff, size, 16);
+// 	printf(" (write)\n");
+// 	sleep(5);
+// 	return 	orig_snd_rawmidi_write(rawmidi, (void *) myBuff, size);
+
 // }
-
-// // snd_seq --------------------------------------------------------------------
 
 int snd_seq_create_simple_port	(	snd_seq_t * 	seq, const char * 	name, unsigned int 	caps, unsigned int 	type )
 {
-	orig_snd_seq_create_simple_port = dlsym(RTLD_NEXT, "snd_seq_create_simple_port");
 
-
-	// Do not allow port creation for our virtual ports
-	char port_name[128];
-	for ( int i = first_seqvirtual_addr ; i <= seqvirtual_addr_index ; i++  ) {
-		sprintf(port_name,"Client-%d Virtual RawMIDI",i);
-		if ( strcmp(port_name,name) == 0) {
-			printf("(tkgl_anyctrl) Port creation disabled for : %s\n",port_name);
-			return -1;
-		}
+	// Do not allow ports creation for our device or our virtuals ports
+	if ( strstr(name, getenv("ANYCTRL_NAME") ) ) {
+		fprintf(stdout,"(tkgl_anyctrl) Port creation disabled for : %s\n",name);
+		return -1;
 	}
-
-	// Do not allow ports creation for our device
-	if ( strstr(name, getenv("ANYCTRL_NAME") ) ) return -1;
-
-	// Add subscriptions rights to created ports, so we can use aconnect without restrictions
-
-	//printf("snd_seq_create_simple_port %s type %u\n",name,type);
-	// if (caps & SND_SEQ_PORT_CAP_READ) {
-	// 	caps |= SND_SEQ_PORT_CAP_SYNC_READ | SND_SEQ_PORT_CAP_SUBS_READ;
-	// }
-
-	// if (caps & SND_SEQ_PORT_CAP_WRITE) {
-	// 	caps |= SND_SEQ_PORT_CAP_SYNC_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE;
-	// }
+	else if ( match(name,"Client-.* Virtual RawMIDI" )) {
+		fprintf(stdout,"(tkgl_anyctrl) Port creation disabled for : %s\n",name);
+		return -1;
+	}
 
 	return orig_snd_seq_create_simple_port(seq,name,caps,type);
 }
 
 long snd_midi_event_decode	(	snd_midi_event_t * 	dev,unsigned char * 	buf,long 	count, const snd_seq_event_t * 	ev )
 {
-	orig_snd_midi_event_decode = dlsym(RTLD_NEXT, "snd_midi_event_decode");
 
 	// Disable running status. Board effect : disabled for all ports...
 	snd_midi_event_no_status(dev,1);
