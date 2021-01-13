@@ -31,7 +31,7 @@ By a simple midi message mapping in your own controller, it is possible now to s
 	IO  hw:2,0,2  Midi Out
 	IO  hw:2,0,3  Midi Out
 
-The "PRIVATE" adn "PUBLIC"  ports used by the MPC application to send or capture messages from the MPC controller are replaced by a 3 rawmidi virtual seq ports (usually #134-135-136).   These virtual ports are reconnected to the physical port of the controller with an alsa connection, similar to aconnect utility, before the sending of SYSEX controller identification sequences.  These virtual ports can be then used to connect any other controller in addition to the standard hardware.  
+The "PRIVATE" and "PUBLIC"  ports used by the MPC application to send or capture messages from the MPC controller are replaced by a 3 rawmidi virtual seq ports (usually #134-135-136).   These virtual ports are reconnected to the physical port of the controller with an alsa connection, similar to aconnect utility, before the sending of SYSEX controller identification sequences.  These virtual ports can be then used to connect any other controller in addition to the standard hardware.  
 Note that running status are inhibited.
 
 So , now, you can add "buttons" allowing direct access to the different screens of the MPC application, as the MPC X or ONE do.  
