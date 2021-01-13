@@ -6,6 +6,7 @@
 -----------------------------------------------------------------------------
 # MPC LD_PRELOAD libraries
 
+NB : You need SSH access to your MPC to use these libraries.
 
 ### TKGL_ANYCTRL
 
@@ -61,28 +62,52 @@ client 132: 'Virtual MIDI Input 1 Output' [type=user,pid=265]
 client 133: 'Virtual MIDI Input 2 Output' [type=user,pid=265]
 
 # export ANYCTRL_NAME="KIKPAD";LD_PRELOAD=/media/tkgl/mpcroot/root/preload_libs/tkgl_anyctrl.so /usr/bin/MPC
-MPC 2.9.0
 ------------------------------------
 TKGL_ANYCTRL V1.0 by the KikGen Labs
 ------------------------------------
 (tkgl_anyctrl) MPC card id hw:1 found
 (tkgl_anyctrl) MPC Private port is hw:1,0,1
 (tkgl_anyctrl) MPC Public port is hw:1,0,0
-(tkgl_anyctrl) First virtual seq client available address is 135
+(tkgl_anyctrl) MPC seq client is 20
 (tkgl_anyctrl) KIKPAD connect port is 24:0
-(tkgl_anyctrl) Port creation was already disabled for : KIKPAD
+(tkgl_anyctrl) Virtual private input port 134 created.
+(tkgl_anyctrl) Virtual private output port 135 created.
+(tkgl_anyctrl) Virtual public output port 136 created.
+(tkgl_anyctrl) connection 20:1 to 134:0 successfull
+(tkgl_anyctrl) connection 135:0 to 20:1 successfull
+(tkgl_anyctrl) connection 136:0 to 20:0 successfull
+(tkgl_anyctrl) connection 24:0 to 134:0 successfull
+(tkgl_anyctrl) connection 135:0 to 24:0 successfull
+(tkgl_anyctrl) connection 136:0 to 24:0 successfull
+MPC 2.9.0
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : Client-135 Virtual RawMIDI
+(tkgl_anyctrl) Port creation disabled for : Client-136 Virtual RawMIDI
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+(tkgl_anyctrl) Port creation disabled for : Client-134 Virtual RawMIDI
+(tkgl_anyctrl) snd_rawmidi_open name hw:1,0,1 mode 2
+(tkgl_anyctrl) hw:1,0,1 substitution by virtual rawmidi successfull
+(tkgl_anyctrl) snd_rawmidi_open name hw:1,0,1 mode 3
+(tkgl_anyctrl) hw:1,0,1 substitution by virtual rawmidi successfull
+(tkgl_anyctrl) snd_rawmidi_open name hw:1,0,0 mode 3
+(tkgl_anyctrl) hw:1,0,0 substitution by virtual rawmidi successfull
 **** Audio 44100Hz; 2-in; 6-out; 128sample buffer
 **** Warning: inefficient input path: hardware=2 filter=4
 **** Warning: inefficient output path: hardware=6 filter=8
+MPC Live detected
 ButtonStates reply from firmware: {0,0,0,0}
-(tkgl_anyctrl) Port creation disabled for : Client-136 Virtual RawMIDI
-(tkgl_anyctrl) Port creation disabled for : Client-137 Virtual RawMIDI
-(tkgl_anyctrl) Port creation disabled for : Client-135 Virtual RawMIDI
+
 ```
 
 #### Make
 
-You need to setup a 2.30 glibc to incompatibility issues and undefined symbols when using LD_PRELOAD.  The best option is to build  chroot system dedicated for that.   Usually you will cross compile with "arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC -ldl" 
+You need to setup a 2.30 glibc (version used by the MPC app) to avoid incompatibility issues and undefined symbols when using LD_PRELOAD.  The best option is to build  chroot system dedicated for that.   Usually you will cross compile with "arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC -ldl" 
 
 You can also use the "tkgl_anyctrl" module of the tkgl_bootstrap (under construction).
 
