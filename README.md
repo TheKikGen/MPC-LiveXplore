@@ -8,6 +8,12 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
+
+## GLOBAL MIDI MAPPING FOR STANDALONE MPC - HIDDEN FEATURE (2021-01-21)
+
+I recently investigated more deeply around the "Global midi learn" to propose a less specific midi control than I did with the anyctrl.so LD_PRELOAD library. I discovered that the global midi mapping available in the MPC software is also available in standalone mode.   
+Read the how-to [here](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to).
+ 
 ## USE ANY MIDI CONTROLLER AS MPC CONTROL SURFACE (2021-01-04)
 
 This is a hack of the MPC standalone software, using LD_PRELOAD and a special library launched with the MPC binary allowing the use of any usb midi controller as a secondary control surface. It is thus possible to extend available buttons, pads or qlinks like those of the MPC X or MPC One (track mute, pad mixer, solo, mute, etc...).  
