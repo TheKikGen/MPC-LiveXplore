@@ -20,9 +20,7 @@ Check the preload_libs github repo [here](https://github.com/TheKikGen/MPC-LiveX
 If you want to get a remote Linux command line with SSH instead of opening your MPC, 
 patched images are available :
 
-[MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing)
-
-[Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)
+[MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing)      [Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)
 
 Very few things have been modified in that mod :
 - empty password for root. Recent version of Force Firmware added a password to root acount.
