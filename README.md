@@ -66,37 +66,6 @@ I have also seen code areas mentioning new plugins that I think will be present 
 we can therefore deduce that the 4 MPCs will share the same software platform and mainly the same core hardware.
 This is very good news for MPC Live owners as that means updates and new features probably in a next future for all.   
 
-The Force softwaree is very close: it is probably a branch of the MPC one. By the way, the executable runs on a MPC Live...and is also called "MPC". 
-
-The main MCU board (originally designed by Radxa) is strictly the same on the 4 products: only the internal USB peripherals are different (controller, sound card). The MPC One supposed to be "a new" product is in fact a Live/X rebranded !  
-
-The internal MIDI interfaces are named and identified as following, depending on the hardware :  
-
-      USB String name = "MPC X Controller",  USB VID:PID = "09e8:003a"
-      USB String name = "MPC Live Controller", USB VID:PID = "09e8:003b"
-      USB String name = "APC Live USB Device" or "Akai Pro Force", USB VID:PID = "09e8:0040"
-      USB String name = "MPC One MIDI", USB VID:PID = "09e8:0046"
-      USB String name = "MPC Live II", USB VID:PID = "09e8:0047"
-
-Akai (InMusic) will certainly capitalize on the evolutions of its embedded software (it's very expensive to develop), and make the software of its products converge to a 3.x ... Personally, I speculate on a Live MPC MKII based on the same hardware but using the good recipes of the 4 previous MPC/Force (drums, CV gates, square format ...) + a significant evolution of the software: addition of plugin, Clip mode improved like what is done on the force, improved midi, etc. ...  
-
-I also noticed that Akai was starting to lock its firmware more seriously...you can probably expect features to be enabled depending on the model you acquired...ex: X: everything. Live MK 2: almost everything, MK1/One nothing more...  Right now, it is clearly stated in the latest MPC (2.72) user manual that the MPC ONE does not have the standalone Ableton controller, even though the firmware is exactly the same as on the Live.
-
-<img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/85106040_889619251467495_2131203209392291840_n.jpg?_nc_cat=106&_nc_sid=1480c5&_nc_ohc=i9EmeYz5MZMAX8Rq8ff&_nc_ht=scontent-cdt1-1.xx&oh=27e9aad0ca843261a8a4f43d04195f19&oe=5E9C7341" />
-
-We'll see that in 6 months...
-
-All these InMusic (FCC ID Y40) products seem to share the same core hardware :
-      
-      ACV5 MPC X              ACV6 MPC Kitten Mattress      ACV7 MPC Touch
-      ACV8 MPC Live           ACV9 MPC Studio Black         ACVA MPC Studio Live (aka ONE)
-      ADA2 Borris The Turtle  JP07 SC5000 PRIME             JP08 SC5000M PRIME
-      JP12 SC4000 PRIME       JC11 PRIME 4                  JC16 PRIME 2
-      Force (Aka ADA2)        SC4000                        SC5000 PRIME Screen
-      SC5000M PRIME Screen    SC4000 PRIME Screen           PRIME 4 Screen
-      PRIME 2 Screen          ACVB MPC LIVE MKII
-
-
 ## MPC Arp patterns and progressions
 
 You will find all arp patterns and progressions here.
