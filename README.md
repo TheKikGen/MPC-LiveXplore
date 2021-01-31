@@ -74,44 +74,45 @@ and progressions to '/usr/share/Akai/SME0/Progressions'.
 Don't forget to remount the partition read/write with a "mount remount / -o rw,remount" command.
 
 -----------------------------------------------------------------------------------------------------------------------
+
 <ul class="m-0 p-0 list-style-none" data-filterable-for="wiki-pages-filter" data-filterable-type="substring" data-pjax="">
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki">Wiki Home</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki">Wiki Home</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/About-overlays-in-the-MPC-filesystem">About overlays in the MPC filesystem</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/About-overlays-in-the-MPC-filesystem">About overlays in the MPC filesystem</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX">Add 2 new midi ports C D   a quick guide with MIDI OX</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX">Add 2 new midi ports C D   a quick guide with MIDI OX</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force">Enabling SSH on the MPC Live X one Force</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force">Enabling SSH on the MPC Live X one Force</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-serial-console">How to activate the linux serial console</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-serial-console">How to activate the linux serial console</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img">How to extract the 2.6 rootfs img from the update.img</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img">How to extract the 2.6 rootfs img from the update.img</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/MPC-internal-controller---Midi-aspects">MPC internal controller   Midi aspects</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-internal-controller---Midi-aspects">MPC internal controller   Midi aspects</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-II-coming-soon...">MPC Live II coming soon...</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-II-coming-soon...">MPC Live II coming soon...</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations">MPC Live X internal EMMC disk informations</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations">MPC Live X internal EMMC disk informations</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-:-How-to-solve-sound-pops-and-cracks">MPC Touch : How to solve sound pops and cracks</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-:-How-to-solve-sound-pops-and-cracks">MPC Touch : How to solve sound pops and cracks</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10)">MPC Touch black screen syndrom (Win 10)</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10)">MPC Touch black screen syndrom (Win 10)</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="/TheKikGen/MPC-LiveXplore/wiki/SSD-partitioning">SSD partitioning</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSD-partitioning">SSD partitioning</a></strong>
         </li>
     </ul>
