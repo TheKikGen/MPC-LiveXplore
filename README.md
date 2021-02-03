@@ -12,8 +12,7 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 ## FORCE 6 - CODE NAME ACVK - WILL BE AN HYBRID KEYBOARD/PADS DEVICE (2021-02-03)
 <img width="500" border="0" src="https://medias.audiofanzine.com/images/thumbs3/akai-professional-force-3241206.png"  />
 
-While exploring a recent MPC 2.9 update, someone from the Mpc live X and Force hacking modding custom group found a png showing the **FORCE 6** new keyboard from Akai.  
-This confirms the upcoming release of a 5 octave hybrid keyboard, with 5 * 8 pads, 8 QLINKS, and a touch screen.   The embedded software will most certainly be the same as the one already installed on the MPC/Force range, as well as the RK3288-based hardware core.    
+While exploring a recent MPC 2.9 update, someone from the Mpc live X and Force hacking modding custom group found a png showing the **FORCE 6** new keyboard from Akai. This confirms the upcoming release of a 5 octave hybrid keyboard, with 5 * 8 pads, 8 QLINKS, and a touch screen.   The embedded software will most certainly be the same as the one already installed on the MPC/Force range, as well as the RK3288-based hardware core.    
 Png located internally at : /usr/share/Akai/ACVBTestApp/Resources/acvk.top.830x314.png
 
 ## GLOBAL MIDI MAPPING FOR STANDALONE MPC - HIDDEN FEATURE (2021-01-21)
