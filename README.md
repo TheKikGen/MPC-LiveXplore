@@ -122,3 +122,6 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSD-partitioning">SSD partitioning</a></strong>
         </li>
     </ul>
+
+
+I want also to mention here this excellent source of information from niklasnisbeth : https://niklasnisbeth.gitlab.io/mpc-internals/
