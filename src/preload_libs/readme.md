@@ -105,7 +105,7 @@ ButtonStates reply from firmware: {0,0,0,0}
 
 #### Make
 
-You need to setup a 2.30 glibc (version used by the MPC app) to avoid incompatibility issues and undefined symbols when using LD_PRELOAD.  The best option is to build  chroot system dedicated for that.   Usually you will cross compile with "arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC -ldl" 
+You need to setup a 2.30 glibc (version used by the MPC app) to avoid incompatibility issues and undefined symbols when using LD_PRELOAD.  The best option is to build a chroot system dedicated for that (it is what I do).   If working on a Linux platform (recommended) you will usually cross compile with "arm-linux-gnueabihf-gcc tkgl_anyctrl.c -o tkgl_anyctrl.so -shared -fPIC -ldl" 
 
 You can also use the "tkgl_anyctrl" module of the tkgl_bootstrap (under construction).
 
