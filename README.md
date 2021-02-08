@@ -8,21 +8,31 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
-## USE ANY MIDI CONTROLLER AS MPC CONTROL SURFACE (2021-01-04)
 
-This is a hack of the MPC standalone software, using LD_PRELOAD and a special library launched with the MPC binary allowing the use of any usb midi controller as a secondary control surface. It is thus possible to extend available buttons, pads or qlinks like those of the MPC X or MPC One (track mute, pad mixer, solo, mute, etc...).   
-Check the github repo here :https://github.com/TheKikGen/MPC-LiveXplore/tree/master/src/preload_libs  
+## FORCE 6 - CODE NAME ACVK - WILL BE AN HYBRID KEYBOARD/PADS DEVICE (2021-02-03)
+<img width="500" border="0" src="https://medias.audiofanzine.com/images/thumbs3/akai-professional-force-3241206.png"  />
 
+While exploring a recent MPC 2.9 update, someone from the [Mpc live X and Force hacking modding custom group](https://www.facebook.com/groups/550328948678055) found a png showing the **FORCE 6** new keyboard from Akai. This confirms the upcoming release of a 5 octaves hybrid keyboard, with 5 * 8 pads, 8 QLINKS, and a touch screen.   The embedded software will most certainly be the same as the one already installed on the MPC/Force range, as well as the RK3288-based hardware core.    
+Png located internally at : /usr/share/Akai/ACVBTestApp/Resources/acvk.top.830x314.png
+
+## GLOBAL MIDI MAPPING FOR STANDALONE MPC - HIDDEN FEATURE (2021-01-21)
+
+I recently investigated more deeply around the "Global midi learn" to propose a less specific midi control than I did with the anyctrl.so LD_PRELOAD library. I discovered that the global midi mapping available in the MPC software is also available in standalone mode.   
+Read the how-to [here](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to).
+ 
+## USE ANY MIDI CONTROLLER AS MPC OR FORCE CONTROL SURFACE (2021-01-04)
+
+This is a hack of the MPC standalone software, using LD_PRELOAD and a special library launched with the MPC binary allowing the use of any usb midi controller as a secondary control surface. It is thus possible to extend available buttons, pads or qlinks like those of the MPC X or MPC One (track mute, pad mixer, solo, mute, etc...).  This is particularly interesting for the Force which does not have an external controller mode in the midi settings unlike the MPCs.  
 [![tkglctrl video](https://img.youtube.com/vi/PQ-h3_DM6EI/0.jpg)](https://www.youtube.com/watch?v=PQ-h3_DM6EI)
+
+Check the preload_libs github repo [here](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/src/preload_libs).  
 
 ## IMG WITH SSH ACCESS for MPC LIVE AND FORCE (2020-11-25)
 
 If you want to get a remote Linux command line with SSH instead of opening your MPC, 
 patched images are available :
 
-[MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing)
-
-[Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)
+| [MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing) | [Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)|
 
 Very few things have been modified in that mod :
 - empty password for root. Recent version of Force Firmware added a password to root acount.
@@ -53,7 +63,7 @@ ONE MONTH LATER : CONFIRMED. Look at [fcc web site](https://apps.fcc.gov/oetcf/e
 
 ## THE MPC LIVE MK II SOON (2020-02-01) ?
 
-Beyond my [previous post in gearslutsz](https://www.gearslutz.com/board/showthread.php?p=14503941) regarding a shell script mentioning the MPC Live MKII, other traces were found in the 2.72 MPC binary after a deeper analysis and confirmed by the existence of 2x4 dtb linux drivers in the /boot directory.
+Beyond my [previous post in gearslutsz](https://www.gearslutz.com/board/showthread.php?p=14503941) regarding a shell script mentioning the MPC Live MKII, [other traces were found](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-II-coming-soon...) in the 2.72 MPC binary after a deeper analysis and confirmed by the existence of 2x4 dtb linux drivers in the /boot directory.
 
 I have also seen code areas mentioning new plugins that I think will be present in new releases or reserved for the new MPC?  
 
@@ -61,37 +71,6 @@ I have also seen code areas mentioning new plugins that I think will be present 
 
 we can therefore deduce that the 4 MPCs will share the same software platform and mainly the same core hardware.
 This is very good news for MPC Live owners as that means updates and new features probably in a next future for all.   
-
-The Force softwaree is very close: it is probably a branch of the MPC one. By the way, the executable runs on a MPC Live...and is also called "MPC". 
-
-The main MCU board (originally designed by Radxa) is strictly the same on the 4 products: only the internal USB peripherals are different (controller, sound card). The MPC One supposed to be "a new" product is in fact a Live/X rebranded !  
-
-The internal MIDI interfaces are named and identified as following, depending on the hardware :  
-
-      USB String name = "MPC X Controller",  USB VID:PID = "09e8:003a"
-      USB String name = "MPC Live Controller", USB VID:PID = "09e8:003b"
-      USB String name = "APC Live USB Device" or "Akai Pro Force", USB VID:PID = "09e8:0040"
-      USB String name = "MPC One MIDI", USB VID:PID = "09e8:0046"
-      USB String name = "MPC Live II", USB VID:PID = "09e8:0047"
-
-Akai (InMusic) will certainly capitalize on the evolutions of its embedded software (it's very expensive to develop), and make the software of its products converge to a 3.x ... Personally, I speculate on a Live MPC MKII based on the same hardware but using the good recipes of the 4 previous MPC/Force (drums, CV gates, square format ...) + a significant evolution of the software: addition of plugin, Clip mode improved like what is done on the force, improved midi, etc. ...  
-
-I also noticed that Akai was starting to lock its firmware more seriously...you can probably expect features to be enabled depending on the model you acquired...ex: X: everything. Live MK 2: almost everything, MK1/One nothing more...  Right now, it is clearly stated in the latest MPC (2.72) user manual that the MPC ONE does not have the standalone Ableton controller, even though the firmware is exactly the same as on the Live.
-
-<img border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-9/85106040_889619251467495_2131203209392291840_n.jpg?_nc_cat=106&_nc_sid=1480c5&_nc_ohc=i9EmeYz5MZMAX8Rq8ff&_nc_ht=scontent-cdt1-1.xx&oh=27e9aad0ca843261a8a4f43d04195f19&oe=5E9C7341" />
-
-We'll see that in 6 months...
-
-All these InMusic (FCC ID Y40) products seem to share the same core hardware :
-      
-      ACV5 MPC X              ACV6 MPC Kitten Mattress      ACV7 MPC Touch
-      ACV8 MPC Live           ACV9 MPC Studio Black         ACVA MPC Studio Live (aka ONE)
-      ADA2 Borris The Turtle  JP07 SC5000 PRIME             JP08 SC5000M PRIME
-      JP12 SC4000 PRIME       JC11 PRIME 4                  JC16 PRIME 2
-      Force (Aka ADA2)        SC4000                        SC5000 PRIME Screen
-      SC5000M PRIME Screen    SC4000 PRIME Screen           PRIME 4 Screen
-      PRIME 2 Screen          ACVB MPC LIVE MKII
-
 
 ## MPC Arp patterns and progressions
 
@@ -101,16 +80,48 @@ and progressions to '/usr/share/Akai/SME0/Progressions'.
 Don't forget to remount the partition read/write with a "mount remount / -o rw,remount" command.
 
 -----------------------------------------------------------------------------------------------------------------------
-[How to add 2 new midi ports C D : a quick guide with MIDI-OX](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX)
 
-[How to activate the linux console](https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-console)
+<ul class="m-0 p-0 list-style-none" data-filterable-for="wiki-pages-filter" data-filterable-type="substring" data-pjax="">
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki">Wiki Home</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/About-overlays-in-the-MPC-filesystem">About overlays in the MPC filesystem</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Add-2-new-midi-ports-C-D---a-quick-guide-with-MIDI-OX">Add 2 new midi ports C D   a quick guide with MIDI OX</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force">Enabling SSH on the MPC Live X one Force</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-activate-the-linux-serial-console">How to activate the linux serial console</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img">How to extract the 2.6 rootfs img from the update.img</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-internal-controller---Midi-aspects">MPC internal controller   Midi aspects</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-II-coming-soon...">MPC Live II coming soon...</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations">MPC Live X internal EMMC disk informations</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-:-How-to-solve-sound-pops-and-cracks">MPC Touch : How to solve sound pops and cracks</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10)">MPC Touch black screen syndrom (Win 10)</a></strong>
+        </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSD-partitioning">SSD partitioning</a></strong>
+        </li>
+    </ul>
 
-[SSH activation and flashing the rootfs with fastboot](https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSH-activation-and-flashing-the-rootfs-with-fastboot)
 
-[How to extract the rootfs image from an official Akai update img file](https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img)
-
-[MPC Touch black screen syndrom (Windows 10)](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Touch-black-screen-syndrom-(Win-10))
-
-[MPC Live X internal EMMC disk informations](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-X-internal-EMMC-disk-informations)
-
-
+I want also to mention here this excellent source of information from niklasnisbeth : https://niklasnisbeth.gitlab.io/mpc-internals/
