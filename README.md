@@ -100,6 +100,11 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img">How to extract the 2.6 rootfs img from the update.img</a></strong>
         </li>
+   <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Iamforce-:-a-MPC-Live-like-a-Force-proof-of-concept
+">Iamforce : a MPC Live like a Force proof of concept</a></strong>
+        </li>
+   
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
         </li>
