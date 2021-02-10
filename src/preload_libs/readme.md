@@ -8,7 +8,7 @@
 
 NB : You need SSH access to your MPC to use these libraries.
 
-### TKGL_ANYCTRL
+### TKGL_ANYCTRL  TKGL_ANYCTRL_LT
 
 This "low-level" library allows you to set up any controller as a control surface to drive the MPC standalone application. 
 
@@ -41,10 +41,13 @@ You can even consider making a dedicated DIY usb controller (check my other Kikp
 
 Copy the tkgl_anyctrl.so library on a usb stick of a smartcard.
 The "ANYCTRL_NAME" environment varaible can contains a string / substring matching the name of the midi controller you want to use to simulate a MPC controller.   
-To avoid crashes due to infinite midi loops, that controller will be disabled from the MPC application point of view, so you will not see it anymore in midi devices. 
+To avoid crashes due to infinite midi loops, that controller will be disabled the first port of your conttroller from the MPC application point of view, so you will not see it anymore in midi devices.
+
 If that variable is not defined, the application will start as usual, but will still use virtual ports in place of hardware ports.
 You can retrieve the name of your midi controller with a "aconnect -l | grep client" command.
 If you do this in an ssh session manually, don't forget to stop the MPC application with a "systemctl stop inmusic-mpc" command.
+
+The LT version doesn't not remap the "Public" port, if you don't need specific MPC sysex.
 
 Example (after a fresh boot) : 
 ```
@@ -77,30 +80,21 @@ TKGL_ANYCTRL V1.0 by the KikGen Labs
 (tkgl_anyctrl) connection 24:0 to 134:0 successfull
 (tkgl_anyctrl) connection 135:0 to 24:0 successfull
 (tkgl_anyctrl) connection 136:0 to 24:0 successfull
-MPC 2.9.0
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
+MPC 2.8.1
+failed to change state
+failed to switch mux to internal
+(tkgl_anyctrl) Port creation disabled for first port of : KIKPAD MIDI IN
 (tkgl_anyctrl) Port creation disabled for : Client-135 Virtual RawMIDI
 (tkgl_anyctrl) Port creation disabled for : Client-136 Virtual RawMIDI
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
-(tkgl_anyctrl) Port creation disabled for : KIKPAD Midi In
 (tkgl_anyctrl) Port creation disabled for : Client-134 Virtual RawMIDI
-(tkgl_anyctrl) snd_rawmidi_open name hw:1,0,1 mode 2
 (tkgl_anyctrl) hw:1,0,1 substitution by virtual rawmidi successfull
-(tkgl_anyctrl) snd_rawmidi_open name hw:1,0,1 mode 3
 (tkgl_anyctrl) hw:1,0,1 substitution by virtual rawmidi successfull
-(tkgl_anyctrl) snd_rawmidi_open name hw:1,0,0 mode 3
 (tkgl_anyctrl) hw:1,0,0 substitution by virtual rawmidi successfull
 **** Audio 44100Hz; 2-in; 6-out; 128sample buffer
 **** Warning: inefficient input path: hardware=2 filter=4
 **** Warning: inefficient output path: hardware=6 filter=8
 MPC Live detected
 ButtonStates reply from firmware: {0,0,0,0}
-
 ```
 
 #### Make
