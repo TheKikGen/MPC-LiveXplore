@@ -11,6 +11,15 @@ By a simple midi message mapping in your own controller, it is possible to
 simulate "buttons" press, and get more shortut like those of the MPC X
 (track mute, pad mixer, solo, mute, etc...) or to add more pads or qlinks.
 
+The first port of your controller will be masked in the application
+if you use it with anyctrl.
+
+THis 'full' version remaps PRIVATE and PUBLIC ports.
+
+NB : some specific midi messages crash the MPC application. This is not
+linked with this library, but probably likely due to a bug in the application
+that does not correctly filter messages according to the context.
+
 Preload syntax is :
 	LD_PRELOAD=/full/path/to/tkgl_anyctrl.so /usr/bin/MPC
 
@@ -91,6 +100,7 @@ static char mpc_midi_public_alsa_name[20];
 
 // Midi controller seq client
 static int seqanyctrl_client=-1;
+static int seqanyctrl_firstport = 1;
 
 // Virtual rawmidi pointers
 static snd_rawmidi_t *rawvirt_inpriv  = NULL;
@@ -308,11 +318,11 @@ static void tkgl_init()
 	fprintf(stdout,"------------------------------------\n");
 
 	// Alsa hooks
-	orig_snd_rawmidi_open = dlsym(RTLD_NEXT, "snd_rawmidi_open");
-	orig_snd_rawmidi_read = dlsym(RTLD_NEXT,"snd_rawmidi_read");
-	orig_snd_rawmidi_write = dlsym(RTLD_NEXT, "snd_rawmidi_write");
+	orig_snd_rawmidi_open           = dlsym(RTLD_NEXT, "snd_rawmidi_open");
+	orig_snd_rawmidi_read           = dlsym(RTLD_NEXT,"snd_rawmidi_read");
+	orig_snd_rawmidi_write          = dlsym(RTLD_NEXT, "snd_rawmidi_write");
 	orig_snd_seq_create_simple_port = dlsym(RTLD_NEXT, "snd_seq_create_simple_port");
-	orig_snd_midi_event_decode = dlsym(RTLD_NEXT, "snd_midi_event_decode");
+	orig_snd_midi_event_decode      = dlsym(RTLD_NEXT, "snd_midi_event_decode");
 
 	// Initialize card id for public and private
 	mpc_midi_card = GetCardFromShortName(CTRL_MPC_ALL);
@@ -344,11 +354,10 @@ static void tkgl_init()
 	else {
 		// Initialize card id for public and private
 		seqanyctrl_client = GetSeqClientFromPortName(port_name);
-		if ( seqanyctrl_client  < 0 ) {
-			fprintf(stderr,"(tkgl_anyctrl) **** Error : %s seq client not found\n",port_name);
-			exit(1);
-		}
-		fprintf(stdout,"(tkgl_anyctrl) %s connect port is %d:0\n",port_name,seqanyctrl_client);
+    if ( seqanyctrl_client  < 0 )
+      fprintf(stderr,"(tkgl_anyctrl) **** Warning : %s seq client not found\n",port_name);
+    else
+      fprintf(stdout,"(tkgl_anyctrl) %s connect port is %d:0\n",port_name,seqanyctrl_client);
 	}
 
 	// Create 3 virtuals ports : Private I/O, Public O
@@ -442,7 +451,7 @@ int __libc_start_main(
     /* Find the real __libc_start_main()... */
     typeof(&__libc_start_main) orig = dlsym(RTLD_NEXT, "__libc_start_main");
 
-	tkgl_init();
+  	tkgl_init();
 
     /* ... and call it with our custom main function */
     return orig(main, argc, argv, init, fini, rtld_fini, stack_end);
@@ -453,7 +462,7 @@ int __libc_start_main(
 int snd_rawmidi_open(snd_rawmidi_t **inputp, snd_rawmidi_t **outputp, const char *name, int mode)
 {
 
-	fprintf(stdout,"(tkgl_anyctrl) snd_rawmidi_open name %s mode %d\n",name,mode);
+	//fprintf(stdout,"(tkgl_anyctrl) snd_rawmidi_open name %s mode %d\n",name,mode);
 
 	// Substitute the hardware private input port by our input virtual ports
 
@@ -530,12 +539,18 @@ ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
 
 int snd_seq_create_simple_port	(	snd_seq_t * 	seq, const char * 	name, unsigned int 	caps, unsigned int 	type )
 {
+  // fprintf(stdout,"(tkgl_anyctrl) create simple port %s  type ",name);
+  // print_binary(type);
+  // fprintf(stdout,"\n");
 
-	// Do not allow ports creation for our device or our virtuals ports
-	if ( seqanyctrl_client >= 0 && strstr(name, getenv("ANYCTRL_NAME") ) ) {
-		fprintf(stdout,"(tkgl_anyctrl) Port creation disabled for : %s\n",name);
-		return -1;
+  // If the port is the first of our controller then do not allow creation
+  if ( seqanyctrl_client >= 0 && seqanyctrl_firstport && strstr(name, getenv("ANYCTRL_NAME"))  ) {
+      seqanyctrl_firstport = 0;
+      fprintf(stdout,"(tkgl_anyctrl) Port creation disabled for first port of : %s\n",name);
+		  return -1;
 	}
+
+  // Do not allow MPC to create virtual connection to our virtual ports
 	else if ( match(name,"Client-.* Virtual RawMIDI" )) {
 		fprintf(stdout,"(tkgl_anyctrl) Port creation disabled for : %s\n",name);
 		return -1;

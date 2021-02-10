@@ -8,7 +8,7 @@ TKGL_IAMFORCECTRL  LD_PRELOAD library.
 This "low-level" library allows you to hijack the MPC Force application with
 an MPC Live as a "fake" Force controller.
 All sysex are reinterpreted, as the inmusic internal identification id.
-I also used a customized Smartpad firmware to manage 8x8 pads with colors feedback.
+I also used a customize Smartpad firmware to manage 8x8 pads with colors feedback.
 
 Buy a Force if you like it. It is by far, a better experience, and no more
 expensive than buying a MPC Live + a 64 pads midi controller !!!
@@ -560,7 +560,7 @@ int snd_seq_create_simple_port	(	snd_seq_t * 	seq, const char * 	name, unsigned 
 
 	// We do not allow ports creation for our device or our virtuals ports
   // Because this could lead to infinite midi loop in the MPC midi settings
-	if ( strstr(name, getenv("ANYCTRL_NAME") ) ) {
+	if ( seqanyctrl_client >= 0 && strstr(name, getenv("ANYCTRL_NAME") ) ) {
 		fprintf(stdout,"(tkgl_anyctrl) Port creation disabled for : %s\n",name);
 		return -1;
 	}
