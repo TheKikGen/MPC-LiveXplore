@@ -37,6 +37,8 @@ Note that running status are inhibited.
 So , now, you can add "buttons" allowing direct access to the different screens of the MPC application, as the MPC X or ONE do.  
 You can even consider making a dedicated DIY usb controller (check my other Kikpad project) to add buttons or qlinks (like SOLO or MUTE buttons on the MPC Live for example).
 
+Note : MPC users can use the ["global mapping"](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to) approach to get the same result. The Force is not with us, and doesn't have (yet) this controller mode.
+
 #### Quick setup
 
 Copy the tkgl_anyctrl.so library on a usb stick of a smartcard.
