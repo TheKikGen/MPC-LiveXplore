@@ -532,7 +532,7 @@ int snd_seq_create_simple_port	(	snd_seq_t * 	seq, const char * 	name, unsigned 
 {
 
 	// Do not allow ports creation for our device or our virtuals ports
-	if ( strstr(name, getenv("ANYCTRL_NAME") ) ) {
+	if ( seqanyctrl_client >= 0 && strstr(name, getenv("ANYCTRL_NAME") ) ) {
 		fprintf(stdout,"(tkgl_anyctrl) Port creation disabled for : %s\n",name);
 		return -1;
 	}
