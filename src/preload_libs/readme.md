@@ -31,7 +31,7 @@ By a simple midi message mapping in your own controller, it is possible now to s
 	IO  hw:2,0,2  Midi Out
 	IO  hw:2,0,3  Midi Out
 
-The "PRIVATE" and "PUBLIC"  ports used by the MPC application to send or capture messages from the MPC controller are replaced by a 3 rawmidi virtual seq ports (usually #134-135-136).   These virtual ports are reconnected to the physical port of the controller with an alsa connection, similar to aconnect utility, before the sending of SYSEX controller identification sequences.  These virtual ports can be then used to connect any other controller in addition to the standard hardware.  
+The "PRIVATE" and "PUBLIC"  ports used by the MPC application to send or capture messages from the MPC controller are replaced by a 3 rawmidi virtual seq ports (usually #134-135-136).   These virtual ports are reconnected to the physical port of the controller with an alsa connection, similar to the "aconnect" command line ALSA utility, before the sending of SYSEX controller identification sequences.  These virtual ports can be then used to connect any other controller in addition to the standard hardware.  
 Note that running status are inhibited.
 
 So , now, you can add "buttons" allowing direct access to the different screens of the MPC application, as the MPC X or ONE do.  
@@ -43,7 +43,7 @@ Note : MPC users can use the ["global mapping"](https://github.com/TheKikGen/MPC
 
 Copy the tkgl_anyctrl.so library on a usb stick of a smartcard.
 The "ANYCTRL_NAME" environment varaible can contains a string / substring matching the name of the midi controller you want to use to simulate a MPC controller.   
-To avoid crashes due to infinite midi loops, that controller will be disabled the first port of your conttroller from the MPC application point of view, so you will not see it anymore in midi devices.
+To avoid crashes due to potential infinite midi loops, the first midi port of your controller will be disabled within the MPC application, so you will not see it anymore in midi devices setting.
 
 If that variable is not defined, the application will start as usual, but will still use virtual ports in place of hardware ports.
 You can retrieve the name of your midi controller with a "aconnect -l | grep client" command.
