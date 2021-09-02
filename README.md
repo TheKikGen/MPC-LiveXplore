@@ -8,6 +8,15 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=thekikgen@gmail.com&lc=FR&item_name=Donation+to+TheKikGen+projects&no_note=0&cn=&currency_code=EUR&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
+
+____
+
+## I AM FORCE (2021-02-11)
+[![tkglctrl video](https://img.youtube.com/vi/fVG7otydEA0/0.jpg)](https://www.youtube.com/watch?v=fVG7otydEA0) 
+
+This [Proof of Concept](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Iamforce-:-a-MPC-Live-like-a-Force-proof-of-concept) shows how an AKAI MPC Live and a hacked Midiplus Smartpad can be mutated to simulate a Force controller. Even if this project was technically challenging, believe me, the original Akai Force product offers much more comfort for almost the same price...one less tinkering !!
+
 
 ## FORCE 6 - CODE NAME ACVK - WILL BE AN HYBRID KEYBOARD/PADS DEVICE (2021-02-03)
 <img width="500" border="0" src="https://medias.audiofanzine.com/images/thumbs3/akai-professional-force-3241206.png"  />
