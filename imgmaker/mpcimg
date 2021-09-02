@@ -4,8 +4,11 @@
 #    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
 #   _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
 #   -----------------------------------------------------------------------------
-#   MPC LIVE/X/Force Image extractor, and maker by The KikGen Labs
-#   additional credits : Pierre Lule / Matthieu Le Corre
+#   MPC LIVE/X/Force Image extractor, and maker by TheKikGen Labs.
+#   Aditional credits :
+#       Pierre Lule for the very first version of that script
+#       Matthieu Le Corre for discovering that Akai img is a dtb
+#
 # The authors disclaim all warranties with regard to this software, including
 # all implied warranties of merchantability and fitness. In no event shall
 # the authors be liable for any special, indirect or consequential damages or
@@ -159,8 +162,8 @@ def create(mpc,in_img, out_update_img,version_string):
     else:
         print("MPC image maker.")
         tmpl_header = tmpl_header + "description = \"MPC upgrade image\";\n"
-        tmpl_header = tmpl_header + "compatible = \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acvb\";\n"
-        tmpl_header = tmpl_header + "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047>;\n"
+        tmpl_header = tmpl_header + "compatible = \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acvb\", \"inmusic,acvm\";\n"
+        tmpl_header = tmpl_header + "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047 0x9e8404b>;\n"
 
 
     tmpl_header = tmpl_header + "inmusic,version = \"{version}\";\n"
