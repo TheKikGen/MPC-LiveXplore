@@ -11,7 +11,7 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 SSH images : 
 | [MPC 2.10.1](https://drive.google.com/file/d/1pdYVSlkgc2BsGnpN1XlW4DVW8i5Ubkdl/view?usp=sharing) 
 | [MPC 2.9.1](https://drive.google.com/file/d/1CV7ve0irk7pT2x3QsRl2mMMK_h4mAl7c/view?usp=sharing) 
-| [Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)
+| [Force 3.0.6](https://drive.google.com/file/d/13xuB-GGLZNNpmqIQehXZRNTmSv2YjwPi/view?usp=sharing)
 | [Force 3.1.0]()
 
 
