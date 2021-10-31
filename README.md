@@ -15,6 +15,8 @@ SSH images :
 | [Force 3.1.0]()
 
 
+If you download any of these images, please consider making a small donation to encourage our team to continue their research into your favorite toys.  This will pay for the coffees swallowed during the long nights of reverse-engineering!
+
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=thekikgen@gmail.com&lc=FR&item_name=Donation+to+TheKikGen+projects&no_note=0&cn=&currency_code=EUR&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
 
 ____
@@ -46,9 +48,7 @@ Check the preload_libs github repo [here](https://github.com/TheKikGen/MPC-LiveX
 ## IMG WITH SSH ACCESS for MPC LIVE AND FORCE (2020-11-25)
 
 If you want to get a remote Linux command line with SSH instead of opening your MPC, 
-patched images are available :
-
-| [MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing) | [Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)|
+patched images are available (edit : check at the top of this page) :
 
 Very few things have been modified in that mod :
 - empty password for root. Recent version of Force Firmware added a password to root acount.
