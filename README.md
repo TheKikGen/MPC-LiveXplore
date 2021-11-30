@@ -25,7 +25,7 @@ ____
 <img width="500" border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t39.30808-6/262789660_1345518102544272_3765518872430473631_n.jpg?_nc_cat=109&ccb=1-5&_nc_sid=dbeb18&_nc_ohc=vqnKiiuh7OsAX-hQLty&_nc_ht=scontent-cdt1-1.xx&oh=8378ab2095dd3c3346bbc02c1a0e55ff&oe=61AB4935"  />
 
 It seems that Akai finally decided to release not a Force (ACVK), but an MPC with a keyboard (ACVM). 
-The Force synth project would have been abandoned in favor of an MPC synth.
+The Force synth project would have been abandoned in favor of an MPC synth.  
 Images path in the last MPC img 2.10.1 :  /usr/share/Akai/ACVMTestApp/Resources
 
 ## I AM FORCE (2021-02-11)
