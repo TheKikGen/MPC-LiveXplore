@@ -21,7 +21,7 @@ If you download any of these images, please consider making a small donation to 
 
 ____
 
-## MPC KEY 61 - CODE NAME ACVM - WILL BE AN HYBRID KEYBOARD/PADS MPC (2021-11-30)
+## MPC KEY 61 - CODE NAME ACVM - WILL BE AN HYBRID KBD/PADS MPC (2021-11-30)
 <img width="500" border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t39.30808-6/262789660_1345518102544272_3765518872430473631_n.jpg?_nc_cat=109&ccb=1-5&_nc_sid=dbeb18&_nc_ohc=vqnKiiuh7OsAX-hQLty&_nc_ht=scontent-cdt1-1.xx&oh=8378ab2095dd3c3346bbc02c1a0e55ff&oe=61AB4935"  />
 
 It seems that Akai finally decided to release not a Force (ACVK), but an MPC with a keyboard (ACVM). 
