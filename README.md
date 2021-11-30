@@ -104,10 +104,18 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
 
 -----------------------------------------------------------------------------------------------------------------------
 
+
+
+
 <ul class="m-0 p-0 list-style-none" data-filterable-for="wiki-pages-filter" data-filterable-type="substring" data-pjax="">
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki">Wiki Home</a></strong>
         </li>
+        <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Akai--InMusic-device-Ids
+">Akai  InMusic device Ids</a></strong>
+        </li>
+
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/About-overlays-in-the-MPC-filesystem">About overlays in the MPC filesystem</a></strong>
         </li>
