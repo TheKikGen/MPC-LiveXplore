@@ -112,10 +112,8 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki">Wiki Home</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Akai--InMusic-device-Ids
-">Akai  InMusic device Ids</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Akai--InMusic-device-Ids">Akai  InMusic device Ids</a></strong>
         </li>
-
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/About-overlays-in-the-MPC-filesystem">About overlays in the MPC filesystem</a></strong>
         </li>
