@@ -154,6 +154,9 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSD-partitioning">SSD partitioning</a></strong>
         </li>
+                          <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Custom-Arp-Patterns-in-standalone-mode-for-MPCs-and-Force">Custom Arp Patterns in standalone mode for MPCs and Force</a></strong>
+        </li>
     </ul>
 
 
