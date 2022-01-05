@@ -111,8 +111,8 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki">Wiki Home</a></strong>
         </li>
-        <li class="Box-row">
-          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Akai--InMusic-device-Ids">Akai  InMusic device Ids</a></strong>
+      <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Akai--InMusic-device-Ids">Akai  InMusic device Ids</a</strong>
         </li>
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/About-overlays-in-the-MPC-filesystem">About overlays in the MPC filesystem</a></strong>
@@ -129,12 +129,12 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img">How to extract the 2.6 rootfs img from the update.img</a></strong>
         </li>
-   <li class="Box-row">
+        <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Iamforce-:-a-MPC-Live-like-a-Force-proof-of-concept
 ">Iamforce : a MPC Live like a Force proof of concept</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-and-Force-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
         </li>
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-internal-controller---Midi-aspects">MPC internal controller   Midi aspects</a></strong>
