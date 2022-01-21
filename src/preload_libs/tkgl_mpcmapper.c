@@ -60,6 +60,11 @@ your own midi mapping to input and output midi messages.
 
 // Globals
 
+
+// Raw midi dump flag
+int rawMidiDumpFlag = 0 ;
+int rawMidiDumpPostFlag = 0 ; // After our tranformation
+
 // End user virtual port name
 static char *user_virtual_portname = NULL;
 
@@ -459,14 +464,14 @@ static void tkgl_init()
 ////////////////////////////////////////////////////////////////////////////////
 // Clean DUMP of a buffer to screen
 ////////////////////////////////////////////////////////////////////////////////
-static void ShowBufferHexDump(const uint8_t* data, uint16_t sz, uint8_t nl)
+static void ShowBufferHexDump(const uint8_t* data, size_t sz, uint8_t nl)
 {
     uint8_t b;
     char asciiBuff[33];
     uint8_t c=0;
 
     for (uint16_t idx = 0 ; idx < sz; idx++) {
-			if ( c == 0 && idx > 0) fprintf(stdout,"[tkgl]  ");
+			if ( c == 0 && idx >= 0) fprintf(stdout,"[tkgl]  ");
         b = (*data++);
   		fprintf(stdout,"%02X ",b);
         asciiBuff[c++] = ( b >= 0x20 && b< 127? b : '.' ) ;
@@ -540,6 +545,18 @@ int __libc_start_main(
          user_virtual_portname = argv[i] + 19;
          fprintf(stdout,"[tkgl]  --tkgl_virtualport specified as %s port name\n",user_virtual_portname) ;
       }
+      else
+      // Dump rawmidi
+      if ( ( strcmp("--tkgl_mididump",argv[i]) == 0 ) ) {
+        rawMidiDumpFlag = 1 ;
+        fprintf(stdout,"[tkgl]  --tkgl_mididump specified : dump original raw midi message (ENTRY)\n") ;
+      }
+      else
+      if ( ( strcmp("--tkgl_mididumpPost",argv[i]) == 0 ) ) {
+        rawMidiDumpPostFlag = 1 ;
+        fprintf(stdout,"[tkgl]  --tkgl_mididumpPost specified : dump raw midi message after transformation (POST)\n") ;
+      }
+
 
     }
 
@@ -660,14 +677,24 @@ static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
 ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
 
 	ssize_t r = orig_snd_rawmidi_read(rawmidi, buffer, size);
+  if ( rawMidiDumpFlag ) {
+    const char *name = snd_rawmidi_name(rawmidi);
+    fprintf(stdout,"[tkgl]  ENTRY Dump snd_rawmidi_read from controller %s\n",name);
+    ShowBufferHexDump(buffer, size,16);
+    fprintf(stdout,"[tkgl]\n");
+  }
 
-
-  //const char *name = snd_rawmidi_name(rawmidi);
-  //fprintf(stdout,"[tkgl]  Rawmidi_read %s\n",name);
 
   // Map only if not on the original hardware
   if ( MPCId != MPCOriginalId && rawmidi == rawvirt_inpriv) {
         Map_AppReadFromMPC(buffer,size);
+  }
+
+  if ( rawMidiDumpPostFlag ) {
+    const char *name = snd_rawmidi_name(rawmidi);
+    fprintf(stdout,"[tkgl]  POST Dump snd_rawmidi_read from controller %s\n",name);
+    ShowBufferHexDump(buffer, size,16);
+    fprintf(stdout,"[tkgl]\n");
   }
 
 
@@ -679,6 +706,12 @@ ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
 ///////////////////////////////////////////////////////////////////////////////
 ssize_t snd_rawmidi_write(snd_rawmidi_t * 	rawmidi,const void * 	buffer,size_t 	size) {
 
+  if ( rawMidiDumpFlag ) {
+    const char *name = snd_rawmidi_name(rawmidi);
+    fprintf(stdout,"[tkgl]  ENTRY Dump snd_rawmidi_write to controller %s\n",name);
+    ShowBufferHexDump(buffer, size,16);
+    fprintf(stdout,"[tkgl]\n");
+  }
 
   //const char *name = snd_rawmidi_name(rawmidi);
   //fprintf(stdout,"[tkgl]  Rawmidi_write %s\n",name);
@@ -687,6 +720,13 @@ ssize_t snd_rawmidi_write(snd_rawmidi_t * 	rawmidi,const void * 	buffer,size_t 	
   if ( MPCId != MPCOriginalId  &&
        ( rawmidi == rawvirt_outpriv || rawmidi == rawvirt_outpub ) ) {
          Map_AppWriteToMPC(buffer,size);
+  }
+
+  if ( rawMidiDumpPostFlag ) {
+    const char *name = snd_rawmidi_name(rawmidi);
+    fprintf(stdout,"[tkgl]  POST Dump snd_rawmidi_write to controller %s\n",name);
+    ShowBufferHexDump(buffer, size,16);
+    fprintf(stdout,"[tkgl]\n");
   }
 
 	return 	orig_snd_rawmidi_write(rawmidi, buffer, size);
