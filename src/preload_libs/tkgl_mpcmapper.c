@@ -135,6 +135,14 @@ static const uint8_t MPCPadsTable[]
 MPC_PAD4 };
 // 0x52
 
+static const uint8_t MPCPadsTable2[]
+= {
+  0x25,0x24,0x2A,0x52,
+  0x28,0x26,0x2E,0x2C,
+  0x30,0x2F,0x2D,0x2B,
+  0x31,0x37,0x33,0x35
+};
+
 
 // Our MPC product id (index in the table)
 static int MPCOriginalId = -1;
@@ -710,6 +718,26 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
           // Compute the Force pad id
           *pad = ( 3 - padL ) * 8 + padC + FORCEPADS_TABLE_IDX_OFFSET;
         }
+        else
+        // MPC spoofed on a Force
+        if ( MPCOriginalId == MPC_FORCE && MPCId != MPC_FORCE) {
+          // Remap Force hardware pad
+          uint8_t *pad = &myBuff[i+1];
+          uint8_t p = *pad - FORCEPADS_TABLE_IDX_OFFSET;
+          uint8_t padL = p / 8 ;
+          uint8_t padC = p % 8 ;
+
+          // Keep pads in the 4x4 MPC pad matrix at the left bottom
+          if ( padL >= 4 && padC < 4 ) {
+            // Compute the MPC pad id
+            p = (7 - padL) + padC;
+            *pad = MPCPadsTable2[p];
+          } else {
+            // Implement other functions on Free PADS ?
+            // Or Shows all banks...
+            *pad = 0x7F; // To avoid random pad events...
+          }
+        }
 
         i += 3;
 
@@ -720,6 +748,9 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// MAP MPC application to MPC controller hardware midi event
+///////////////////////////////////////////////////////////////////////////////
 static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
 
   uint8_t * myBuff = (uint8_t*)midiBuffer;
@@ -752,10 +783,24 @@ static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
               i += 5 ; // Next msg
           }
         }
+        // MPC spoofed on a Force
+        else if ( MPCOriginalId == MPC_FORCE && MPCId != MPC_FORCE) {
+          // SET PAD COLORS SYSEX FN
+          // F0 47 7F [3B] -> 65 00 04 [Pad #] [R] [G] [B] F7
+          if ( memcmp(&myBuff[i],MPCSysexPadColorFn,sizeof(MPCSysexPadColorFn)) == 0 ) {
+              i += sizeof(MPCSysexPadColorFn) ;
+              uint8_t *pad = &myBuff[i];
+              uint8_t padL = *pad / 4 ;
+              uint8_t padC = 4 - *pad % 4 ;
+
+              // 4x4 MPC pad matrix at the left bottom of Force pads
+              *pad = ( 7 - padL ) * 8 + padC;
+
+              i += 5 ; // Next msg
+          }
+        }
+
     }
-
-
-
 
 
     else i++;
