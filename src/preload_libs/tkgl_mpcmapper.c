@@ -85,12 +85,56 @@ const uint8_t MPCIdentityReplySysex[][7] = {
   {0x47,0x00,0x19,0x00,0x01,0x01,0x01}, // Live MkII
 };
 
+// F0 47 7F [3B] 65 00 04 [Pad #] [R] [G] [B] F7
+const uint8_t MPCSysexPadColorFn[] = {0x65,0x00,0x04};
+
 // Sysex patterns. 0xFF means any value.  That sysex will be amended with the
 // fake Force sysex id in rawmidi write function.
 static const uint8_t AkaiSysex[] = {0xF0,0x47, 0x7F};
 
 // Header of an Akai identity reply
 static const uint8_t IdentityReplySysexHeader[]   = {0xF0,0x7E,0x00,0x06,0x02,0x47};
+
+// MPC hardware pads : a totally anarchic numbering!
+// Force is orered from 0x36. Top left
+enum MPCPads { MPC_PAD1, MPC_PAD2, MPC_PAD3, MPC_PAD4, MPC_PAD5,MPC_PAD6,MPC_PAD7, MPC_PAD8,
+              MPC_PAD9, MPC_PAD10, MPC_PAD11, MPC_PAD12, MPC_PAD13, MPC_PAD14, MPC_PAD15, MPC_PAD16 };
+
+
+// MPC ---------------------     FORCE------------------
+// Press = 99 [pad#] [00-7F]     idem
+// Release = 89 [pad#] 00        idem
+// AFT A9 [pad#] [00-7F]         idem
+// MPC PAd # from left bottom    Force pad# from up left to right bottom
+// to up right (hexa) =
+// 31 37 33 35                   36 37 38 39 3A 3B 3C 3D
+// 30 2F 2D 2B                   3E 3F 40 41 42 43 44 45
+// 28 26 2E 2C                   ...
+// 25 24 2A 52
+// wtf !!
+//
+// (13)31 (14)37 (15)33 (16)35
+// (9) 30 (10)2F (11)2D (12)2B
+// (5) 28 (6) 26 (7) 2E (8) 2C
+// (1) 25 (2) 24 (3) 2A (4) 52
+
+#define MPCPADS_TABLE_IDX_OFFSET 0X24
+#define FORCEPADS_TABLE_IDX_OFFSET 0X36
+
+static const uint8_t MPCPadsTable[]
+= { MPC_PAD2, MPC_PAD1, MPC_PAD6,  0xff,   MPC_PAD5,    0xff,  MPC_PAD3, MPC_PAD12,
+//    0x24,       0x25,     0x26,    (0x27),   0x28,   (0x29),    0x2A,     0x2B,
+    MPC_PAD8, MPC_PAD11, MPC_PAD7, MPC_PAD10, MPC_PAD9, MPC_PAD13, 0xff,  MPC_PAD15,
+//    0x2C,       0x2D,     0x2E,     0x2F,     0x30,      0x31,   (0x32)   0x33,
+  0xff,   MPC_PAD16, 0xff, MPC_PAD14,
+// (0x34), 0x35,    (0x36)   0x37,
+0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,
+0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,
+0xff,0xff,0xff,0xff,0xff,0xff,
+// 0x38 - 0x51
+MPC_PAD4 };
+// 0x52
+
 
 // Our MPC product id (index in the table)
 static int MPCOriginalId = -1;
@@ -641,31 +685,80 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
 
     uint8_t * myBuff = (uint8_t*)midiBuffer;
 
-    for ( int i = 0 ; i < size ; i++ ) {
+    size_t i = 0 ;
+    while  ( i < size ) {
 
-      // Check if identity request ? (could be optimized....)
+      // AKAI SYSEX
+      // IDENTITY REQUEST
       if (  myBuff[i] == 0xF0 &&  memcmp(&myBuff[i],IdentityReplySysexHeader,sizeof(IdentityReplySysexHeader)) == 0 ) {
         // If so, substitue sysex identity request by the faked one
         memcpy(&myBuff[i+sizeof(IdentityReplySysexHeader)],MPCIdentityReplySysex[MPCId], sizeof(MPCIdentityReplySysex[MPCId])  );
         i += sizeof(IdentityReplySysexHeader) + sizeof(MPCIdentityReplySysex[MPCId]);
       }
-    }
 
+      // PADS
+      if (  myBuff[i] == 0x99 || myBuff[i] == 0x89 || myBuff[i] == 0xA9 ) {
+
+        // Force spoofed on an MPC
+        if ( MPCOriginalId != MPC_FORCE && MPCId == MPC_FORCE) {
+          // Remap MPC hardware pad
+          uint8_t *pad = &myBuff[i+1] ;
+          // Get MPC pad id in the true order
+          *pad = MPCPadsTable[*pad - MPCPADS_TABLE_IDX_OFFSET ];
+          uint8_t padL = *pad / 4 ;
+          uint8_t padC = *pad % 4 ;
+          // Compute the Force pad id
+          *pad = ( 3 - padL ) * 8 + padC + FORCEPADS_TABLE_IDX_OFFSET;
+        }
+
+        i += 3;
+
+      }
+
+      else i++;
+
+    }
 }
 
 static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
 
   uint8_t * myBuff = (uint8_t*)midiBuffer;
 
-  for ( int i = 0 ; i < size ; i++ ) {
+
+  size_t i = 0 ;
+  while  ( i < size ) {
+
+    // AKAI SYSEX
     // If we detect the Akai sysex header, change the harwware id by our true hardware id.
     // Messages are compatibles. Some midi msg are not always interpreted (e.g. Oled)
-
     if (  myBuff[i] == 0xF0 &&  memcmp(&myBuff[i],AkaiSysex,sizeof(AkaiSysex)) == 0 ) {
-        // Update the sysex id in the sysex
-        myBuff[i+3] = MPCSysexId[MPCOriginalId];
+        // Update the sysex id in the sysex for our original hardware
         i += sizeof(AkaiSysex) ;
+        myBuff[i] = MPCSysexId[MPCOriginalId];
+        i++;
+
+        // Force spoofed on an MPC
+        if ( MPCOriginalId != MPC_FORCE && MPCId == MPC_FORCE) {
+
+          // SET PAD COLORS SYSEX FN
+          // F0 47 7F [3B] -> 65 00 04 [Pad #] [R] [G] [B] F7
+          if ( memcmp(&myBuff[i],MPCSysexPadColorFn,sizeof(MPCSysexPadColorFn)) == 0 ) {
+              i += sizeof(MPCSysexPadColorFn) ;
+              uint8_t *pad = &myBuff[i];
+              uint8_t padL = *pad / 8 ;
+              uint8_t padC = *pad % 8 ;
+              // Stay in the 4x4 MPC pad matrix
+              if ( padL < 4 && padC < 4 )  *pad = ( 3 - padL ) * 4 + padC;
+              i += 5 ; // Next msg
+          }
+        }
     }
+
+
+
+
+
+    else i++;
   }
 
 }
