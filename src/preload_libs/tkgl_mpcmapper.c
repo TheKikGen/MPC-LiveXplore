@@ -410,6 +410,30 @@ static void tkgl_init()
   orig_snd_seq_port_info_set_name = dlsym(RTLD_NEXT, "snd_seq_port_info_set_name");
   orig_snd_seq_event_input        = dlsym(RTLD_NEXT, "snd_seq_event_input");
 
+
+  // Read product code
+  char product_code[4];
+  int fd = orig_open(PRODUCT_CODE_PATH,O_RDONLY);
+  orig_read(fd,&product_code,4);
+
+  // Find the id in the product code table
+  for (int i = 0 ; i < _END_MPCID; i++) {
+    if ( strncmp(MPCProductCode[i],product_code,4) == 0 ) {
+      MPCOriginalId = i;
+      break;
+    }
+  }
+  if ( MPCOriginalId < 0) {
+    fprintf(stdout,"[tkgl]  *** Error when reading the product-code file\n");
+    exit(1);
+  }
+  fprintf(stdout,"[tkgl]  Original Product code : %s (%s)\n",MPCProductCode[MPCOriginalId],MPCProductString[MPCOriginalId]);
+
+  if ( MPCIdSpoofed >= 0 ) {
+    fprintf(stdout,"[tkgl]  Product code spoofed to %s (%s)\n",MPCProductCode[MPCIdSpoofed],MPCProductString[MPCIdSpoofed]);
+    MPCId = MPCIdSpoofed ;
+  } else MPCId = MPCOriginalId ;
+
 	// Initialize card id for public and private
 	mpc_midi_card = GetCardFromShortName(CTRL_MPC_ALL);
 	if ( mpc_midi_card < 0 ) {
@@ -1219,27 +1243,6 @@ ssize_t read(int fildes, void *buf, size_t nbyte) {
 
   // If we got the file descriptor, we can swap the product code with the spoofed one.
   if ( fildes == product_code_file_handler ) {
-    char product_code[5];
-    orig_read(fildes,&product_code,nbyte);
-
-    // Find the id in the product code table
-    for (int i = 0 ; i < _END_MPCID; i++) {
-      if ( strncmp(MPCProductCode[i],product_code,4) == 0 ) {
-        MPCOriginalId = i;
-        break;
-      }
-    }
-    if ( MPCOriginalId < 0) {
-      fprintf(stdout,"[tkgl]  *** Error when reading the product-code file\n");
-      exit(1);
-    }
-    fprintf(stdout,"[tkgl]  Original Product code : %s (%s)\n",MPCProductCode[MPCOriginalId],MPCProductString[MPCOriginalId]);
-
-    if ( MPCIdSpoofed >= 0 ) {
-      fprintf(stdout,"[tkgl]  Product code spoofed to %s (%s)\n",MPCProductCode[MPCIdSpoofed],MPCProductString[MPCIdSpoofed]);
-      MPCId = MPCIdSpoofed ;
-    } else MPCId = MPCOriginalId ;
-
     memcpy(buf,MPCProductCode[MPCId],nbyte );
     product_code_file_handler = -1;
     return nbyte;
