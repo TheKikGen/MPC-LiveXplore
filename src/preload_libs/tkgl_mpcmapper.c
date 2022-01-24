@@ -754,8 +754,10 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
           // Keep pads in the 4x4 MPC pad matrix at the left bottom
           if ( padL >= 4 && padC < 4 ) {
             // Compute the MPC pad id
-            p = (7 - padL) + padC;
+            p = (7 - padL ) * 4 + padC;
             *pad = MPCPadsTable2[p];
+
+
           } else {
             // Implement other functions on Free PADS ?
             // Or Shows all banks...
@@ -815,7 +817,7 @@ static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
               i += sizeof(MPCSysexPadColorFn) ;
               uint8_t *pad = &myBuff[i];
               uint8_t padL = *pad / 4 ;
-              uint8_t padC = 4 - *pad % 4 ;
+              uint8_t padC = *pad % 4 ;
 
               // 4x4 MPC pad matrix at the left bottom of Force pads
               *pad = ( 7 - padL ) * 8 + padC;
