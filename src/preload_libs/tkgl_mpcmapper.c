@@ -46,6 +46,8 @@ your own midi mapping to input and output midi messages.
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdbool.h>
+
 
 // MPC Controller names (regexp)
 #define CTRL_FORCE "Akai Pro Force"
@@ -65,6 +67,17 @@ your own midi mapping to input and output midi messages.
 int rawMidiDumpFlag = 0 ;
 int rawMidiDumpPostFlag = 0 ; // After our tranformation
 
+// Config file name
+static char *configFileName = NULL;
+
+
+// Mapping tables
+static int map_ButtonsLeds[128];
+static int map_Ctrl[128];
+static int map_ButtonsLeds_Inv[128];
+static int map_Ctrl_Inv[128];
+
+
 // End user virtual port name
 static char *user_virtual_portname = NULL;
 
@@ -76,6 +89,7 @@ static snd_rawmidi_t *rawvirt_user_out   = NULL ;
 enum MPCIds {MPC_X, MPC_LIVE,  MPC_FORCE,MPC_ONE,MPC_LIVE_MK2,_END_MPCID };
 const uint8_t MPCSysexId[]      = {  0x3a,   0x3b,       0x40,    0x46,      0x47};
 const char * MPCProductString[] = { "MPC X", "MPC Live", "Force",	"MPC One", "MPC Live Mk II" };
+const char * MPCProductStrShort[] = { "X", "LIVE", "FORCE",	"ONE", "LIVE2" };
 const char * MPCProductCode[]   = {	"ACV5",  "ACV8", 	   "ADA2", 	"ACVA", 	 "ACVB" };
 const uint8_t MPCIdentityReplySysex[][7] = {
   {0x3A,0x00,0x19,0x00,0x01,0x01,0x01}, // X
@@ -94,6 +108,9 @@ static const uint8_t AkaiSysex[] = {0xF0,0x47, 0x7F};
 
 // Header of an Akai identity reply
 static const uint8_t IdentityReplySysexHeader[]   = {0xF0,0x7E,0x00,0x06,0x02,0x47};
+
+// MPC Current pad bank.  A-H = 0-7
+static int MPC_PadBank = -1 ;
 
 // MPC hardware pads : a totally anarchic numbering!
 // Force is orered from 0x36. Top left
@@ -143,6 +160,45 @@ static const uint8_t MPCPadsTable2[]
   0x31,0x37,0x33,0x35
 };
 
+enum ForceButtonsLedsCtrlValue {
+  FORCE_NAVIGATE   = 0x00,  FORCE_KNOBS      = 0X01,  FORCE_MENU       = 0x02, FORCE_MATRIX     = 0x03,
+  FORCE_NOTE       = 0x04,  FORCE_MASTER     = 0x05,  FORCE_CLIP       = 0x09, FORCE_MIXER      = 0x0B,
+  FORCE_LOAD       = 0x23,  FORCE_SAVE       = 0x24,  FORCE_EDIT       = 0x25, FORCE_DELETE     = 0x26,
+  FORCE_SHIFT      = 0x31,  FORCE_SELECT     = 0x34,  FORCE_TAP        = 0x35, FORCE_PLUS       = 0x36,
+  FORCE_MINUS      = 0x37,  FORCE_LAUNCH_1   = 0x38,  FORCE_LAUNCH_2   = 0x39, FORCE_LAUNCH_3   = 0x3A,
+  FORCE_LAUNCH_4   = 0x3B,  FORCE_LAUNCH_5   = 0x3C,  FORCE_LAUNCH_6   = 0x3D, FORCE_LAUNCH_7   = 0x3E,
+  FORCE_LAUNCH_8   = 0x3F,  FORCE_UNDO       = 0x43,  FORCE_REC        = 0x49, FORCE_STOP       = 0x51,
+  FORCE_PLAY       = 0x52,  FORCE_MUTE       = 0x5B,  FORCE_SOLO       = 0x5C, FORCE_REC_ARM    = 0x5D,
+  FORCE_CLIP_STOP  = 0x5E,  FORCE_STOP_ALL   = 0x5F,  FORCE_UP         = 0x70, FORCE_DOWN       = 0x71,
+  FORCE_LEFT       = 0x72,  FORCE_RIGHT      = 0x73,  FORCE_LAUNCH     = 0x74, FORCE_STEP_SEQ   = 0x75,
+  FORCE_ARP        = 0x76,  FORCE_COPY       = 0x7A,  FORCE_ASSIGN_A   = 0x7B, FORCE_ASSIGN_B   = 0x7C,
+
+};
+
+enum MpcButtonsNoteValue {
+MPC_QLINK_SELECT = 0x00,
+MPC_SAMPLE_EDIT = 0x06,
+MPC_NOTE_REPEAT = 0x0B,
+MPC_PAD_BANK_A = 0x23, MPC_PAD_BANK_B = 0x24, MPC_PAD_BANK_C = 0x25, MPC_PAD_BANK_D = 0x26,
+MPC_SHIFT = 0x31,
+MPC_MAIN = 0x34,
+MPC_TEMPO_TAP = 0x35,
+MPC_PLUS = 0x36,
+MPC_MINUS = 0x37,
+MPC_UNDO = 0x43,
+MPC_REC = 0x49,
+MPC_OVERDUB = 0x50,
+MPC_STOP = 0x51,
+MPC_PLAY = 0x52,
+MPC_PLAY_START = 0x53,
+MPC_QLINK1_TOUCH  = 0x54, MPC_QLINK2_TOUCH  = 0x55, MPC_QLINK3_TOUCH  = 0x56, MPC_QLINK4_TOUCH  = 0x57,
+MPC_QLINK5_TOUCH  = 0x58, MPC_QLINK6_TOUCH  = 0x59, MPC_QLINK7_TOUCH  = 0x5A, MPC_QLINK8_TOUCH  = 0x5B,
+MPC_QLINK9_TOUCH  = 0x5C, MPC_QLINK10_TOUCH = 0x5D, MPC_QLINK11_TOUCH = 0x5E, MPC_QLINK12_TOUCH = 0x5F,
+MPC_QLINK13_TOUCH = 0x60, MPC_QLINK14_TOUCH = 0x61, MPC_QLINK15_TOUCH = 0x62, MPC_QLINK16_TOUCH = 0x63,
+MPC_ROTARY = 0x6F,
+MPC_PAD_MIXER = 0x73,
+MPC_MENU = 0x7B,
+};
 
 // Our MPC product id (index in the table)
 static int MPCOriginalId = -1;
@@ -215,6 +271,140 @@ int match(const char *string, const char *pattern)
     }
     return(1);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// Read a key,value pair from our config file (INI file format)
+///////////////////////////////////////////////////////////////////////////////
+static int GetKeyValueFromConfFile(const char * confFileName, const char *sectionName,const char* key, char value[]) {
+
+  FILE *fp = fopen(confFileName, "r");
+  if ( fp == NULL) return -1;
+
+  char line [132];
+  int r = -1;
+  bool sectionFound = false;
+
+  while (fgets(line, sizeof(line), fp)) {
+
+    // Remove spaces before
+    char *p = line;
+    while (isspace (*p)) p++;
+
+    // Empty line or comments
+    if ( p[0] == '\0' || p[0] == '#' || p[0] == ';' ) continue;
+
+    // Remove spaces after
+    int i;
+    for ( i = strlen (p) - 1; (isspace (p[i]));  i--) ;
+    p[i + 1] = '\0';
+
+    // A section ?
+    if ( p[0] == '[' && p[strlen(p) - 1 ] == ']' ) {
+
+      if ( strncmp(p + 1,sectionName,strlen(p)-2 ) == 0 ) {
+        sectionFound = true;
+      }
+
+      continue;
+
+    }
+
+    // Section was already found : read the value of the key
+    if ( sectionFound ) {
+      // Empty section ?
+      if ( p[0] == '[' ) break;
+      if ( strncmp(p,key,strlen(key) ) == 0  && p[strlen(key)] == '=' ) {
+        strcpy(value,&p[strlen(key) + 1 ]);
+        // Empty value return -1
+        r = ( value[0] == '\0' ? -1 : 0 );
+        break;
+      }
+    }
+  }
+  fclose(fp);
+
+  return r;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Load mapping tables from config file
+///////////////////////////////////////////////////////////////////////////////
+static void LoadMappingFromConfFile(const char * confFileName) {
+
+  char srcKey[32];
+  char destKey[32];
+  char myKey[32];
+  char myValue[32];
+  char btLedMapSection[64];
+  char ctrlMapSection[64];
+  char btLedSrcSection[64];
+  char ctrlSrcSection[64];
+  char btLedDestSection[64];
+  char ctrlDestSection[64];
+
+  sprintf(btLedMapSection,"Map_%s_%s_ButtonsLeds",MPCProductStrShort[MPCOriginalId],MPCProductStrShort[MPCId]);
+  sprintf(ctrlMapSection,"Map_%s_%s_Controls",MPCProductStrShort[MPCOriginalId],MPCProductStrShort[MPCId]);
+
+  sprintf(btLedSrcSection,"%s_ButtonsLeds",MPCProductStrShort[MPCOriginalId]);
+  sprintf(ctrlSrcSection,"%s_Controls",MPCProductStrShort[MPCOriginalId]);
+
+  sprintf(btLedDestSection,"%s_ButtonsLeds",MPCProductStrShort[MPCId]);
+  sprintf(ctrlDestSection,"%s_Controls",MPCProductStrShort[MPCId]);
+
+  for ( int i = 0 ; i < 128 ; i++ ) {
+
+    map_ButtonsLeds[i] = -1;
+    map_ButtonsLeds_Inv[i] = -1;
+
+    map_Ctrl[i] = -1;
+    map_Ctrl_Inv[i] = -1;
+
+  }
+
+  if ( confFileName == NULL ) return ;  // No config file
+
+
+  // Read the mapping table entries
+  for ( int i = 0 ; i < 256 ; i++ ) {
+
+    // Key of the map section, to scan all mappings
+    sprintf(myKey,"%d",i);
+
+    // Buttons & Leds mapping
+
+    if ( GetKeyValueFromConfFile(confFileName, btLedMapSection,myKey,myValue) == 0 ) {
+
+        // We get the combination as src:dest
+        // Get the src key
+        char * sep = strstr(myValue,":");
+        if ( sep != NULL ) {
+          *sep = '\0';
+          strcpy(srcKey,myValue);
+          strcpy(destKey,sep + 1);
+
+          if ( srcKey[0] != '\0' && destKey[0] != '\0' ) {
+          // Get Src value
+            if ( GetKeyValueFromConfFile(confFileName, btLedSrcSection,srcKey,myValue) == 0 ) {
+              int srcValue =  atoi(myValue);
+              if ( srcValue <= 127 ) {
+                // Get Dest value
+                if ( GetKeyValueFromConfFile(confFileName, btLedDestSection,destKey,myValue) == 0 ) {
+                  int destValue =  atoi(myValue);
+                  if ( destValue <= 127 ) {
+                    map_ButtonsLeds[srcValue]=destValue;
+                    map_ButtonsLeds_Inv[destValue]=srcValue;
+                    fprintf(stdout,"[tkgl]  Button-Led %s (%d) mapped to %s (%d)\n",srcKey,srcValue,destKey,map_ButtonsLeds[srcValue]);
+                  }
+                }
+              }
+            }
+          } // != '\0'
+        } // sep
+    }
+
+  } // for
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Get an ALSA sequencer client containing a name
@@ -410,7 +600,6 @@ static void tkgl_init()
   orig_snd_seq_port_info_set_name = dlsym(RTLD_NEXT, "snd_seq_port_info_set_name");
   orig_snd_seq_event_input        = dlsym(RTLD_NEXT, "snd_seq_event_input");
 
-
   // Read product code
   char product_code[4];
   int fd = orig_open(PRODUCT_CODE_PATH,O_RDONLY);
@@ -433,6 +622,9 @@ static void tkgl_init()
     fprintf(stdout,"[tkgl]  Product code spoofed to %s (%s)\n",MPCProductCode[MPCIdSpoofed],MPCProductString[MPCIdSpoofed]);
     MPCId = MPCIdSpoofed ;
   } else MPCId = MPCOriginalId ;
+
+  // read mapping config file if any
+  LoadMappingFromConfFile(configFileName);
 
 	// Initialize card id for public and private
 	mpc_midi_card = GetCardFromShortName(CTRL_MPC_ALL);
@@ -632,6 +824,12 @@ int __libc_start_main(
         rawMidiDumpPostFlag = 1 ;
         fprintf(stdout,"[tkgl]  --tkgl_mididumpPost specified : dump raw midi message after transformation (POST)\n") ;
       }
+      else
+      // Config file name
+      if ( ( strncmp("--tkgl_configfile=",argv[i],18) == 0 ) && ( strlen(argv[i]) >18 )  ) {
+        configFileName = argv[i] + 18 ;
+        fprintf(stdout,"[tkgl]  --tkgl_configfile specified. File %s will be used for mapping\n",configFileName) ;
+      }
 
 
     }
@@ -727,6 +925,21 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
         memcpy(&myBuff[i+sizeof(IdentityReplySysexHeader)],MPCIdentityReplySysex[MPCId], sizeof(MPCIdentityReplySysex[MPCId])  );
         i += sizeof(IdentityReplySysexHeader) + sizeof(MPCIdentityReplySysex[MPCId]);
       }
+      else
+
+      // Buttons-Leds.  In that direction, it's a button press/release
+      // Check if we must remap...
+      if (  myBuff[i] == 0x90  ) {
+
+        fprintf(stdout,"[tkgl]  %d button pressed/released\n",myBuff[i+1]);
+        if ( map_ButtonsLeds[ myBuff[i+1] ] >= 0 ) {
+          fprintf(stdout,"[tkgl]  MAP %d->%d\n",myBuff[i+1],map_ButtonsLeds[ myBuff[i+1] ]);
+          myBuff[i+1] = map_ButtonsLeds[ myBuff[i+1] ];
+        }
+        i += 3;
+
+      }
+      else
 
       // PADS
       if (  myBuff[i] == 0x99 || myBuff[i] == 0x89 || myBuff[i] == 0xA9 ) {
@@ -750,6 +963,20 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
           uint8_t p = *pad - FORCEPADS_TABLE_IDX_OFFSET;
           uint8_t padL = p / 8 ;
           uint8_t padC = p % 8 ;
+
+          // Use the 8x8 matrix as 4x pad banks
+          // Regarding the pad pressed
+          //  C  D   2  3
+          //  A  B   0  1
+
+          int prevMPC_PadBank = MPC_PadBank;
+          if (padL >= 4 ) {
+            if ( padC < 4 ) MPC_PadBank = 0;
+            else MPC_PadBank = 1;
+          } else {
+            if ( padC < 4 ) MPC_PadBank = 2;
+            else MPC_PadBank = 3;
+          }
 
           // Keep pads in the 4x4 MPC pad matrix at the left bottom
           if ( padL >= 4 && padC < 4 ) {
@@ -827,6 +1054,23 @@ static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
         }
 
     }
+    else
+
+    // Buttons-Leds.  In that direction, it's a LED ON / OFF for the button
+    // Check if we must remap...
+
+    if (  myBuff[i] == 0xB0  ) {
+
+      fprintf(stdout,"[tkgl]  %d LED ON/OFF - Map => %d\n",myBuff[i+1],map_ButtonsLeds_Inv[myBuff[i+1]]);
+
+//map_ButtonsLeds_Inv[destValue]=srcValue;
+
+      if ( map_ButtonsLeds_Inv[ myBuff[i+1] ] >= 0 ) {
+        fprintf(stdout,"[tkgl]  MAP INV %d->%d\n",myBuff[i+1],map_ButtonsLeds_Inv[ myBuff[i+1] ]);
+        myBuff[i+1] = map_ButtonsLeds_Inv[ myBuff[i+1] ];
+      }
+      i += 3;
+    }
 
 
     else i++;
@@ -844,7 +1088,7 @@ ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
   if ( rawMidiDumpFlag ) {
     const char *name = snd_rawmidi_name(rawmidi);
     fprintf(stdout,"[tkgl]  ENTRY Dump snd_rawmidi_read from controller %s\n",name);
-    ShowBufferHexDump(buffer, size,16);
+    ShowBufferHexDump(buffer, r,16);
     fprintf(stdout,"[tkgl]\n");
   }
 
@@ -857,7 +1101,7 @@ ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
   if ( rawMidiDumpPostFlag ) {
     const char *name = snd_rawmidi_name(rawmidi);
     fprintf(stdout,"[tkgl]  POST Dump snd_rawmidi_read from controller %s\n",name);
-    ShowBufferHexDump(buffer, size,16);
+    ShowBufferHexDump(buffer, r,16);
     fprintf(stdout,"[tkgl]\n");
   }
 
