@@ -73,10 +73,22 @@ static char *configFileName = NULL;
 
 // Mapping tables
 static int map_ButtonsLeds[128];
-static int map_Ctrl[128];
-static int map_ButtonsLeds_Inv[128];
-static int map_Ctrl_Inv[128];
+static int map_ButtonsLeds_Inv[128]; // Inverted table
 
+static int map_Ctrl[128];
+static int map_Ctrl_Inv[128]; // Inverted table
+
+// To navigate in matrix quadran when MPC spoofing a Force
+static int MPCPad_OffsetL = 0;
+static int MPCPad_OffsetC = 0;
+
+// Force Pads Color cache
+typedef struct {
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
+} ForcePadColor_t;
+static ForcePadColor_t ForcePadColorsCache[128];
 
 // End user virtual port name
 static char *user_virtual_portname = NULL;
@@ -111,6 +123,13 @@ static const uint8_t IdentityReplySysexHeader[]   = {0xF0,0x7E,0x00,0x06,0x02,0x
 
 // MPC Current pad bank.  A-H = 0-7
 static int MPC_PadBank = -1 ;
+
+// SHIFT Holded mode
+// The shift value is hard coded here because it is equivalent whatever the platform is
+#define SHIFT_KEY_VALUE 49
+// Holding shift will activate the shift mode
+static bool shiftHoldedMode=false;
+
 
 // MPC hardware pads : a totally anarchic numbering!
 // Force is orered from 0x36. Top left
@@ -160,45 +179,6 @@ static const uint8_t MPCPadsTable2[]
   0x31,0x37,0x33,0x35
 };
 
-enum ForceButtonsLedsCtrlValue {
-  FORCE_NAVIGATE   = 0x00,  FORCE_KNOBS      = 0X01,  FORCE_MENU       = 0x02, FORCE_MATRIX     = 0x03,
-  FORCE_NOTE       = 0x04,  FORCE_MASTER     = 0x05,  FORCE_CLIP       = 0x09, FORCE_MIXER      = 0x0B,
-  FORCE_LOAD       = 0x23,  FORCE_SAVE       = 0x24,  FORCE_EDIT       = 0x25, FORCE_DELETE     = 0x26,
-  FORCE_SHIFT      = 0x31,  FORCE_SELECT     = 0x34,  FORCE_TAP        = 0x35, FORCE_PLUS       = 0x36,
-  FORCE_MINUS      = 0x37,  FORCE_LAUNCH_1   = 0x38,  FORCE_LAUNCH_2   = 0x39, FORCE_LAUNCH_3   = 0x3A,
-  FORCE_LAUNCH_4   = 0x3B,  FORCE_LAUNCH_5   = 0x3C,  FORCE_LAUNCH_6   = 0x3D, FORCE_LAUNCH_7   = 0x3E,
-  FORCE_LAUNCH_8   = 0x3F,  FORCE_UNDO       = 0x43,  FORCE_REC        = 0x49, FORCE_STOP       = 0x51,
-  FORCE_PLAY       = 0x52,  FORCE_MUTE       = 0x5B,  FORCE_SOLO       = 0x5C, FORCE_REC_ARM    = 0x5D,
-  FORCE_CLIP_STOP  = 0x5E,  FORCE_STOP_ALL   = 0x5F,  FORCE_UP         = 0x70, FORCE_DOWN       = 0x71,
-  FORCE_LEFT       = 0x72,  FORCE_RIGHT      = 0x73,  FORCE_LAUNCH     = 0x74, FORCE_STEP_SEQ   = 0x75,
-  FORCE_ARP        = 0x76,  FORCE_COPY       = 0x7A,  FORCE_ASSIGN_A   = 0x7B, FORCE_ASSIGN_B   = 0x7C,
-
-};
-
-enum MpcButtonsNoteValue {
-MPC_QLINK_SELECT = 0x00,
-MPC_SAMPLE_EDIT = 0x06,
-MPC_NOTE_REPEAT = 0x0B,
-MPC_PAD_BANK_A = 0x23, MPC_PAD_BANK_B = 0x24, MPC_PAD_BANK_C = 0x25, MPC_PAD_BANK_D = 0x26,
-MPC_SHIFT = 0x31,
-MPC_MAIN = 0x34,
-MPC_TEMPO_TAP = 0x35,
-MPC_PLUS = 0x36,
-MPC_MINUS = 0x37,
-MPC_UNDO = 0x43,
-MPC_REC = 0x49,
-MPC_OVERDUB = 0x50,
-MPC_STOP = 0x51,
-MPC_PLAY = 0x52,
-MPC_PLAY_START = 0x53,
-MPC_QLINK1_TOUCH  = 0x54, MPC_QLINK2_TOUCH  = 0x55, MPC_QLINK3_TOUCH  = 0x56, MPC_QLINK4_TOUCH  = 0x57,
-MPC_QLINK5_TOUCH  = 0x58, MPC_QLINK6_TOUCH  = 0x59, MPC_QLINK7_TOUCH  = 0x5A, MPC_QLINK8_TOUCH  = 0x5B,
-MPC_QLINK9_TOUCH  = 0x5C, MPC_QLINK10_TOUCH = 0x5D, MPC_QLINK11_TOUCH = 0x5E, MPC_QLINK12_TOUCH = 0x5F,
-MPC_QLINK13_TOUCH = 0x60, MPC_QLINK14_TOUCH = 0x61, MPC_QLINK15_TOUCH = 0x62, MPC_QLINK16_TOUCH = 0x63,
-MPC_ROTARY = 0x6F,
-MPC_PAD_MIXER = 0x73,
-MPC_MENU = 0x7B,
-};
 
 // Our MPC product id (index in the table)
 static int MPCOriginalId = -1;
@@ -579,6 +559,29 @@ const char * GetHwNameFromMPCId(uint8_t id){
 	else return NULL;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Show MPCMAPPER HELP
+///////////////////////////////////////////////////////////////////////////////
+void ShowHelp(void) {
+
+  fprintf(stdout,"[tkgl]\n") ;
+  fprintf(stdout,"[tkgl]  --tgkl_help               : Show this help\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_ctrlname=<name>    : Use external controller containing <name>\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_iamX               : Emulate MPC X\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_iamLive            : Emulate MPC Live\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_iamForce           : Emulate Force\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_iamOne             : Emulate MPC One\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_iamLive2           : Emulate MPC Live Mk II\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_virtualport=<name> : Create end user virtual port <name>\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_mididump           : Dump original raw midi flow\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_mididumpPost       : Dump raw midi flow after transformation\n") ;
+  fprintf(stdout,"[tkgl]  --tkgl_configfile=<name>  : Use configuration file <name>\n") ;
+  fprintf(stdout,"[tkgl]\n") ;
+  exit(0);
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Setup tkgl anyctrl
 ///////////////////////////////////////////////////////////////////////////////
@@ -777,6 +780,12 @@ int __libc_start_main(
     char * tkgl_SpoofArg = NULL;
 
     for ( int i = 1 ; i < argc ; i++ ) {
+
+      // help
+      if ( ( strcmp("--tkgl_help",argv[i]) == 0 ) ) {
+         ShowHelp();
+      }
+      else
       if ( ( strncmp("--tkgl_ctrlname=",argv[i],16) == 0 ) && ( strlen(argv[i]) >16 ) ) {
          anyctrl_name = argv[i] + 16;
          fprintf(stdout,"[tkgl]  --tgkl_ctrlname specified for %s midi controller\n",anyctrl_name) ;
@@ -908,10 +917,38 @@ int snd_rawmidi_open(snd_rawmidi_t **inputp, snd_rawmidi_t **outputp, const char
 	return orig_snd_rawmidi_open(inputp, outputp, name, mode);
 }
 
+
+void MPC_UpdatePadColor(uint8_t padL, uint8_t padC) {
+
+  // Write again the color like a Force.
+  // The midi modification will done within the corpse of the hooked fn.
+
+  uint8_t sysexBuff[12] = { 0xF0, 0x47, 0x7F, 0x40, 0x65, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0xF7};
+  //                                                                 [Pad #] [R]   [G]   [B]
+
+  for ( int l = 0 ; l< 4 ; l++ ) {
+
+    for ( int c = 0 ; c < 4 ; c++ ) {
+
+      int padF = ( l + padL ) * 8 + c + padC;
+      sysexBuff[7] = padF;
+      sysexBuff[8] = ForcePadColorsCache[padF].r ;
+      sysexBuff[9] = ForcePadColorsCache[padF].g;
+      sysexBuff[10] = ForcePadColorsCache[padF].b;
+      // Send the sysex to the MPC controller
+      snd_rawmidi_write(rawvirt_outpriv,sysexBuff,sizeof(sysexBuff));
+
+    }
+
+  }
+
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // MAP MPC controller hardware midi event to MPC application
 ///////////////////////////////////////////////////////////////////////////////
-static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
+static void Map_AppReadFromMPC(void *midiBuffer, size_t maxSize,size_t size) {
 
     uint8_t * myBuff = (uint8_t*)midiBuffer;
 
@@ -929,13 +966,22 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
 
       // Buttons-Leds.  In that direction, it's a button press/release
       // Check if we must remap...
-      if (  myBuff[i] == 0x90  ) {
+      if (  myBuff[i] == 0x90  || myBuff[i] == 0x80 ) {
 
-        fprintf(stdout,"[tkgl]  %d button pressed/released\n",myBuff[i+1]);
+        //fprintf(stdout,"[tkgl]  %d button pressed/released (%02x) \n",myBuff[i+1], myBuff[i+2]);
+
+        // Shift is an exception and  mapping is ignored
+        if ( myBuff[i+1] == SHIFT_KEY_VALUE ) {
+            shiftHoldedMode = ( myBuff[i+2] == 0x7F ? true:false ) ;
+            //fprintf(stdout,"[tkgl]  %d PAD SHIFT MODE\n",( myBuff[i+2] == 0x7F ? true:false )  );
+
+        }
+        else
         if ( map_ButtonsLeds[ myBuff[i+1] ] >= 0 ) {
-          fprintf(stdout,"[tkgl]  MAP %d->%d\n",myBuff[i+1],map_ButtonsLeds[ myBuff[i+1] ]);
+          //fprintf(stdout,"[tkgl]  MAP %d->%d\n",myBuff[i+1],map_ButtonsLeds[ myBuff[i+1] ]);
           myBuff[i+1] = map_ButtonsLeds[ myBuff[i+1] ];
         }
+
         i += 3;
 
       }
@@ -944,16 +990,120 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t size) {
       // PADS
       if (  myBuff[i] == 0x99 || myBuff[i] == 0x89 || myBuff[i] == 0xA9 ) {
 
+
+
         // Force spoofed on an MPC
         if ( MPCOriginalId != MPC_FORCE && MPCId == MPC_FORCE) {
+
           // Remap MPC hardware pad
-          uint8_t *pad = &myBuff[i+1] ;
           // Get MPC pad id in the true order
-          *pad = MPCPadsTable[*pad - MPCPADS_TABLE_IDX_OFFSET ];
-          uint8_t padL = *pad / 4 ;
-          uint8_t padC = *pad % 4 ;
-          // Compute the Force pad id
-          *pad = ( 3 - padL ) * 8 + padC + FORCEPADS_TABLE_IDX_OFFSET;
+          uint8_t padM = MPCPadsTable[myBuff[i+1] - MPCPADS_TABLE_IDX_OFFSET ];
+
+          uint8_t padL = padM / 4  ;
+          uint8_t padC = padM % 4  ;
+
+          // Compute the Force pad id without offset
+          uint8_t padF = ( 3 - padL + MPCPad_OffsetL ) * 8 + padC + MPCPad_OffsetC ;
+
+          fprintf(stdout,"[tkgl]  pad (%d,%d) -> Force pad %d\n",padL,padC,padF);
+
+          // Check if SHIFT is holded for the 0 column
+          if ( shiftHoldedMode ) {
+
+            fprintf(stdout,"[tkgl]  Pad Shift mode ! \n");
+
+            if ( padC == 0 ) {
+              // SHIFT + PAD  in column 0 = Launch the corresponding line
+              // LAUNCH_1=56
+              // Replace the midi pad note on by a button on/off
+
+              myBuff[i+2] = ( myBuff[i] == 0x99 ? 0x7F:0x00 ) ;
+              myBuff[i]   = 0x90; // Button
+              myBuff[i+1] = padF / 8 + 56; // Launch line
+            }
+            else
+            {
+
+              bool buttonSimul = false; // Simulate a Force button
+              uint8_t buttonValue = 0x7F;
+              bool refreshPads = false; // Simulate a Force button
+
+              // Navigte in the matrix
+              // Use Pads
+              // 13 14         ( Up 15 ) 16
+              // 08 (Left 09 ) ( Down 10) (Right 11 )
+              if (padM == 9  ) {
+                buttonValue = 114; // Left
+                buttonSimul = true;
+              }
+              else
+              if (padM == 11  ) {
+                buttonValue = 115; // Right
+                buttonSimul = true;
+              }
+              else
+              if (padM == 15  ) {
+                buttonValue = 112; // Up
+                buttonSimul = true;
+              }
+              else
+              if (padM == 11  ) {
+                buttonValue = 113; // Down
+                buttonSimul = true;
+              }
+              // Navigte in the MPC pads
+              // 04 05 (06 Left top quadran   ) (07 right top    quadran)
+              // 00 01 (02 Left bottom quadran) (03 right bottom quadran)
+              else
+              // Top Left
+              if (padM == 6  ) {
+                MPCPad_OffsetL = MPCPad_OffsetC = 0;
+                refreshPads = true;
+              }
+              else
+              // Top Right
+              if (padM == 7  ) {
+                MPCPad_OffsetL = 0;
+                MPCPad_OffsetC = 4;
+                refreshPads = true;
+              }
+              else
+              // bottom left
+              if (padM == 2 ) {
+                MPCPad_OffsetL = 4;
+                MPCPad_OffsetC = 0;
+                refreshPads = true;
+              }
+              else
+              // bottom right
+              if (padM == 3 ) {
+                MPCPad_OffsetL = 4;
+                MPCPad_OffsetC = 4;
+                refreshPads = true;
+              }
+
+              //fprintf(stdout,"[tkgl]  remapped to %02x %02x %02x  ! \n",myBuff[i],myBuff[i+1],myBuff[i+2]);
+
+              // Simulate a button press/release
+              if ( buttonSimul ) {
+                myBuff[i+2] = ( myBuff[i] == 0x99 ? 0x7F:0x00 ) ;
+                myBuff[i]   = 0x90; // MPC Button
+                myBuff[i+1] = buttonValue;
+              }
+              else {
+                // Generate a fake midi message
+                myBuff[i]   = 0x8F;
+                myBuff[i+1] = 0x00;
+                myBuff[i+2] = 0x00 ;
+              }
+
+              // Update the MPC pad colors from Force pad colors cache
+              if ( refreshPads )  MPC_UpdatePadColor(MPCPad_OffsetL,MPCPad_OffsetC);
+
+          }
+          }
+          else myBuff[i+1] = padF + FORCEPADS_TABLE_IDX_OFFSET;
+
         }
         else
         // MPC spoofed on a Force
@@ -1026,13 +1176,30 @@ static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
 
           // SET PAD COLORS SYSEX FN
           // F0 47 7F [3B] -> 65 00 04 [Pad #] [R] [G] [B] F7
+          // F0 47 7F 40      65 00 04   04     46 19   7F F7
           if ( memcmp(&myBuff[i],MPCSysexPadColorFn,sizeof(MPCSysexPadColorFn)) == 0 ) {
               i += sizeof(MPCSysexPadColorFn) ;
-              uint8_t *pad = &myBuff[i];
-              uint8_t padL = *pad / 8 ;
-              uint8_t padC = *pad % 8 ;
-              // Stay in the 4x4 MPC pad matrix
-              if ( padL < 4 && padC < 4 )  *pad = ( 3 - padL ) * 4 + padC;
+              uint8_t padF = myBuff[i];
+              uint8_t padL = padF / 8 ;
+              uint8_t padC = padF % 8 ;
+
+              // Update Force pad color cache
+              ForcePadColorsCache[padF].r = myBuff[i + 1 ];
+              ForcePadColorsCache[padF].g = myBuff[i + 2 ];
+              ForcePadColorsCache[padF].b = myBuff[i + 3 ];
+              //fprintf(stdout,"[tkgl]  Force pads color cache updated : Pad %d/%02x (%02x %02x %02x)\n",padF,padF,ForcePadColorsCache[padF].r,ForcePadColorsCache[padF].g,ForcePadColorsCache[padF].b);
+
+              // Apply eventulal L,C pad offset if MPC
+
+              if ( padL >= MPCPad_OffsetL && padC >= MPCPad_OffsetC ) {
+                padF = (  3 - ( padL - MPCPad_OffsetL  ) ) * 4 + ( padC - MPCPad_OffsetC)  ;
+              }
+              else
+                padF = 0x7F; // Cancel the pad color by setting to an unknow pad #
+
+              // Update the midi buffer
+              myBuff[i] = padF;
+
               i += 5 ; // Next msg
           }
         }
@@ -1060,10 +1227,6 @@ static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
     // Check if we must remap...
 
     if (  myBuff[i] == 0xB0  ) {
-
-      fprintf(stdout,"[tkgl]  %d LED ON/OFF - Map => %d\n",myBuff[i+1],map_ButtonsLeds_Inv[myBuff[i+1]]);
-
-//map_ButtonsLeds_Inv[destValue]=srcValue;
 
       if ( map_ButtonsLeds_Inv[ myBuff[i+1] ] >= 0 ) {
         fprintf(stdout,"[tkgl]  MAP INV %d->%d\n",myBuff[i+1],map_ButtonsLeds_Inv[ myBuff[i+1] ]);
@@ -1095,7 +1258,7 @@ ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
 
   // Map only if not on the original hardware
   if ( MPCId != MPCOriginalId && rawmidi == rawvirt_inpriv) {
-        Map_AppReadFromMPC(buffer,size);
+        Map_AppReadFromMPC(buffer,size,r);
   }
 
   if ( rawMidiDumpPostFlag ) {
