@@ -23,6 +23,25 @@ If you download any of these images, please consider making a small donation to 
 Thanks : Gian Andrea, Christopher, Egil !
 ____
 
+## NEW SSH IMAGES RELEASED FOR MPC AND FORCE (2022-02-07)
+
+                C:\Users\tkgl>ssh root@192.168.x.y
+
+                  _____ _          _  ___ _                   _         _
+                 |_   _| |_  ___  | |/ (_| |____ _ ___ _ _   | |   __ _| |__ ___
+                   | | | ' \/ -_) | ' <| | / / _` / -_| ' \  | |__/ _` | '_ (_-<
+                   |_| |_||_\___| |_|\_|_|_\_\__, \___|_||_| |____\__,_|_.__/__/
+                                             |___/
+
+                Welcome to the MPC OS ssh mod !
+                Linux force 5.4.130-inmusic-2021-07-08-rt59 #1 SMP PREEMPT_RT Fri Jan 21 17:28:36 UTC 2022 armv7l GNU/Linux
+                Your IP address is 192.168.2.126
+                WARNING : you have root permissions. You could harm your system.
+                $root@force:~#
+
+This release add a nice login banner, a usefull command prompt, and allows now to launch a bootstrap script from a FAT32 disk.
+Links on the top of the page. 
+
 ## I AM FORCE - V2 - PRELIMINARY RELEASE (2022-02-06)
 [![iamforce video](https://img.youtube.com/vi/x_guX13cvb8/0.jpg)](https://www.youtube.com/watch?v=x_guX13cvb8) 
 [![iamforce video](https://img.youtube.com/vi/zxvWxjmXFvg/0.jpg)](https://www.youtube.com/watch?v=zxvWxjmXFvg) 
