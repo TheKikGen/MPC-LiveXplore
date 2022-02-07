@@ -37,7 +37,7 @@ ____
                 Linux force 5.4.130-inmusic-2021-07-08-rt59 #1 SMP PREEMPT_RT Fri Jan 21 17:28:36 UTC 2022 armv7l GNU/Linux
                 Your IP address is 192.168.2.126
                 WARNING : you have root permissions. You could harm your system.
-                $root@force:~#
+                root@force:~#
 
 This release add a nice login banner, a usefull command prompt, and allows now to launch a bootstrap script from a FAT32 disk.
 Links on the top of the page. 
