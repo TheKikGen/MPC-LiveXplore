@@ -10,11 +10,11 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 
 SSH images :  
 
-| [MPC 2.10.1 + arp patterns, fx racks, progressions bonus](https://drive.google.com/file/d/1ZN1CFBKsuGIv4DNrRi9Yu2uEKngwSBpG/view?usp=sharing)  
-| [Force 3.1.3 + arp patterns, fx racks, progression bonus ](https://drive.google.com/file/d/16Rg-Of66t1BnyEskENe4xX_p8LMnwTXt/view?usp=sharing)
+| [MPC 2.10.1 + arp patterns, fx racks bonus](https://drive.google.com/file/d/1ZN1CFBKsuGIv4DNrRi9Yu2uEKngwSBpG/view?usp=sharing)  
+| [Force 3.1.3 + arp patterns, fx racks bonus](https://drive.google.com/file/d/16Rg-Of66t1BnyEskENe4xX_p8LMnwTXt/view?usp=sharing)
 
-These images contain new arp patterns, fx racks, and progressions.  
-NB : the test tools within /usr/share/Akai/SME0 were removed from the MPC image, due to lack of internal disk space (you will probably not miss them !).
+These images contain new arp patterns and fx racks.  
+NB : the test tools within /usr/share/Akai/SME0 were removed from the MPC image, due to lack of internal disk space (you will probably not miss them !).  You can retrieve them from the original Akai images if absolutely necessary.
 
 If you download any of these images, please consider making a small donation to encourage our team to continue their research into your favorite toys.  This will pay for the coffees swallowed during the long nights of reverse-engineering!
 
