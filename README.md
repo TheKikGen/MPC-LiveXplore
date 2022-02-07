@@ -23,6 +23,23 @@ If you download any of these images, please consider making a small donation to 
 Thanks : Gian Andrea, Christopher, Egil !
 ____
 
+## I AM FORCE - V2 - PRELIMINARY RELEASE (2022-02-06)
+[![iamforce video](https://img.youtube.com/vi/x_guX13cvb8/0.jpg)](https://www.youtube.com/watch?v=x_guX13cvb8) 
+[![iamforce video](https://img.youtube.com/vi/zxvWxjmXFvg/0.jpg)](https://www.youtube.com/watch?v=zxvWxjmXFvg) 
+
+This is a preliminary version of a further development of the IAMFORCE POC presented earlier, allowing a MPC owner to test and run the Force software.
+This special image works with a sdcard or a usb stick. No need to update your MPC.  Plug in it into your MPC, switch on the beast, and you will get  the Force. 
+Important : you need an SSH modded image on your MPC (see links at the top of this page).
+
+I have totally isolated MPC settings from Force settings, so you can't corrupt your MPC configuration. The Force image is embedded on the sdcard img.
+It is an original root file system, version 3.1.3 including streaming.   
+
+The shutdown doesn't work.  It will make you to return to the MPC mode, in which you can truly shutdown your MPC. So, a little pain...
+One last point for MPC Live users : it will not work on battery, so plug your MPC Live into the wall.
+
+To flash the img, use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.  
+[Iamforce sdcard img](https://drive.google.com/file/d/1vrxuloMMvxpAcbTfhrqD4IqjjMzY7aoB/view?usp=sharing). This image is for MPC only.  Will do nothing on Force for sure !  
+
 ## MPC KEY 61 - CODE NAME ACVM - WILL BE AN HYBRID KBD/PADS MPC (2021-11-30)
 <img width="500" border="0" src="https://www.synthanatomy.com/wp-content/uploads/2021/07/Akai-Pro-MPC-Key-61-cover.001.jpeg"  />
 
