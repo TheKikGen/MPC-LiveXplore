@@ -48,7 +48,6 @@ your own midi mapping to input and output midi messages.
 #include <fcntl.h>
 #include <stdbool.h>
 
-
 // MPC Controller names (regexp)
 #define CTRL_FORCE "Akai Pro Force"
 #define CTRL_MPC_X "MPC X Controller"
@@ -58,25 +57,51 @@ your own midi mapping to input and output midi messages.
 // Product code file
 #define PRODUCT_CODE_PATH "/sys/firmware/devicetree/base/inmusic,product-code"
 
-// Function prototypes
+// Colors R G B
+#define COLOR_FIRE       0xFF0000
+#define COLOR_ORANGE     0xFF6D17
+#define COLOR_TANGERINE  0xFF4400
+#define COLOR_APRICOT    0xFF8800
+#define COLOR_YELLOW     0xECEC24
+#define COLOR_CANARY     0xFFD500
+#define COLOR_LEMON      0xE6FF00
+#define COLOR_CHARTREUSE 0xA2FF00
+#define COLOR_NEON       0x55FF00
+#define COLOR_LIME       0x11FF00
+#define COLOR_CLOVER     0x00FF33
+#define COLOR_SEA        0x00FF80
+#define COLOR_MINT       0x00FFC4
+#define COLOR_CYAN       0x00F7FF
+#define COLOR_SKY        0x00AAFF
+#define COLOR_AZURE      0x0066FF
+#define COLOR_GREY       0xA2A9AD
+#define COLOR_MIDNIGHT   0x0022FF
+#define COLOR_INDIGO     0x5200FF
+#define COLOR_VIOLET     0x6F00FF
+#define COLOR_GRAPPE     0xB200FF
+#define COLOR_FUSHIA     0xFF00FF
+#define COLOR_MAGENTA    0xFF00BB
+#define COLOR_CORAL      0xFF0077
 
-// Globals
+// Function prototypes ---------------------------------------------------------
 
+// Globals ---------------------------------------------------------------------
 
-// Raw midi dump flag
-int rawMidiDumpFlag = 0 ;
-int rawMidiDumpPostFlag = 0 ; // After our tranformation
+// Raw midi dump flag (for debugging purpose)
+uint8_t rawMidiDumpFlag = 0 ;     // Before transformation
+uint8_t rawMidiDumpPostFlag = 0 ; // After our tranformation
 
 // Config file name
 static char *configFileName = NULL;
 
+// Buttons and controls Mapping tables
+// SHIFT values have bit 7 set
 
-// Mapping tables
-static int map_ButtonsLeds[128];
-static int map_ButtonsLeds_Inv[128]; // Inverted table
+static int map_ButtonsLeds[256];
+static int map_ButtonsLeds_Inv[256]; // Inverted table
 
-static int map_Ctrl[128];
-static int map_Ctrl_Inv[128]; // Inverted table
+static int map_Ctrl[256];
+static int map_Ctrl_Inv[256]; // Inverted table
 
 // To navigate in matrix quadran when MPC spoofing a Force
 static int MPCPad_OffsetL = 0;
@@ -89,6 +114,13 @@ typedef struct {
   uint8_t b;
 } ForcePadColor_t;
 static ForcePadColor_t ForcePadColorsCache[128];
+
+// Force Columns track pads line cache
+//static ForceColumnPadTrack_t ForcePadColorsCache[128];
+
+// Force column mute track pads line cache
+//static ForceColumnPadMute_t ForcePadColorsCache[128];
+
 
 // End user virtual port name
 static char *user_virtual_portname = NULL;
@@ -185,7 +217,7 @@ static int MPCOriginalId = -1;
 // The one used
 static int MPCId = -1;
 // and the spoofed one,
-static int MPCIdSpoofed = -1;
+static int MPCSpoofedID = -1;
 
 // Internal product code file handler to change on the fly when the file will be opened
 static int product_code_file_handler = -1 ;
@@ -311,10 +343,10 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
 ///////////////////////////////////////////////////////////////////////////////
 static void LoadMappingFromConfFile(const char * confFileName) {
 
-  char srcKey[32];
-  char destKey[32];
-  char myKey[32];
-  char myValue[32];
+  char srcKey[64];
+  char destKey[64];
+  char myKey[64];
+  char myValue[64];
   char btLedMapSection[64];
   char ctrlMapSection[64];
   char btLedSrcSection[64];
@@ -331,7 +363,7 @@ static void LoadMappingFromConfFile(const char * confFileName) {
   sprintf(btLedDestSection,"%s_ButtonsLeds",MPCProductStrShort[MPCId]);
   sprintf(ctrlDestSection,"%s_Controls",MPCProductStrShort[MPCId]);
 
-  for ( int i = 0 ; i < 128 ; i++ ) {
+  for ( int i = 0 ; i < 256 ; i++ ) {
 
     map_ButtonsLeds[i] = -1;
     map_ButtonsLeds_Inv[i] = -1;
@@ -359,11 +391,29 @@ static void LoadMappingFromConfFile(const char * confFileName) {
         char * sep = strstr(myValue,":");
         if ( sep != NULL ) {
           *sep = '\0';
-          strcpy(srcKey,myValue);
+
+          strcpy(srcKey, myValue);
           strcpy(destKey,sep + 1);
 
           if ( srcKey[0] != '\0' && destKey[0] != '\0' ) {
-          // Get Src value
+
+            bool srcShift = false ;
+            bool destShift = false;
+
+            // fprintf(stdout,"[tkgl]  Value %s src key %s => dest key %s\n",myValue,srcKey,destKey);
+
+            // Look for "SHIFT_" prefix on the source and dest key value
+            if ( strncmp(srcKey,"SHIFT_",6) == 0 )  {
+                srcShift = true;
+                strcpy(srcKey, &srcKey[6] );
+            }
+
+            if ( strncmp(destKey,"SHIFT_",6) == 0 )  {
+                destShift = true;
+                strcpy(destKey, destKey + 6);
+            }
+
+            // Get Src value in the device declaration
             if ( GetKeyValueFromConfFile(confFileName, btLedSrcSection,srcKey,myValue) == 0 ) {
               int srcValue =  atoi(myValue);
               if ( srcValue <= 127 ) {
@@ -371,9 +421,12 @@ static void LoadMappingFromConfFile(const char * confFileName) {
                 if ( GetKeyValueFromConfFile(confFileName, btLedDestSection,destKey,myValue) == 0 ) {
                   int destValue =  atoi(myValue);
                   if ( destValue <= 127 ) {
-                    map_ButtonsLeds[srcValue]=destValue;
-                    map_ButtonsLeds_Inv[destValue]=srcValue;
-                    fprintf(stdout,"[tkgl]  Button-Led %s (%d) mapped to %s (%d)\n",srcKey,srcValue,destKey,map_ButtonsLeds[srcValue]);
+                    // If shift mapping, set the bit 7
+                    srcValue   = ( srcShift  ? srcValue  + 0x80 : srcValue );
+                    destValue  = ( destShift ? destValue + 0x80 : destValue );
+                    map_ButtonsLeds[srcValue]      = destValue;
+                    map_ButtonsLeds_Inv[destValue] = srcValue;
+                    fprintf(stdout,"[tkgl]  Button-Led %s%s (%d) mapped to %s%s (%d)\n",srcShift?"(SHIFT) ":"",srcKey,srcValue,destShift?"(SHIFT) ":"",destKey,map_ButtonsLeds[srcValue]);
                   }
                 }
               }
@@ -383,6 +436,48 @@ static void LoadMappingFromConfFile(const char * confFileName) {
     }
 
   } // for
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Set pad colors
+///////////////////////////////////////////////////////////////////////////////
+// 2 implementations : call with a 32 bits color int value or with r,g,b values
+void SetPadColor(const uint8_t mpcId, const uint8_t padNumber, const uint8_t r,const uint8_t g,const uint8_t b ) {
+
+  uint8_t sysexBuff[128];
+  int p = 0;
+
+  // F0 47 7F [3B] 65 00 04 [Pad #] [R] [G] [B] F7
+
+  memcpy(sysexBuff, AkaiSysex,sizeof(AkaiSysex));
+  p += sizeof(AkaiSysex) ;
+
+  // Add the current product id
+  sysexBuff[p++] = mpcId ;
+
+  // Add the pad color fn and pad number and color
+  memcpy(&sysexBuff[p], MPCSysexPadColorFn,sizeof(MPCSysexPadColorFn));
+  sysexBuff[p++] = padNumber ;
+
+  // #define COLOR_CORAL      00FF0077
+
+  sysexBuff[p++] = r ;
+  sysexBuff[p++] = g ;
+  sysexBuff[p++] = b ;
+
+  sysexBuff[p++]  = 0xF7;
+
+  // Send the sysex to the MPC controller
+  snd_rawmidi_write(rawvirt_outpriv,sysexBuff,p);
+
+}
+
+void SetPadColorFromColorInt(const uint8_t mpcId, const uint8_t padNumber, const uint32_t rgbColorValue) {
+
+  SetPadColor(mpcId, padNumber, ( rgbColorValue >> 16 ), ( rgbColorValue >> 8 ) & 0x000000FF,rgbColorValue & 0x000000FF );
+
 }
 
 
@@ -621,9 +716,9 @@ static void tkgl_init()
   }
   fprintf(stdout,"[tkgl]  Original Product code : %s (%s)\n",MPCProductCode[MPCOriginalId],MPCProductString[MPCOriginalId]);
 
-  if ( MPCIdSpoofed >= 0 ) {
-    fprintf(stdout,"[tkgl]  Product code spoofed to %s (%s)\n",MPCProductCode[MPCIdSpoofed],MPCProductString[MPCIdSpoofed]);
-    MPCId = MPCIdSpoofed ;
+  if ( MPCSpoofedID >= 0 ) {
+    fprintf(stdout,"[tkgl]  Product code spoofed to %s (%s)\n",MPCProductCode[MPCSpoofedID],MPCProductString[MPCSpoofedID]);
+    MPCId = MPCSpoofedID ;
   } else MPCId = MPCOriginalId ;
 
   // read mapping config file if any
@@ -793,27 +888,27 @@ int __libc_start_main(
       else
       // Spoofed product id
       if ( ( strcmp("--tkgl_iamX",argv[i]) == 0 ) ) {
-        MPCIdSpoofed = MPC_X;
+        MPCSpoofedID = MPC_X;
         tkgl_SpoofArg = argv[i];
       }
       else
       if ( ( strcmp("--tkgl_iamLive",argv[i]) == 0 ) ) {
-        MPCIdSpoofed = MPC_LIVE;
+        MPCSpoofedID = MPC_LIVE;
         tkgl_SpoofArg = argv[i];
       }
       else
       if ( ( strcmp("--tkgl_iamForce",argv[i]) == 0 ) ) {
-        MPCIdSpoofed = MPC_FORCE;
+        MPCSpoofedID = MPC_FORCE;
         tkgl_SpoofArg = argv[i];
       }
       else
       if ( ( strcmp("--tkgl_iamOne",argv[i]) == 0 ) ) {
-        MPCIdSpoofed = MPC_ONE;
+        MPCSpoofedID = MPC_ONE;
         tkgl_SpoofArg = argv[i];
       }
       else
       if ( ( strcmp("--tkgl_iamLive2",argv[i]) == 0 ) ) {
-        MPCIdSpoofed = MPC_LIVE_MK2;
+        MPCSpoofedID = MPC_LIVE_MK2;
         tkgl_SpoofArg = argv[i];
       }
       else
@@ -843,8 +938,8 @@ int __libc_start_main(
 
     }
 
-    if ( MPCIdSpoofed >= 0 ) {
-      fprintf(stdout,"[tkgl]  %s specified. %s spoofing.\n",tkgl_SpoofArg,MPCProductString[MPCIdSpoofed]) ;
+    if ( MPCSpoofedID >= 0 ) {
+      fprintf(stdout,"[tkgl]  %s specified. %s spoofing.\n",tkgl_SpoofArg,MPCProductString[MPCSpoofedID]) ;
     }
 
     // Initialize everything
@@ -918,10 +1013,13 @@ int snd_rawmidi_open(snd_rawmidi_t **inputp, snd_rawmidi_t **outputp, const char
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Refresh MPC pads colors from Force PAD Colors cache
+///////////////////////////////////////////////////////////////////////////////
 void MPC_UpdatePadColor(uint8_t padL, uint8_t padC) {
 
   // Write again the color like a Force.
-  // The midi modification will done within the corpse of the hooked fn.
+  // The midi modification will be done within the corpse of the hooked fn.
 
   uint8_t sysexBuff[12] = { 0xF0, 0x47, 0x7F, 0x40, 0x65, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0xF7};
   //                                                                 [Pad #] [R]   [G]   [B]
@@ -948,7 +1046,7 @@ void MPC_UpdatePadColor(uint8_t padL, uint8_t padC) {
 ///////////////////////////////////////////////////////////////////////////////
 // MAP MPC controller hardware midi event to MPC application
 ///////////////////////////////////////////////////////////////////////////////
-static void Map_AppReadFromMPC(void *midiBuffer, size_t maxSize,size_t size) {
+static size_t Map_AppReadFromMPC(void *midiBuffer, size_t maxSize,size_t size) {
 
     uint8_t * myBuff = (uint8_t*)midiBuffer;
 
@@ -964,21 +1062,81 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t maxSize,size_t size) {
       }
       else
 
+      // If it's a shift + knob turn, add an offset of 4 if qlink <= 4
+      //  B0 [10-31] [7F - n]
+      if (  myBuff[i] == 0xB0 ) {
+
+        if ( shiftHoldedMode && myBuff[i+1] >= 0x10 && myBuff[i+1] < 0x14 ) myBuff[i+1] += 4;
+        i += 3;
+      }
+      else
+
       // Buttons-Leds.  In that direction, it's a button press/release
       // Check if we must remap...
-      if (  myBuff[i] == 0x90  || myBuff[i] == 0x80 ) {
+      if (  myBuff[i] == 0x90   ) { //|| myBuff[i] == 0x80
 
         //fprintf(stdout,"[tkgl]  %d button pressed/released (%02x) \n",myBuff[i+1], myBuff[i+2]);
 
-        // Shift is an exception and  mapping is ignored
+        // Shift is an exception and  mapping is ignored (the SHIFT button can't be mapped)
+        // Double click on SHIFT is not managed at all. Avoid it.
         if ( myBuff[i+1] == SHIFT_KEY_VALUE ) {
             shiftHoldedMode = ( myBuff[i+2] == 0x7F ? true:false ) ;
             //fprintf(stdout,"[tkgl]  %d PAD SHIFT MODE\n",( myBuff[i+2] == 0x7F ? true:false )  );
 
         }
         else
+        if ( shiftHoldedMode ) {
+
+          // If it's a shift + knob touch, add an offset of 4 if qlink <= 4
+          //  90 [54-63] 7F
+          if ( myBuff[i+1] >= 0x54 && myBuff[i+1] <= 0x57 ) myBuff[i+1] += 4;
+
+
+          // Look for shift mapping above 0x7F
+          if ( map_ButtonsLeds[ myBuff[i+1] + 0x80  ] >= 0 ) {
+
+              uint8_t mapValue = map_ButtonsLeds[ myBuff[i+1] + 0x80 ];
+
+              fprintf(stdout,"[tkgl]  Shift Button %d\n",mapValue);
+              // If the SHIFT mapping is also activated at destination, and as the shift key
+              // is currently holded, we send only the corresponding button,
+              // that will generate the shift + button code
+
+              // Otherwise, we must release the shift key, by inserting a
+              // shift key note off
+
+              // Shift mapped also at destination
+              if ( mapValue >= 0x80 ) {
+                  myBuff[i+1] = mapValue - 0x80;
+              }
+              else {
+                  // We are holding shift, but the dest key is not a SHIFT mapping
+                  // insert SHIFT BUTTON note off in the midi buffer
+                  // (we assume brutally we have room; Should check max size)
+                  if ( size > maxSize - 3 ) fprintf(stdout,"[tkgl]  Warning : midi buffer overflow !!\n");
+
+
+                  memcpy( &myBuff[i + 3 ], &myBuff[i], size - i );
+                  size +=3;
+
+                  myBuff[i + 1] = SHIFT_KEY_VALUE ;
+                  myBuff[i + 2] = 0x00 ; // Button released
+                  i += 3;
+
+                  // Now, map our Key
+                  myBuff[ i + 1 ] = mapValue;
+              }
+
+          }
+          else {
+              // If no shift mapping, use the normal mapping
+              myBuff[i+1] = map_ButtonsLeds[ myBuff[i+1] ];
+          }
+        }
+        else
         if ( map_ButtonsLeds[ myBuff[i+1] ] >= 0 ) {
           //fprintf(stdout,"[tkgl]  MAP %d->%d\n",myBuff[i+1],map_ButtonsLeds[ myBuff[i+1] ]);
+
           myBuff[i+1] = map_ButtonsLeds[ myBuff[i+1] ];
         }
 
@@ -989,8 +1147,6 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t maxSize,size_t size) {
 
       // PADS
       if (  myBuff[i] == 0x99 || myBuff[i] == 0x89 || myBuff[i] == 0xA9 ) {
-
-
 
         // Force spoofed on an MPC
         if ( MPCOriginalId != MPC_FORCE && MPCId == MPC_FORCE) {
@@ -1012,95 +1168,89 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t maxSize,size_t size) {
 
             fprintf(stdout,"[tkgl]  Pad Shift mode ! \n");
 
+            bool buttonSimul = false; // Simulate a Force button
+            uint8_t buttonValue = 0x7F;
+            bool refreshPads = false;
+
             if ( padC == 0 ) {
               // SHIFT + PAD  in column 0 = Launch the corresponding line
               // LAUNCH_1=56
               // Replace the midi pad note on by a button on/off
-
-              myBuff[i+2] = ( myBuff[i] == 0x99 ? 0x7F:0x00 ) ;
-              myBuff[i]   = 0x90; // Button
-              myBuff[i+1] = padF / 8 + 56; // Launch line
+              buttonValue = padF / 8 + 56; // Launch line
+              buttonSimul = true;
+            }
+            // Navigte in the matrix with shift + Pads
+            // 13     14       ( Up 15 )   16
+            // 08 (Left 09 ) ( Down 10) (Right 11 )
+            else
+            if (padM == 9  ) {
+              buttonValue = 114; // Left
+              buttonSimul = true;
             }
             else
-            {
+            if (padM == 11  ) {
+              buttonValue = 115; // Right
+              buttonSimul = true;
+            }
+            else
+            if (padM == 15  ) {
+              buttonValue = 112; // Up
+              buttonSimul = true;
+            }
+            else
+            if (padM == 11  ) {
+              buttonValue = 113; // Down
+              buttonSimul = true;
+            }
+            // Navigte in the MPC pads
+            // 04 05 (06 Left top quadran   ) (07 right top    quadran)
+            // 00 01 (02 Left bottom quadran) (03 right bottom quadran)
+            else
+            // Top Left
+            if (padM == 6  ) {
+              MPCPad_OffsetL = MPCPad_OffsetC = 0;
+              refreshPads = true;
+            }
+            else
+            // Top Right
+            if (padM == 7  ) {
+              MPCPad_OffsetL = 0;
+              MPCPad_OffsetC = 4;
+              refreshPads = true;
+            }
+            else
+            // bottom left
+            if (padM == 2 ) {
+              MPCPad_OffsetL = 4;
+              MPCPad_OffsetC = 0;
+              refreshPads = true;
+            }
+            else
+            // bottom right
+            if (padM == 3 ) {
+              MPCPad_OffsetL = 4;
+              MPCPad_OffsetC = 4;
+              refreshPads = true;
+            }
 
-              bool buttonSimul = false; // Simulate a Force button
-              uint8_t buttonValue = 0x7F;
-              bool refreshPads = false; // Simulate a Force button
+            //fprintf(stdout,"[tkgl]  remapped to %02x %02x %02x  ! \n",myBuff[i],myBuff[i+1],myBuff[i+2]);
 
-              // Navigte in the matrix
-              // Use Pads
-              // 13 14         ( Up 15 ) 16
-              // 08 (Left 09 ) ( Down 10) (Right 11 )
-              if (padM == 9  ) {
-                buttonValue = 114; // Left
-                buttonSimul = true;
-              }
-              else
-              if (padM == 11  ) {
-                buttonValue = 115; // Right
-                buttonSimul = true;
-              }
-              else
-              if (padM == 15  ) {
-                buttonValue = 112; // Up
-                buttonSimul = true;
-              }
-              else
-              if (padM == 11  ) {
-                buttonValue = 113; // Down
-                buttonSimul = true;
-              }
-              // Navigte in the MPC pads
-              // 04 05 (06 Left top quadran   ) (07 right top    quadran)
-              // 00 01 (02 Left bottom quadran) (03 right bottom quadran)
-              else
-              // Top Left
-              if (padM == 6  ) {
-                MPCPad_OffsetL = MPCPad_OffsetC = 0;
-                refreshPads = true;
-              }
-              else
-              // Top Right
-              if (padM == 7  ) {
-                MPCPad_OffsetL = 0;
-                MPCPad_OffsetC = 4;
-                refreshPads = true;
-              }
-              else
-              // bottom left
-              if (padM == 2 ) {
-                MPCPad_OffsetL = 4;
-                MPCPad_OffsetC = 0;
-                refreshPads = true;
-              }
-              else
-              // bottom right
-              if (padM == 3 ) {
-                MPCPad_OffsetL = 4;
-                MPCPad_OffsetC = 4;
-                refreshPads = true;
-              }
+            // Simulate a button press/release
+            if ( buttonSimul ) {
+              myBuff[i+2] = ( myBuff[i] == 0x99 ? 0x7F:0x00 ) ;
+              myBuff[i]   = 0x90; // MPC Button
+              myBuff[i+1] = buttonValue;
+            }
+            else {
+              // Generate a fake midi message
+              myBuff[i]   = 0x8F;
+              myBuff[i+1] = 0x00;
+              myBuff[i+2] = 0x00 ;
+            }
 
-              //fprintf(stdout,"[tkgl]  remapped to %02x %02x %02x  ! \n",myBuff[i],myBuff[i+1],myBuff[i+2]);
+            // Update the MPC pad colors from Force pad colors cache
+            if ( refreshPads )  MPC_UpdatePadColor(MPCPad_OffsetL,MPCPad_OffsetC);
 
-              // Simulate a button press/release
-              if ( buttonSimul ) {
-                myBuff[i+2] = ( myBuff[i] == 0x99 ? 0x7F:0x00 ) ;
-                myBuff[i]   = 0x90; // MPC Button
-                myBuff[i+1] = buttonValue;
-              }
-              else {
-                // Generate a fake midi message
-                myBuff[i]   = 0x8F;
-                myBuff[i+1] = 0x00;
-                myBuff[i+2] = 0x00 ;
-              }
-
-              // Update the MPC pad colors from Force pad colors cache
-              if ( refreshPads )  MPC_UpdatePadColor(MPCPad_OffsetL,MPCPad_OffsetC);
-
-          }
           }
           else myBuff[i+1] = padF + FORCEPADS_TABLE_IDX_OFFSET;
 
@@ -1149,6 +1299,8 @@ static void Map_AppReadFromMPC(void *midiBuffer, size_t maxSize,size_t size) {
       else i++;
 
     }
+
+    return size;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1189,13 +1341,16 @@ static void Map_AppWriteToMPC(const void *midiBuffer, size_t size) {
               ForcePadColorsCache[padF].b = myBuff[i + 3 ];
               //fprintf(stdout,"[tkgl]  Force pads color cache updated : Pad %d/%02x (%02x %02x %02x)\n",padF,padF,ForcePadColorsCache[padF].r,ForcePadColorsCache[padF].g,ForcePadColorsCache[padF].b);
 
+
               // Apply eventulal L,C pad offset if MPC
 
-              if ( padL >= MPCPad_OffsetL && padC >= MPCPad_OffsetC ) {
-                padF = (  3 - ( padL - MPCPad_OffsetL  ) ) * 4 + ( padC - MPCPad_OffsetC)  ;
+              padF = 0x7F; // set the default pad color to an unknow pad #
+              if ( padL >= MPCPad_OffsetL && padL < MPCPad_OffsetL + 4 ) {
+                if ( padC >= MPCPad_OffsetC  && padC < MPCPad_OffsetC + 4 ) {
+                  //fprintf(stdout,"[tkgl]  Pad (%d,%d) In the quadran (%d,%d)\n",padL,padC,MPCPad_OffsetL,MPCPad_OffsetC);
+                  padF = (  3 - ( padL - MPCPad_OffsetL  ) ) * 4 + ( padC - MPCPad_OffsetC)  ;
+                }
               }
-              else
-                padF = 0x7F; // Cancel the pad color by setting to an unknow pad #
 
               // Update the midi buffer
               myBuff[i] = padF;
@@ -1258,7 +1413,7 @@ ssize_t snd_rawmidi_read(snd_rawmidi_t *rawmidi, void *buffer, size_t size) {
 
   // Map only if not on the original hardware
   if ( MPCId != MPCOriginalId && rawmidi == rawvirt_inpriv) {
-        Map_AppReadFromMPC(buffer,size,r);
+        r = Map_AppReadFromMPC(buffer,size,r);
   }
 
   if ( rawMidiDumpPostFlag ) {
