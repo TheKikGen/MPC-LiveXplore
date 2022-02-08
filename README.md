@@ -8,9 +8,63 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
+SSH images :  
+
+| [MPC 2.10.1 + arp patterns, fx racks bonus](https://drive.google.com/file/d/1EfBNOjYYd3NHIVwA7UInOzCnRX_Zn3o2/view?usp=sharing)  
+| [Force 3.1.3 + arp patterns, fx racks bonus](https://drive.google.com/file/d/1YfTkMvTqVzhB55eqA52GokyHvzNQ3Gg8/view?usp=sharing)
+
+These images contain new arp patterns and fx racks.  
+NB : the test tools within /usr/share/Akai/SME0 were removed from the MPC image, due to lack of internal disk space (you will probably not miss them !).  You can retrieve them from the original Akai images if absolutely necessary.
+
+If you download any of these images, please consider making a small donation to encourage our team to continue their research into your favorite toys.  This will pay for the coffees swallowed during the long nights of reverse-engineering!
+
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=thekikgen@gmail.com&lc=FR&item_name=Donation+to+TheKikGen+projects&no_note=0&cn=&currency_code=EUR&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
 
+Thanks : Gian Andrea, Christopher, Egil !
 ____
+
+## NEW SSH IMAGES RELEASED FOR MPC AND FORCE (2022-02-07)
+
+                C:\Users\tkgl>ssh root@192.168.x.y
+
+                  _____ _          _  ___ _                   _         _
+                 |_   _| |_  ___  | |/ (_| |____ _ ___ _ _   | |   __ _| |__ ___
+                   | | | ' \/ -_) | ' <| | / / _` / -_| ' \  | |__/ _` | '_ (_-<
+                   |_| |_||_\___| |_|\_|_|_\_\__, \___|_||_| |____\__,_|_.__/__/
+                                             |___/
+
+                Welcome to the MPC OS ssh mod !
+                Linux force 5.4.130-inmusic-2021-07-08-rt59 #1 SMP PREEMPT_RT Fri Jan 21 17:28:36 UTC 2022 armv7l GNU/Linux
+                Your IP address is 192.168.2.126
+                WARNING : you have root permissions. You could harm your system.
+                root@force:~#
+
+This release add a nice login banner, a usefull command prompt, and allows now to launch a bootstrap script from a FAT32 disk.
+Links on the top of the page. 
+
+## I AM FORCE - V2 - PRELIMINARY RELEASE (2022-02-06)
+[![iamforce video](https://img.youtube.com/vi/x_guX13cvb8/0.jpg)](https://www.youtube.com/watch?v=x_guX13cvb8) 
+[![iamforce video](https://img.youtube.com/vi/zxvWxjmXFvg/0.jpg)](https://www.youtube.com/watch?v=zxvWxjmXFvg) 
+
+This is a preliminary version of a further development of the IAMFORCE POC presented earlier, allowing a MPC owner to test and run the Force software.
+This special image works with a sdcard or a usb stick. No need to update your MPC.  Plug in it into your MPC, switch on the beast, and you will get  the Force. 
+Important : you need an SSH modded image on your MPC (see links at the top of this page).
+
+I have totally isolated MPC settings from Force settings, so you can't corrupt your MPC configuration. The Force image is embedded on the sdcard img.
+It is an original root file system, version 3.1.3 including streaming.   
+
+The shutdown doesn't work.  It will make you to return to the MPC mode, in which you can truly shutdown your MPC. So, a little pain...
+One last point for MPC Live users : it will not work on battery, so plug your MPC Live into the wall.
+
+To flash the img, use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.  
+[Iamforce sdcard img](https://drive.google.com/file/d/1vrxuloMMvxpAcbTfhrqD4IqjjMzY7aoB/view?usp=sharing). This image is for MPC only.  Will do nothing on Force for sure !  
+
+## MPC KEY 61 - CODE NAME ACVM - WILL BE AN HYBRID KBD/PADS MPC (2021-11-30)
+<img width="500" border="0" src="https://www.synthanatomy.com/wp-content/uploads/2021/07/Akai-Pro-MPC-Key-61-cover.001.jpeg"  />
+
+It seems that Akai finally decided to release not a Force (ACVK), but an MPC with a keyboard (ACVM). 
+The Force synth project would have been abandoned in favor of an MPC synth.  
+Images path in the last MPC img 2.10.1 :  /usr/share/Akai/ACVMTestApp/Resources
 
 ## I AM FORCE (2021-02-11)
 [![tkglctrl video](https://img.youtube.com/vi/fVG7otydEA0/0.jpg)](https://www.youtube.com/watch?v=fVG7otydEA0) 
@@ -39,9 +93,7 @@ Check the preload_libs github repo [here](https://github.com/TheKikGen/MPC-LiveX
 ## IMG WITH SSH ACCESS for MPC LIVE AND FORCE (2020-11-25)
 
 If you want to get a remote Linux command line with SSH instead of opening your MPC, 
-patched images are available :
-
-| [MPC 2.9.0](https://drive.google.com/drive/folders/1A57y88qUesdRu_S2F8FVn3AhZaA_dDgG?usp=sharing) | [Force 3.0.6](https://drive.google.com/drive/folders/1AqEcxZnJkUNG-8yA7DVGSTJy_sd6ijqr?usp=sharing)|
+patched images are available (edit : check at the top of this page) :
 
 Very few things have been modified in that mod :
 - empty password for root. Recent version of Force Firmware added a password to root acount.
@@ -90,9 +142,15 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
 
 -----------------------------------------------------------------------------------------------------------------------
 
+
+
+
 <ul class="m-0 p-0 list-style-none" data-filterable-for="wiki-pages-filter" data-filterable-type="substring" data-pjax="">
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki">Wiki Home</a></strong>
+        </li>
+      <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Akai--InMusic-device-Ids">Akai  InMusic device Ids</a</strong>
         </li>
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/About-overlays-in-the-MPC-filesystem">About overlays in the MPC filesystem</a></strong>
@@ -109,12 +167,12 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/How-to-extract-the-2.6-rootfs-img-from-the-update.img">How to extract the 2.6 rootfs img from the update.img</a></strong>
         </li>
-   <li class="Box-row">
+        <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Iamforce-:-a-MPC-Live-like-a-Force-proof-of-concept
 ">Iamforce : a MPC Live like a Force proof of concept</a></strong>
         </li>
         <li class="Box-row">
-          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-and-Force-global-midi-mapping-in-standalone-mode-how-to">MPC global midi mapping in standalone mode how to</a></strong>
         </li>
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-internal-controller---Midi-aspects">MPC internal controller   Midi aspects</a></strong>
@@ -133,6 +191,9 @@ Don't forget to remount the partition read/write with a "mount remount / -o rw,r
         </li>
         <li class="Box-row">
           <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/SSD-partitioning">SSD partitioning</a></strong>
+        </li>
+                          <li class="Box-row">
+          <strong><a class="d-block" href="https://github.com/TheKikGen/MPC-LiveXplore/wiki/Custom-Arp-Patterns-in-standalone-mode-for-MPCs-and-Force">Custom Arp Patterns in standalone mode for MPCs and Force</a></strong>
         </li>
     </ul>
 
