@@ -46,7 +46,7 @@ Links at the top of the page.
 [![iamforce video](https://img.youtube.com/vi/x_guX13cvb8/0.jpg)](https://www.youtube.com/watch?v=x_guX13cvb8) 
 [![iamforce video](https://img.youtube.com/vi/zxvWxjmXFvg/0.jpg)](https://www.youtube.com/watch?v=zxvWxjmXFvg) 
 
-This is a preliminary version of a further development of the IAMFORCE POC presented on year ago, allowing a MPC owner to test and run the Force software.
+This is a preliminary version of a further development of the IAMFORCE POC presented one year ago, allowing a MPC owner to test and run the Force software.
 This special image works with a sdcard or a usb stick. No need to update your MPC.  Plug in it into your MPC, switch on the beast, and you will get  the Force. 
 Important : you need an SSH modded image on your MPC (see links at the top of this page).
 
