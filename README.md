@@ -39,8 +39,8 @@ ____
                 WARNING : you have root permissions. You could harm your system.
                 root@force:~#
 
-This release add a nice login banner, a usefull command prompt, and allows now to launch a bootstrap script from a FAT32 disk.
-Links on the top of the page. 
+This release add a nice login banner, a usefull command prompt, and allows now to launch a bootstrap script from a FAT32 disk.  
+Links at the top of the page. 
 
 ## I AM FORCE - V2 - PRELIMINARY RELEASE (2022-02-06)
 [![iamforce video](https://img.youtube.com/vi/x_guX13cvb8/0.jpg)](https://www.youtube.com/watch?v=x_guX13cvb8) 
