@@ -8,20 +8,20 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
-SSH images :  
+SSH images :
 
-| [MPC 2.10.1 update image ssh + arp patterns, fx racks bonus](https://drive.google.com/file/d/1E7KeLxiC4T9NgpNxhbCnfvwzI9gbXpB2/view?usp=sharing)  
+| [MPC 2.10.1 update image ssh + arp patterns, fx racks bonus](https://drive.google.com/file/d/1E7KeLxiC4T9NgpNxhbCnfvwzI9gbXpB2/view?usp=sharing)
 | [Force 3.1.3 update image ssh + arp patterns, fx racks bonus](https://drive.google.com/file/d/1cOSXjFlV7fevczlyXd4MshtLl3WDU_1R/view?usp=sharing)
 
-These images contain new arp patterns and fx racks.  
+These images contain new arp patterns and fx racks.
 NB : the test tools within /usr/share/Akai/SME0 were removed from the MPC image, due to lack of internal disk space (you will probably not miss them !).  You can retrieve them from the original Akai images if absolutely necessary.
 
-Bootstrap mods on sdcard : 
+Bootstrap mods on sdcard :
 
-| [IamForce sdcard image file (Force on a MPC)](https://drive.google.com/file/d/1vrxuloMMvxpAcbTfhrqD4IqjjMzY7aoB/view?usp=sharing)  
+| [IamForce sdcard image file (Force on a MPC)](https://drive.google.com/file/d/1vrxuloMMvxpAcbTfhrqD4IqjjMzY7aoB/view?usp=sharing)
 
-This image is for MPCs only and will no run on a Force, obviously !  
-To flash a sdcard image, I recommend to use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.  
+This image is for MPCs only and will no run on a Force, obviously !
+To flash a sdcard image, I recommend to use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.
 
 If you download any of these images, please consider making a small donation to encourage our team to continue their research into your favorite toys.  This will pay for the coffees swallowed during the long nights of reverse-engineering!
 
@@ -29,6 +29,35 @@ If you download any of these images, please consider making a small donation to 
 
 Thanks : Gian Andrea, Christopher, Egil !
 ____
+
+## CWF Builder (2022-02-11)
+
+You can now build your CFW from a vanilla update image.
+
+- install Docker
+- install make
+- you must put your firmwares into the firmwares folder
+
+```bash
+# print json info for given firmware from cfw builder database
+$ make firmware-info MPC-2.10.1-Update.img
+
+# build custom firmware (must be known by the cfw builder database)
+#   a firmware is build, e.g. MPC-2.10.1-Update.20220211_132655_cfw.img
+#   also a sha512 checksum is created, e.g. MPC-2.10.1-Update.20220211_132655_cfw.img.sha512sum.txt
+$ make build-cfw MPC-2.10.1-Update.img
+
+# create diffs for two firmwares
+#   a diff file is created in the firmware directory, e.g. MPC-2.10.1-Update.img-MPC-2.10.1.83.tkglarp-Update.img.diff
+#   you can also diff two cfws or two vanilla cfws, e.g. what did AKAI change :)
+$ make diff-firmwares MPC-2.10.1-Update.img MPC-2.10.1.83.tkglarp-Update.img
+```
+
+Todo:
+
+- create a json file with options to add e.g. custom ssh key, root passwort
+- tool to add new firmwares into the firmwares.json
+-
 
 ## NEW SSH IMAGES RELEASED FOR MPC AND FORCE (2022-02-07)
 
@@ -46,19 +75,19 @@ ____
                 WARNING : you have root permissions. You could harm your system.
                 root@force:~#
 
-This release add a nice login banner, a usefull command prompt, and allows now to launch a bootstrap script from a FAT32 disk.  
-Links at the top of the page. 
+This release add a nice login banner, a usefull command prompt, and allows now to launch a bootstrap script from a FAT32 disk.
+Links at the top of the page.
 
 ## I AM FORCE - V2 - PRELIMINARY RELEASE (2022-02-06)
-[![iamforce video](https://img.youtube.com/vi/x_guX13cvb8/0.jpg)](https://www.youtube.com/watch?v=x_guX13cvb8) 
-[![iamforce video](https://img.youtube.com/vi/zxvWxjmXFvg/0.jpg)](https://www.youtube.com/watch?v=zxvWxjmXFvg) 
+[![iamforce video](https://img.youtube.com/vi/x_guX13cvb8/0.jpg)](https://www.youtube.com/watch?v=x_guX13cvb8)
+[![iamforce video](https://img.youtube.com/vi/zxvWxjmXFvg/0.jpg)](https://www.youtube.com/watch?v=zxvWxjmXFvg)
 
 This is a preliminary version of a further development of the IAMFORCE POC presented one year ago, allowing a MPC owner to test and run the Force software.
-This special image works with a sdcard or a usb stick. No need to update your MPC.  Plug in it into your MPC, switch on the beast, and you will get  the Force. 
+This special image works with a sdcard or a usb stick. No need to update your MPC.  Plug in it into your MPC, switch on the beast, and you will get  the Force.
 Important : you need an SSH modded image on your MPC (see links at the top of this page).
 
-MPC settings are totally isolated from Force settings in a "chroot" sandbox, so you can't corrupt your MPC configuration.  
-The Force image is embedded on the sdcard img. It is an original root file system, version 3.1.3 including streaming, and usb audio compliance.  
+MPC settings are totally isolated from Force settings in a "chroot" sandbox, so you can't corrupt your MPC configuration.
+The Force image is embedded on the sdcard img. It is an original root file system, version 3.1.3 including streaming, and usb audio compliance.
 
 The shutdown doesn't work.  It will make you to return to the MPC mode, in which you can truly shutdown your MPC. So, a little pain...
 One last point for MPC Live users : it will not work on battery, so plug your MPC Live into the wall.
@@ -66,12 +95,12 @@ One last point for MPC Live users : it will not work on battery, so plug your MP
 ## MPC KEY 61 - CODE NAME ACVM - WILL BE AN HYBRID KBD/PADS MPC (2021-11-30)
 <img width="500" border="0" src="https://www.synthanatomy.com/wp-content/uploads/2021/07/Akai-Pro-MPC-Key-61-cover.001.jpeg"  />
 
-It seems that Akai finally decided to release not a Force (ACVK), but an MPC with a keyboard (ACVM). 
-The Force synth project would have been abandoned in favor of an MPC synth.  
+It seems that Akai finally decided to release not a Force (ACVK), but an MPC with a keyboard (ACVM).
+The Force synth project would have been abandoned in favor of an MPC synth.
 Images path in the last MPC img 2.10.1 :  /usr/share/Akai/ACVMTestApp/Resources
 
 ## I AM FORCE (2021-02-11)
-[![tkglctrl video](https://img.youtube.com/vi/fVG7otydEA0/0.jpg)](https://www.youtube.com/watch?v=fVG7otydEA0) 
+[![tkglctrl video](https://img.youtube.com/vi/fVG7otydEA0/0.jpg)](https://www.youtube.com/watch?v=fVG7otydEA0)
 
 This [Proof of Concept](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Iamforce-:-a-MPC-Live-like-a-Force-proof-of-concept) shows how an AKAI MPC Live and a hacked Midiplus Smartpad can be mutated to simulate a Force controller. Even if this project was technically challenging, believe me, the original Akai Force product offers much more comfort for almost the same price...one less tinkering !!
 
@@ -79,24 +108,24 @@ This [Proof of Concept](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Iamforc
 ## FORCE 6 - CODE NAME ACVK - WILL BE AN HYBRID KEYBOARD/PADS DEVICE (2021-02-03)
 <img width="500" border="0" src="https://medias.audiofanzine.com/images/thumbs3/akai-professional-force-3241206.png"  />
 
-While exploring a recent MPC 2.9 update, someone from the [Mpc live X and Force hacking modding custom group](https://www.facebook.com/groups/550328948678055) found a png showing the **FORCE 6** new keyboard from Akai. This confirms the upcoming release of a 5 octaves hybrid keyboard, with 5 * 8 pads, 8 QLINKS, and a touch screen.   The embedded software will most certainly be the same as the one already installed on the MPC/Force range, as well as the RK3288-based hardware core.    
+While exploring a recent MPC 2.9 update, someone from the [Mpc live X and Force hacking modding custom group](https://www.facebook.com/groups/550328948678055) found a png showing the **FORCE 6** new keyboard from Akai. This confirms the upcoming release of a 5 octaves hybrid keyboard, with 5 * 8 pads, 8 QLINKS, and a touch screen.   The embedded software will most certainly be the same as the one already installed on the MPC/Force range, as well as the RK3288-based hardware core.
 Png located internally at : /usr/share/Akai/ACVBTestApp/Resources/acvk.top.830x314.png
 
 ## GLOBAL MIDI MAPPING FOR STANDALONE MPC - HIDDEN FEATURE (2021-01-21)
 
-I recently investigated more deeply around the "Global midi learn" to propose a less specific midi control than I did with the anyctrl.so LD_PRELOAD library. I discovered that the global midi mapping available in the MPC software is also available in standalone mode.   
+I recently investigated more deeply around the "Global midi learn" to propose a less specific midi control than I did with the anyctrl.so LD_PRELOAD library. I discovered that the global midi mapping available in the MPC software is also available in standalone mode.
 Read the how-to [here](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-global-midi-mapping-in-standalone-mode-how-to).
- 
+
 ## USE ANY MIDI CONTROLLER AS MPC OR FORCE CONTROL SURFACE (2021-01-04)
 
-This is a hack of the MPC standalone software, using LD_PRELOAD and a special library launched with the MPC binary allowing the use of any usb midi controller as a secondary control surface. It is thus possible to extend available buttons, pads or qlinks like those of the MPC X or MPC One (track mute, pad mixer, solo, mute, etc...).  This is particularly interesting for the Force which does not have an external controller mode in the midi settings unlike the MPCs.  
+This is a hack of the MPC standalone software, using LD_PRELOAD and a special library launched with the MPC binary allowing the use of any usb midi controller as a secondary control surface. It is thus possible to extend available buttons, pads or qlinks like those of the MPC X or MPC One (track mute, pad mixer, solo, mute, etc...).  This is particularly interesting for the Force which does not have an external controller mode in the midi settings unlike the MPCs.
 [![tkglctrl video](https://img.youtube.com/vi/PQ-h3_DM6EI/0.jpg)](https://www.youtube.com/watch?v=PQ-h3_DM6EI)
 
-Check the preload_libs github repo [here](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/src/preload_libs).  
+Check the preload_libs github repo [here](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/src/preload_libs).
 
 ## IMG WITH SSH ACCESS for MPC LIVE AND FORCE (2020-11-25)
 
-If you want to get a remote Linux command line with SSH instead of opening your MPC, 
+If you want to get a remote Linux command line with SSH instead of opening your MPC,
 patched images are available (edit : check at the top of this page) :
 
 Very few things have been modified in that mod :
@@ -108,14 +137,14 @@ Very few things have been modified in that mod :
 Remove any trailer after ".img" and copy the img to the root of an usb key.
 A non-empty usb key will work contrary to what is stated in the documentation.
 
-Check here to launch your own script : [tkgl_bootstrap](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap) 
+Check here to launch your own script : [tkgl_bootstrap](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap)
 
 And here for more details about [SSH activation](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
 
 
 ## MPC V2.9.0 IS HERE AND THE DRUMSYNTH PLUGIN IS IN ! (2020-11-25)
 
-The latest 2.9.0 MPC firmware features an 8-track DrumSynth, reminiscent of Roland's TRs, and Korg ER-1 that many will have forgotten! 
+The latest 2.9.0 MPC firmware features an 8-track DrumSynth, reminiscent of Roland's TRs, and Korg ER-1 that many will have forgotten!
 Honestly, this plugin is a success, and it is certain that many MPCs will be sold at Christmas!
 Akai: Publish your APIs so third-party developers could create more plugins . Why not a MPC plugins market place ?
 
@@ -124,18 +153,18 @@ Akai: Publish your APIs so third-party developers could create more plugins . Wh
 
 ## THE MPC LIVE MK II CONFIRMED (2020-03-18)
 
-ONE MONTH LATER : CONFIRMED. Look at [fcc web site](https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB) : 
+ONE MONTH LATER : CONFIRMED. Look at [fcc web site](https://apps.fcc.gov/oetcf/eas/reports/ViewExhibitReport.cfm?mode=Exhibits&RequestTimeout=500&calledFromFrame=Y&application_id=RfTo93wUp5E%2FXSCXNY9a4Q%3D%3D&fcc_id=Y4O-ACVB) :
 
 ## THE MPC LIVE MK II SOON (2020-02-01) ?
 
 Beyond my [previous post in gearslutsz](https://www.gearslutz.com/board/showthread.php?p=14503941) regarding a shell script mentioning the MPC Live MKII, [other traces were found](https://github.com/TheKikGen/MPC-LiveXplore/wiki/MPC-Live-II-coming-soon...) in the 2.72 MPC binary after a deeper analysis and confirmed by the existence of 2x4 dtb linux drivers in the /boot directory.
 
-I have also seen code areas mentioning new plugins that I think will be present in new releases or reserved for the new MPC?  
+I have also seen code areas mentioning new plugins that I think will be present in new releases or reserved for the new MPC?
 
       => NEW :   MPC:DrumSynth    MPC:Xpand     MPC:OrganB3
 
 we can therefore deduce that the 4 MPCs will share the same software platform and mainly the same core hardware.
-This is very good news for MPC Live owners as that means updates and new features probably in a next future for all.   
+This is very good news for MPC Live owners as that means updates and new features probably in a next future for all.
 
 ## MPC Arp patterns and progressions
 
