@@ -1,2 +1,2 @@
-#**/*.img
-#build
+firmwares/**
+out
