@@ -36,6 +36,8 @@ case $1 in
     ;;
 
   "info")
+        ${SCRIPT_DIR}/../imgmaker/mpcimg info "${FIRMWARE}"
+
         FIRMWARE=$(jq '.[] | select(.sha512sum=="'${SHA512SUM}'")' "${FIRMWARE_DATABASE_JSON}")
 
         if [ -z "${FIRMWARE}" ]

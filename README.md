@@ -39,7 +39,7 @@ You can now build your CFW from a vanilla update image.
 - you must put your firmwares into the firmwares folder
 
 ```bash
-# print json info for given firmware from cfw builder database
+# calls mpcimg info and prints json info for given firmware from cfw builder database
 $ make firmware-info MPC-2.10.1-Update.img
 
 # build custom firmware (must be known by the cfw builder database)
