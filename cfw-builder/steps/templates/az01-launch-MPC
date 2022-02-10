@@ -1,0 +1,102 @@
+#!/bin/sh
+#
+# __ __| |           |  /_) |     ___|             |           |
+#    |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
+#    |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
+#   _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
+#
+# BOOTSTRAP script for MPC device.  /usr/binaz01-launch-MPC patched
+# https://github.com/TheKikGen/MPC-LiveXplore
+#
+# This shell script will :
+# - identify the current device from USB PID:VID
+# - mount all external USB storage devices
+# - run the first "/tkgl_bootstrap/tkgl_bootstrap" script found on usb device
+# - launch the MPC application as usual
+
+echo "*** TKGL MPC BOOTSTRAP ***"
+
+# Detect hardware type from usb PID:VID
+DEVICE="UNKNOW"
+for LINE in $(lsusb) ; do
+  if [[ $LINE == "09e8:003a" ]]   ; then DEVICE="MPC X"          ; break ;
+  elif [[ $LINE == "09e8:003b" ]] ; then DEVICE="MPC Live"       ; break ;
+  elif [[ $LINE == "09e8:0040" ]] ; then DEVICE="Force"          ; break ;
+  elif [[ $LINE == "09e8:0046" ]] ; then DEVICE="MPC One"        ; break ;
+  elif [[ $LINE == "09e8:0047" ]] ; then DEVICE="MPC Live Mk II" ; break ;
+  fi
+done
+echo "$DEVICE detected"
+
+# Mount all disk partitions
+# search for unmounted usb disks
+UNMOUNT_LIST=$(lsblk -o PATH,SUBSYSTEMS,TYPE,MOUNTPOINT| grep 'usb.*part\s*$' | cut -d' ' -f1)
+if [ "x$UNMOUNT_LIST" != "x" ]
+then
+ for DISK_PATH in $UNMOUNT_LIST ; do
+  # mount external usb with udisks
+  if [ "x$DISK_PATH" != "x" ]
+  then
+    echo "Mouting $DISK_PATH"s
+    udisks --mount $DISK_PATH
+  fi
+ done
+fi
+
+# wait for udevd to process the device creation events for all hardware devices
+udevadm settle
+
+# Search for tkgl_bootstrap script on usb disk
+MOUNT_LIST=$(lsblk -o MOUNTPOINT,SUBSYSTEMS | grep '^\/.*usb' | cut -d' ' -f1)
+echo "Mounted usb disks : "$MOUNT_LIST
+if [ "x$MOUNT_LIST" != "x" ]
+then
+ for MOUNT_POINT in $MOUNT_LIST ; do
+   TKGL_ROOT=$MOUNT_POINT/tkgl_bootstrap_[ProjectData]
+   TKGL_SCRIPT=$TKGL_ROOT/scripts
+   TKGL_BIN=$TKGL_ROOT/bin
+   TKGL_LIB=$TKGL_ROOT/lib
+   TKGL_CONF=$TKGL_ROOT/conf
+   TKGL_LOGS=$TKGL_ROOT/logs
+   TKGL_LOG=$TKGL_LOGS/tkgl_log.txt
+   TKGL_BOOTSTRAP=$TKGL_SCRIPT/tkgl_bootstrap
+
+   # Check if the tkgl_bootstrap script is existing and run it
+
+   if [ -f "$TKGL_BOOTSTRAP" ]
+   then
+     echo "bootstrap script found : $TKGL_BOOTSTRAP"
+
+     # Create tkgl_path file variables to source on sub scripts
+     export TKGL_PATH_FILE=$TKGL_SCRIPT/tkgl_path
+
+     echo "#!/bin/sh">$TKGL_PATH_FILE
+     echo "DEVICE=\"$DEVICE\"">>$TKGL_PATH_FILE
+     echo "MOUNT_POINT=\"$MOUNT_POINT\"">>$TKGL_PATH_FILE
+     echo "TKGL_ROOT=\"$TKGL_ROOT\"">>$TKGL_PATH_FILE
+     echo "TKGL_SCRIPT=\"$TKGL_SCRIPT\"">>$TKGL_PATH_FILE
+     echo "TKGL_BIN=\"$TKGL_BIN\"">>$TKGL_PATH_FILE
+     echo "TKGL_LIB=\"$TKGL_LIB\"">>$TKGL_PATH_FILE
+     echo "TKGL_CONF=\"$TKGL_CONF\"">>$TKGL_PATH_FILE
+     echo "TKGL_LOGS=\"$TKGL_LOGS\"">>$TKGL_PATH_FILE
+     echo "TKGL_LOG=\"$TKGL_LOG\"">>$TKGL_PATH_FILE
+     echo "TKGL_BOOTSTRAP=\"$TKGL_BOOTSTRAP\"">>$TKGL_PATH_FILE
+     echo "TKGL_PATH_FILE=\"$TKGL_PATH_FILE\"">>$TKGL_PATH_FILE
+
+     # Ensure execution of the bootstrap script if permissions not set
+     chown root:root  "$TKGL_BOOTSTRAP"
+     chmod 755 "$TKGL_BOOTSTRAP"
+
+     # Launch bootstrapscript. We use now use sh in case of FAT32 mountpoint.
+     sh "$TKGL_BOOTSTRAP"
+     break # only the first one
+   fi
+ done
+fi
+
+# Launch MPC application as usual, but take command line difference in account
+# The Force has one.., MPCs haven't. Don't know if this is important.
+ARGV=""
+[ "$DEVICE" == "Force" ] && ARGV="$@"
+
+#------------------ original script start here---------------------------------
