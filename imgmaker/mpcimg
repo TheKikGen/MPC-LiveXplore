@@ -24,6 +24,7 @@ import shutil
 import subprocess
 import os
 import mmap
+import uuid
 
 comp = ""
 version = ""
@@ -65,11 +66,12 @@ def info(in_update_img):
     if comp != "none":
         print("\nRoofs image is compressed with {}.".format(comp))
 
-def extract(in_update_img, out_img):
+def extract(in_update_img, out_img, out_dir):
 
-    tmp_filename = "imgdata.tmp"
+    tmp_filename = out_dir + str(uuid.uuid4()) + "-imgdata.tmp"
+    outfile = out_dir + out_img
 
-    print("Extracting {} from {}:\n".format(out_img, in_update_img))
+    print("Extracting {} from {}:\n".format(outfile, in_update_img))
     info(in_update_img)
 
     fdtget = ["fdtget", "-t", "x", in_update_img, "/images/rootfs", "data"]
@@ -131,7 +133,7 @@ def extract(in_update_img, out_img):
     # rename rootfs img file if no compression
     if comp == "none" :
         print("3/3.Renaming rootfs img...")
-        os.rename(tmp_filename + ".bin",out_img  )
+        os.rename(tmp_filename + ".bin",outfile)
         return # no compression
 
     # Uncompress the temporary file
@@ -139,16 +141,16 @@ def extract(in_update_img, out_img):
     #filters = [{"id": lzma.FILTER_LZMA2, "preset": 7 | lzma.PRESET_DEFAULT},
 
     with lzma.open(tmp_filename + ".bin",format=lzma.FORMAT_XZ) as compressed:
-        with open(out_img + ".img", 'wb') as destination:
+        with open(outfile + ".img", 'wb') as destination:
             shutil.copyfileobj(compressed, destination)
 
-    print("File ", out_img ," ready in the current directory.")
+    print("File ", outfile ," ready in the current directory.")
 
     print(b," bytes written")
     os.remove(tmp_filename + ".bin")
 
 
-def create(mpc,in_img, out_update_img,version_string):
+def create(mpc,in_img, out_update_img,version_string, out_dir):
 
     tmpl_header = "/dts-v1/;\n/ {{\n"
     tmpl_header = tmpl_header + "timestamp = <0x5dee18e1>;\n"
@@ -178,8 +180,7 @@ def create(mpc,in_img, out_update_img,version_string):
     tmpl_footer = tmpl_footer + "            value = <{sha}>;\n"
     tmpl_footer = tmpl_footer + "            algo = \"sha1\";\n   }};\n  }};\n }};\n}};\n"
 
-
-    tmp_filename = "imgdata.tmp"
+    tmp_filename = out_dir + str(uuid.uuid4()) + "-imgdata.tmp"
 
     print("Creating {} from {}".format(out_update_img, in_img))
 
@@ -259,12 +260,26 @@ if len(sys.argv) > 1:
         exit()
 
     if sys.argv[1] == "extract" and len(sys.argv) == 4:
-        extract(sys.argv[2], "rootfs_" + sys.argv[3])
+        outdir = os.path.dirname(sys.argv[3])
+        basename = sys.argv[3]
+        if outdir is "":
+            outdir = "./"
+        else:
+            basename = os.path.basename(sys.argv[3])
+            outdir = outdir + "/"
+        extract(sys.argv[2], "rootfs_" + basename, outdir)
         print("\nDone !")
         exit()
 
     if (sys.argv[1] == "make-mpc" or sys.argv[1] == "make-force")  and len(sys.argv) == 5:
-        create(sys.argv[1],sys.argv[2], sys.argv[3],sys.argv[4])
+        outdir = os.path.dirname(sys.argv[3])
+        basename = sys.argv[3]
+        if outdir is "":
+            outdir = "./"
+        else:
+            basename = os.path.basename(sys.argv[3])
+            outdir = outdir + "/"
+        create(sys.argv[1],sys.argv[2], sys.argv[3],sys.argv[4],outdir)
         print("\nDone !")
         exit()
 
