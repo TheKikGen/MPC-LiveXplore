@@ -57,7 +57,7 @@ Todo:
 
 - create a json file with options to add e.g. custom ssh key, root passwort
 - tool to add new firmwares into the firmwares.json
--
+- create override mode, if firmware file is not part of the cfw database
 
 ## NEW SSH IMAGES RELEASED FOR MPC AND FORCE (2022-02-07)
 
