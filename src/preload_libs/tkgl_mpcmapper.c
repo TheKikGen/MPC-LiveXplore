@@ -57,7 +57,7 @@ your own midi mapping to input and output midi messages.
 // Product code file
 #define PRODUCT_CODE_PATH "/sys/firmware/devicetree/base/inmusic,product-code"
 
-// Colors R G B
+// Colors R G B (nb . max r g b value is 7f. The bit 8 is always set )
 #define COLOR_FIRE       0xFF0000
 #define COLOR_ORANGE     0xFF6D17
 #define COLOR_TANGERINE  0xFF4400
@@ -103,6 +103,7 @@ your own midi mapping to input and output midi messages.
 #define MPCPADS_TABLE_IDX_OFFSET 0X24
 #define FORCEPADS_TABLE_IDX_OFFSET 0X36
 
+#define MAPPING_TABLE_SIZE 256
 
 // Function prototypes ---------------------------------------------------------
 
@@ -118,11 +119,11 @@ static char *configFileName = NULL;
 // Buttons and controls Mapping tables
 // SHIFT values have bit 7 set
 
-static int map_ButtonsLeds[256];
-static int map_ButtonsLeds_Inv[256]; // Inverted table
+static int map_ButtonsLeds[MAPPING_TABLE_SIZE];
+static int map_ButtonsLeds_Inv[MAPPING_TABLE_SIZE]; // Inverted table
 
-static int map_Ctrl[256];
-static int map_Ctrl_Inv[256]; // Inverted table
+static int map_Ctrl[MAPPING_TABLE_SIZE];
+static int map_Ctrl_Inv[MAPPING_TABLE_SIZE]; // Inverted table
 
 // To navigate in matrix quadran when MPC spoofing a Force
 static int MPCPad_OffsetL = 0;
@@ -309,26 +310,36 @@ int match(const char *string, const char *pattern)
 ///////////////////////////////////////////////////////////////////////////////
 // Read a key,value pair from our config file (INI file format)
 ///////////////////////////////////////////////////////////////////////////////
-static int GetKeyValueFromConfFile(const char * confFileName, const char *sectionName,const char* key, char value[]) {
+// Can return the full key list in the sectionKeys
+// If sectionKeys is NULL, will return the value of the key if matching
+
+static int GetKeyValueFromConfFile(const char * confFileName, const char *sectionName,const char* key, char value[], char * sectionKeys[], size_t keyMaxLen ) {
 
   FILE *fp = fopen(confFileName, "r");
   if ( fp == NULL) return -1;
 
   char line [132];
-  int r = -1;
-  bool sectionFound = false;
+
+  bool   withinMySection = false;
+  bool   parseFullSection = (keyMaxLen > 0 );
+
+  int keyIndex = 0;
+
+  char *p = NULL;
+  char *v = NULL ;
+  int i = 0;
+
 
   while (fgets(line, sizeof(line), fp)) {
 
     // Remove spaces before
-    char *p = line;
+    p = line;
     while (isspace (*p)) p++;
 
     // Empty line or comments
     if ( p[0] == '\0' || p[0] == '#' || p[0] == ';' ) continue;
 
     // Remove spaces after
-    int i;
     for ( i = strlen (p) - 1; (isspace (p[i]));  i--) ;
     p[i + 1] = '\0';
 
@@ -336,28 +347,51 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
     if ( p[0] == '[' && p[strlen(p) - 1 ] == ']' ) {
 
       if ( strncmp(p + 1,sectionName,strlen(p)-2 ) == 0 ) {
-        sectionFound = true;
+        withinMySection = true;
       }
-
       continue;
-
     }
 
     // Section was already found : read the value of the key
-    if ( sectionFound ) {
-      // Empty section ?
+    if ( withinMySection ) {
+      // Next section  ? stop
       if ( p[0] == '[' ) break;
-      if ( strncmp(p,key,strlen(key) ) == 0  && p[strlen(key)] == '=' ) {
-        strcpy(value,&p[strlen(key) + 1 ]);
-        // Empty value return -1
-        r = ( value[0] == '\0' ? -1 : 0 );
-        break;
+
+      // Search "=" sign
+      char * v = strstr(p,"=");
+      if ( v == NULL ) {
+          fprintf(stdout,"[tkgl]  *** Error in Configuration file : '=' missing. \n",line);
+          return -1; // Syntax error
+      }
+      *v = '\0';
+      v++;  // V now point on the value
+
+      // Remove spaces after the section name
+      for ( i = strlen (p) - 1; (isspace (p[i]));  i--) ;
+      p[i + 1] = '\0';
+
+      // Remove spaces before the value (after =)
+      while (isspace (*v)) v++;
+
+      // We need the full section in a char * array
+      if ( parseFullSection ) {
+        strcpy( (char *) ( sectionKeys + ( keyMaxLen * keyIndex ) ),p);
+        keyIndex++;
+      }
+      else {
+        // Check the key value
+
+        if ( strcmp( p,key ) == 0 ) {
+          strcpy(value,v);
+          keyIndex = 1;
+          break;
+        }
       }
     }
   }
   fclose(fp);
 
-  return r;
+  return keyIndex ;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -365,28 +399,37 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
 ///////////////////////////////////////////////////////////////////////////////
 static void LoadMappingFromConfFile(const char * confFileName) {
 
-  char srcKey[64];
-  char destKey[64];
+
+  // shortcuts
+  char *ProductStrShort     = DeviceInfoBloc[MPCOriginalId].productStringShort;
+  char *currProductStrShort = DeviceInfoBloc[MPCId].productStringShort;
+
+  // Section name strings
+  char btLedMapSectionName[64];
+  char ctrlMapSectionName[64];
+
+  char btLedSrcSectionName[64];
+  char ctrlSrcSectionName[64];
+
+  char btLedDestSectionName[64];
+  char ctrlDestSectionName[64];
+
+  // Keys and values
+  char srcKeyName[64];
+  char destKeyName[64];
+
+
+
   char myKey[64];
   char myValue[64];
-  char btLedMapSection[64];
-  char ctrlMapSection[64];
-  char btLedSrcSection[64];
-  char ctrlSrcSection[64];
-  char btLedDestSection[64];
-  char ctrlDestSection[64];
 
+  // Array of keys in the section
+  char keyNames[64]  [MAPPING_TABLE_SIZE];
 
-  sprintf(btLedMapSection,"Map_%s_%s_ButtonsLeds", DeviceInfoBloc[MPCOriginalId].productStringShort,DeviceInfoBloc[MPCId].productStringShort);
-  sprintf(ctrlMapSection,"Map_%s_%s_Controls",     DeviceInfoBloc[MPCOriginalId].productStringShort,DeviceInfoBloc[MPCId].productStringShort);
+  int  keysCount = 0;
 
-  sprintf(btLedSrcSection,"%s_ButtonsLeds",DeviceInfoBloc[MPCOriginalId].productStringShort);
-  sprintf(ctrlSrcSection,"%s_Controls",    DeviceInfoBloc[MPCOriginalId].productStringShort);
-
-  sprintf(btLedDestSection,"%s_ButtonsLeds",DeviceInfoBloc[MPCId].productStringShort);
-  sprintf(ctrlDestSection,"%s_Controls",    DeviceInfoBloc[MPCId].productStringShort);
-
-  for ( int i = 0 ; i < 256 ; i++ ) {
+  // Initialize global mapping tables
+  for ( int i = 0 ; i < MAPPING_TABLE_SIZE ; i++ ) {
 
     map_ButtonsLeds[i] = -1;
     map_ButtonsLeds_Inv[i] = -1;
@@ -396,77 +439,104 @@ static void LoadMappingFromConfFile(const char * confFileName) {
 
   }
 
-  if ( confFileName == NULL ) return ;  // No config file
+  if ( confFileName == NULL ) return ;  // No config file ...return
 
-  // Get Globals within the mapping secton
+  // Make section names
+  sprintf(btLedMapSectionName,"Map_%s_%s_ButtonsLeds", ProductStrShort,currProductStrShort);
+  sprintf(ctrlMapSectionName, "Map_%s_%s_Controls",    ProductStrShort,currProductStrShort);
 
-  if ( GetKeyValueFromConfFile(confFileName, btLedMapSection,"QlinkKnobsShiftMode",myValue) == 0 ) {
+  sprintf(btLedSrcSectionName,"%s_ButtonsLeds",ProductStrShort);
+  sprintf(ctrlSrcSectionName,"%s_Controls",    ProductStrShort);
+
+  sprintf(btLedDestSectionName,"%s_ButtonsLeds",currProductStrShort);
+  sprintf(ctrlDestSectionName,"%s_Controls",    currProductStrShort);
+
+
+  // Get keys of the mapping section. You need to pass the key max len string corresponding
+  // to the size of the string within the array
+  keysCount = GetKeyValueFromConfFile(confFileName, btLedMapSectionName,NULL,NULL,(char **)keyNames,64) ;
+
+  fprintf(stdout,"[tkgl]  %d keys found in  %s . \n",keysCount,btLedMapSectionName);
+
+
+  if ( keysCount <= 0 ) {
+    fprintf(stdout,"[tkgl]  Error *** Missing section %s in configuration file %s or syntax error. No mapping set. \n",btLedMapSectionName,confFileName);
+    return;
+  }
+
+  // Get Globals within the mapping section name of the current device
+  if ( GetKeyValueFromConfFile(confFileName, btLedMapSectionName,"_p_QlinkKnobsShiftMode",myValue,NULL,0) ) {
 
     QlinkKnobsShiftMode = ( atoi(myValue) == 1 ? true:false );
     if ( QlinkKnobsShiftMode) fprintf(stdout,"[tkgl]  QlinkKnobsShiftMode was set to 1.\n");
 
-
+  } else {
+    QlinkKnobsShiftMode = false; // default
+    fprintf(stdout,"[tkgl]  Error *** Missing _p_QlinkKnobsShiftMod key in section . Was set to 0 by default.\n");
   }
 
-
-  // Read the mapping table entries
-  for ( int i = 0 ; i < 256 ; i++ ) {
-
-    // Key of the map section, to scan all mappings
-    sprintf(myKey,"%d",i);
+  // Read the Buttons & Leds mapping section entries
+  for ( int i = 0 ; i < keysCount ; i++ ) {
 
     // Buttons & Leds mapping
 
-    if ( GetKeyValueFromConfFile(confFileName, btLedMapSection,myKey,myValue) == 0 ) {
+    // Ignore parameters
+    if ( strncmp(keyNames[i],"_p_",3) == 0 ) continue;
 
-        // We get the combination as src:dest
-        // Get the src key
-        char * sep = strstr(myValue,":");
-        if ( sep != NULL ) {
-          *sep = '\0';
+    strcpy(srcKeyName, keyNames[i] );
 
-          strcpy(srcKey, myValue);
-          strcpy(destKey,sep + 1);
+    if (  GetKeyValueFromConfFile(confFileName, btLedMapSectionName,srcKeyName,myValue,NULL,0) != 1 ) {
+      fprintf(stdout,"[tkgl]  Error *** Value not found for %s key in section[%s].\n",srcKeyName,btLedMapSectionName);
+      continue;
+    }
+    // Mapped button name
+    // Check if the reserved keyword "SHIFT_" is present
+    // Shift mode of a src button
+    bool srcShift = false;
+    if ( strncmp(srcKeyName,"SHIFT_",6) == 0 )  {
+        srcShift = true;
+        strcpy(srcKeyName, &srcKeyName[6] );
+    }
 
-          if ( srcKey[0] != '\0' && destKey[0] != '\0' ) {
+    strcpy(destKeyName,myValue);
+    bool destShift = false;
+    if ( strncmp(destKeyName,"SHIFT_",6) == 0 )  {
+        destShift = true;
+        strcpy(destKeyName, &destKeyName[6] );
+    }
 
-            bool srcShift = false ;
-            bool destShift = false;
+    // Read value in original device section
+    if (  GetKeyValueFromConfFile(confFileName, btLedSrcSectionName,srcKeyName,myValue,NULL,0) != 1 ) {
+      fprintf(stdout,"[tkgl]  Error *** Value not found for %s key in section[%s].\n",srcKeyName,btLedSrcSectionName);
+      continue;
+    }
 
-            // fprintf(stdout,"[tkgl]  Value %s src key %s => dest key %s\n",myValue,srcKey,destKey);
+    // Save the button value
+    int srcButtonValue =  atoi(myValue);
 
-            // Look for "SHIFT_" prefix on the source and dest key value
-            if ( strncmp(srcKey,"SHIFT_",6) == 0 )  {
-                srcShift = true;
-                strcpy(srcKey, &srcKey[6] );
-            }
+    // Read value in target device section
+    if (  GetKeyValueFromConfFile(confFileName, btLedDestSectionName,destKeyName,myValue,NULL,0) != 1 ) {
+      fprintf(stdout,"[tkgl]  Error *** Value not found for %s key in section[%s].\n",destKeyName,btLedDestSectionName);
+      continue;
+    }
 
-            if ( strncmp(destKey,"SHIFT_",6) == 0 )  {
-                destShift = true;
-                strcpy(destKey, destKey + 6);
-            }
+    int destButtonValue = atoi(myValue);
 
-            // Get Src value in the device declaration
-            if ( GetKeyValueFromConfFile(confFileName, btLedSrcSection,srcKey,myValue) == 0 ) {
-              int srcValue =  atoi(myValue);
-              if ( srcValue <= 127 ) {
-                // Get Dest value
-                if ( GetKeyValueFromConfFile(confFileName, btLedDestSection,destKey,myValue) == 0 ) {
-                  int destValue =  atoi(myValue);
-                  if ( destValue <= 127 ) {
-                    // If shift mapping, set the bit 7
-                    srcValue   = ( srcShift  ? srcValue  + 0x80 : srcValue );
-                    destValue  = ( destShift ? destValue + 0x80 : destValue );
-                    map_ButtonsLeds[srcValue]      = destValue;
-                    map_ButtonsLeds_Inv[destValue] = srcValue;
+    if ( srcButtonValue <=127 && destButtonValue <=127 ) {
 
-                    fprintf(stdout,"[tkgl]  Button-Led %s%s (%d) mapped to %s%s (%d)\n",srcShift?"(SHIFT) ":"",srcKey,srcValue,destShift?"(SHIFT) ":"",destKey,map_ButtonsLeds[srcValue]);
-                  }
-                }
-              }
-            }
-          } // != '\0'
-        } // sep
+      // If shift mapping, set the bit 7
+      srcButtonValue   = ( srcShift  ? srcButtonValue  + 0x80 : srcButtonValue );
+      destButtonValue  = ( destShift ? destButtonValue + 0x80 : destButtonValue );
+
+      map_ButtonsLeds[srcButtonValue]      = destButtonValue;
+      map_ButtonsLeds_Inv[destButtonValue] = srcButtonValue;
+
+      fprintf(stdout,"[tkgl]  Button-Led %s%s (%d) mapped to %s%s (%d)\n",srcShift?"(SHIFT) ":"",srcKeyName,srcButtonValue,destShift?"(SHIFT) ":"",destKeyName,map_ButtonsLeds[srcButtonValue]);
+
+    }
+    else {
+      fprintf(stdout,"[tkgl]  Configuration file Error : values above 127 found. Check sections [%s] %s, [%s] %s.\n",btLedSrcSectionName,srcKeyName,btLedDestSectionName,destKeyName);
+      return;
     }
 
   } // for
@@ -510,7 +580,13 @@ void SetPadColor(const uint8_t mpcId, const uint8_t padNumber, const uint8_t r,c
 
 void SetPadColorFromColorInt(const uint8_t mpcId, const uint8_t padNumber, const uint32_t rgbColorValue) {
 
-  SetPadColor(mpcId, padNumber, ( rgbColorValue >> 16 ), ( rgbColorValue >> 8 ) & 0x000000FF,rgbColorValue & 0x000000FF );
+  // Colors R G B max value is 7f in SYSEX. So the bit 8 is always set to 0.
+
+  uint8_t r = ( rgbColorValue >> 16 ) & 0x7F ;
+  uint8_t g = ( rgbColorValue >> 8  ) & 0x7F ;
+  uint8_t b = rgbColorValue & 0x7F;
+
+  SetPadColor(mpcId, padNumber, r, g , b );
 
 }
 
@@ -1127,7 +1203,7 @@ void MPC_UpdatePadColorLine(uint8_t forcePadL, uint8_t forcePadC, uint8_t mpcPad
     sysexBuff[9]  = ForcePadColorsCache[p].g;
     sysexBuff[10] = ForcePadColorsCache[p].b;
 
-    fprintf(stdout,"[tkgl] MPC Pad Line refresh : %d r g b %02X %02X %02X\n",sysexBuff[7],sysexBuff[8],sysexBuff[9],sysexBuff[10]);
+    //fprintf(stdout,"[tkgl] MPC Pad Line refresh : %d r g b %02X %02X %02X\n",sysexBuff[7],sysexBuff[8],sysexBuff[9],sysexBuff[10]);
 
     orig_snd_rawmidi_write(rawvirt_outpriv,sysexBuff,sizeof(sysexBuff));
   }
