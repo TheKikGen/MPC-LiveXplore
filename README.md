@@ -10,15 +10,15 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 
 SSH images :  
 
-| [MPC 2.10.1 update image ssh + arp patterns, fx racks bonus](https://drive.google.com/file/d/1E7KeLxiC4T9NgpNxhbCnfvwzI9gbXpB2/view?usp=sharing)  
-| [Force 3.1.3 update image ssh + arp patterns, fx racks bonus](https://drive.google.com/file/d/1cOSXjFlV7fevczlyXd4MshtLl3WDU_1R/view?usp=sharing)
+| [MPC 2.10.1 update image ssh](https://drive.google.com/file/d/1E7KeLxiC4T9NgpNxhbCnfvwzI9gbXpB2/view?usp=sharing)  
+| [Force 3.1.3 update image ssh](https://drive.google.com/file/d/1cOSXjFlV7fevczlyXd4MshtLl3WDU_1R/view?usp=sharing)
 
 These images contain new arp patterns and fx racks.  
 NB : the test tools within /usr/share/Akai/SME0 were removed from the MPC image, due to lack of internal disk space (you will probably not miss them !).  You can retrieve them from the original Akai images if absolutely necessary.
 
 Bootstrap mods on sdcard : 
 
-| [IamForce sdcard image file (Force on a MPC)](https://drive.google.com/file/d/1vrxuloMMvxpAcbTfhrqD4IqjjMzY7aoB/view?usp=sharing)  
+| [IamForce sdcard image file (Force on a MPC)](https://drive.google.com/file/d/1TT_TyIbJXN5qrnftmRFe3DwXqeZJokgi/view?usp=sharing)  
 
 This image is for MPCs only and will no run on a Force, obviously !  
 To flash a sdcard image, I recommend to use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.  
