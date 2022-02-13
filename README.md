@@ -11,7 +11,7 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 SSH images :  
 
 | [MPC 2.10.1 update image ssh](https://drive.google.com/file/d/1E7KeLxiC4T9NgpNxhbCnfvwzI9gbXpB2/view?usp=sharing)  
-| [Force 3.1.3 update image ssh](https://drive.google.com/file/d/1cOSXjFlV7fevczlyXd4MshtLl3WDU_1R/view?usp=sharing)
+| [Force 3.1.3 update image ssh](https://drive.google.com/file/d/1Bcgmjx-L75nx4u_781CLJhC1SjkNpH0n/view?usp=sharing)
 
 Bootstrap mods on sdcard : 
 
