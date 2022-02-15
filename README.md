@@ -58,7 +58,7 @@ MPC settings are totally isolated from Force settings in a "chroot" sandbox, so 
 The Force image is embedded on the sdcard img. It is an original root file system, version 3.1.3 including streaming, and usb audio compliance.  
 
 The shutdown doesn't work.  It will make you to return to the MPC mode, in which you can truly shutdown your MPC. So, a little pain...
-One last point for MPC Live users : it will not work on battery, so plug your MPC Live into the wall.
+One last point for MPC Live users : it can be used on battery. The power supply status is faked.
 
 ## MPC KEY 61 - CODE NAME ACVM - WILL BE AN HYBRID KBD/PADS MPC (2021-11-30)
 <img width="500" border="0" src="https://www.synthanatomy.com/wp-content/uploads/2021/07/Akai-Pro-MPC-Key-61-cover.001.jpeg"  />
