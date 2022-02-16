@@ -52,7 +52,8 @@ your own midi mapping to input and output midi messages.
 #define CTRL_FORCE "Akai Pro Force"
 #define CTRL_MPC_X "MPC X Controller"
 #define CTRL_MPC_LIVE "MPC Live Controller"
-#define CTRL_MPC_ALL ".*(MPC.*Controller|Akai Pro Force).*"
+#define CTRL_MPC_LIVE_2 "MPC Live II"
+#define CTRL_MPC_ALL "(.*MPC.*Controller.*|.*MPC Live II$|.*Akai Pro Force.*)"
 
 // Product code file
 #define PRODUCT_CODE_PATH "/sys/firmware/devicetree/base/inmusic,product-code"
