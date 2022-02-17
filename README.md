@@ -20,7 +20,6 @@ Bootstrap mods on sdcard :
 | [Bootstrap sdcard image file (without Force / MPC assets)]()  
 
 
-This image is for MPCs only and will no run on a Force, obviously !  
 To flash a sdcard image, I recommend to use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.  
 
 If you download any of these images, please consider making a small donation to encourage our team to continue their research into your favorite toys.  This will pay for the coffees swallowed during the long nights of reverse-engineering!
