@@ -16,7 +16,7 @@ SSH images :
 Bootstrap mods on sdcard : 
 
 | [IamForce sdcard image file (Force on a MPC)]()  
-| [IamX sdcard image file (MPC X on a Force)]()  
+| [IamX sdcard image file (MPC X on a Force)](https://drive.google.com/file/d/1KiYi4qL6ExJlFeiVaRSVHJLbs07z1qFg/view?usp=sharing)  
 | [Bootstrap sdcard image file (without Force / MPC assets)]()  
 
 
