@@ -34,9 +34,13 @@ your own midi mapping to input and output midi messages.
 */
 
 #define _GNU_SOURCE
-
-#include <stdio.h>
+#include <stdint.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdio.h>
 #include <ctype.h>
 #include <stdint.h>
 #include <alsa/asoundlib.h>
@@ -47,7 +51,6 @@ your own midi mapping to input and output midi messages.
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdbool.h>
-//#include <unistd.h>
 
 
 // MPC Controller names (regexp)
@@ -129,6 +132,11 @@ your own midi mapping to input and output midi messages.
 #define FORCEPADS_TABLE_IDX_OFFSET 0X36
 
 #define MAPPING_TABLE_SIZE 256
+
+// INI FILE Constant
+#define INI_FILE_KEY_MAX_LEN 64
+#define INI_FILE_LINE_MAX_LEN 256
+
 
 // Function prototypes ---------------------------------------------------------
 
@@ -276,10 +284,11 @@ static int MPCSpoofedID = -1;
 // That avoids all binding stuff in shell
 static int product_code_file_handler = -1 ;
 static int product_compatible_file_handler = -1 ;
-
 // Power supply file handlers
 static int pws_online_file_handler = -1 ;
 static int pws_voltage_file_handler = -1 ;
+static FILE *fpws_voltage_file_handler;
+
 static int pws_present_file_handler = -1 ;
 static int pws_status_file_handler = -1 ;
 static int pws_capacity_file_handler = -1 ;
@@ -352,15 +361,15 @@ int match(const char *string, const char *pattern)
 // Can return the full key list in the sectionKeys
 // If sectionKeys is NULL, will return the value of the key if matching
 
-static int GetKeyValueFromConfFile(const char * confFileName, const char *sectionName,const char* key, char value[], char * sectionKeys[], size_t keyMaxLen ) {
+static int GetKeyValueFromConfFile(const char * confFileName, const char *sectionName,const char* key, char value[], char sectionKeys[][INI_FILE_KEY_MAX_LEN], size_t keyMaxCount ) {
 
   FILE *fp = fopen(confFileName, "r");
   if ( fp == NULL) return -1;
 
-  char line [132];
+  char line [INI_FILE_LINE_MAX_LEN];
 
   bool   withinMySection = false;
-  bool   parseFullSection = (keyMaxLen > 0 );
+  bool   parseFullSection = (keyMaxCount > 0 );
 
   int keyIndex = 0;
 
@@ -370,6 +379,8 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
 
 
   while (fgets(line, sizeof(line), fp)) {
+
+      //fprintf(stdout,"[tkgl]  read line : %s\n",line);
 
     // Remove spaces before
     p = line;
@@ -387,6 +398,7 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
 
       if ( strncmp(p + 1,sectionName,strlen(p)-2 ) == 0 ) {
         withinMySection = true;
+        //fprintf(stdout,"[tkgl]  Section %s found.\n",sectionName);
       }
       continue;
     }
@@ -399,13 +411,13 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
       // Search "=" sign
       char * v = strstr(p,"=");
       if ( v == NULL ) {
-          fprintf(stdout,"[tkgl]  *** Error in Configuration file : '=' missing. \n",line);
+          fprintf(stdout,"[tkgl]  *** Error in Configuration file : '=' missing : %s. \n",line);
           return -1; // Syntax error
       }
       *v = '\0';
       v++;  // V now point on the value
 
-      // Remove spaces after the section name
+      // Remove spaces after the key name (before =)
       for ( i = strlen (p) - 1; (isspace (p[i]));  i--) ;
       p[i + 1] = '\0';
 
@@ -414,8 +426,14 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
 
       // We need the full section in a char * array
       if ( parseFullSection ) {
-        strcpy( (char *) ( sectionKeys + ( keyMaxLen * keyIndex ) ),p);
-        keyIndex++;
+
+        if ( keyIndex < keyMaxCount ) {
+          strncpy(&sectionKeys[keyIndex][0],p,INI_FILE_KEY_MAX_LEN - 1);
+          keyIndex++;
+        }
+        else {
+          fprintf(stdout,"[tkgl]  Maximum of %d keys by section reached for key %s. The key is ignored. \n",keyMaxCount,p);
+        }
       }
       else {
         // Check the key value
@@ -423,12 +441,16 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
         if ( strcmp( p,key ) == 0 ) {
           strcpy(value,v);
           keyIndex = 1;
+          //fprintf(stdout,"[tkgl]  Loaded : %s.\n",line);
+
           break;
         }
       }
     }
   }
   fclose(fp);
+  //fprintf(stdout,"[tkgl]  config file closed.\n");
+
 
   return keyIndex ;
 }
@@ -437,7 +459,6 @@ static int GetKeyValueFromConfFile(const char * confFileName, const char *sectio
 // Load mapping tables from config file
 ///////////////////////////////////////////////////////////////////////////////
 static void LoadMappingFromConfFile(const char * confFileName) {
-
 
   // shortcuts
   char *ProductStrShort     = DeviceInfoBloc[MPCOriginalId].productStringShort;
@@ -457,13 +478,11 @@ static void LoadMappingFromConfFile(const char * confFileName) {
   char srcKeyName[64];
   char destKeyName[64];
 
-
-
   char myKey[64];
   char myValue[64];
 
   // Array of keys in the section
-  char keyNames[64]  [MAPPING_TABLE_SIZE];
+  char keyNames [MAPPING_TABLE_SIZE][INI_FILE_KEY_MAX_LEN] ;
 
   int  keysCount = 0;
 
@@ -479,6 +498,7 @@ static void LoadMappingFromConfFile(const char * confFileName) {
   }
 
   if ( confFileName == NULL ) return ;  // No config file ...return
+  fprintf(stdout,"[tkgl]  %s configuration file found.\n", confFileName);
 
   // Make section names
   sprintf(btLedMapSectionName,"Map_%s_%s_ButtonsLeds", ProductStrShort,currProductStrShort);
@@ -493,10 +513,9 @@ static void LoadMappingFromConfFile(const char * confFileName) {
 
   // Get keys of the mapping section. You need to pass the key max len string corresponding
   // to the size of the string within the array
-  keysCount = GetKeyValueFromConfFile(confFileName, btLedMapSectionName,NULL,NULL,(char **)keyNames,64) ;
+  keysCount = GetKeyValueFromConfFile(confFileName, btLedMapSectionName,NULL,NULL,keyNames,MAPPING_TABLE_SIZE) ;
 
   fprintf(stdout,"[tkgl]  %d keys found in  %s . \n",keysCount,btLedMapSectionName);
-
 
   if ( keysCount <= 0 ) {
     fprintf(stdout,"[tkgl]  Error *** Missing section %s in configuration file %s or syntax error. No mapping set. \n",btLedMapSectionName,confFileName);
@@ -511,7 +530,7 @@ static void LoadMappingFromConfFile(const char * confFileName) {
 
   } else {
     QlinkKnobsShiftMode = false; // default
-    fprintf(stdout,"[tkgl]  Error *** Missing _p_QlinkKnobsShiftMod key in section . Was set to 0 by default.\n");
+    fprintf(stdout,"[tkgl]  Warning : missing _p_QlinkKnobsShiftMod key in section . Was set to 0 by default.\n");
   }
 
   // Read the Buttons & Leds mapping section entries
@@ -1196,7 +1215,6 @@ static void MPC_UpdatePadColor(uint8_t padL, uint8_t padC, uint8_t nbLine) {
 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // Show the current MPC quadran within the Force matrix
 ///////////////////////////////////////////////////////////////////////////////
@@ -1251,7 +1269,6 @@ void MPC_UpdatePadColorLine(uint8_t forcePadL, uint8_t forcePadC, uint8_t mpcPad
     orig_snd_rawmidi_write(rawvirt_outpriv,sysexBuff,sizeof(sysexBuff));
   }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // MIDI READ - APP ON MPC READING AS FORCE
@@ -2389,8 +2406,6 @@ long snd_midi_event_decode	(	snd_midi_event_t * 	dev,unsigned char * 	buf,long 	
 ///////////////////////////////////////////////////////////////////////////////
 int close(int fd) {
 
-  int r = orig_close(fd);
-
   if ( fd == product_code_file_handler )            product_code_file_handler = -1;
   else if ( fd == product_compatible_file_handler ) product_compatible_file_handler = -1;
   else if ( fd == pws_online_file_handler   )       pws_online_file_handler   = -1 ;
@@ -2399,57 +2414,84 @@ int close(int fd) {
   else if ( fd == pws_status_file_handler   )       pws_status_file_handler   = -1 ;
   else if ( fd == pws_capacity_file_handler )       pws_capacity_file_handler = -1 ;
 
-  return r;
+  return orig_close(fd);
 }
 
-
+///////////////////////////////////////////////////////////////////////////////
+// fake_open : use memfd to create a fake file in memory
+///////////////////////////////////////////////////////////////////////////////
+int fake_open(const char * name, char *content, size_t contentSize) {
+  int fd = memfd_create(name, MFD_ALLOW_SEALING);
+  write(fd,content, contentSize);
+  lseek(fd, 0, SEEK_SET);
+  return fd  ;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // open64
 ///////////////////////////////////////////////////////////////////////////////
-// We intercept all file opening until we found inmusic,product-code in the path.
-// We could do the same for serial number, or panel/touch orientaton.
+// Intercept all file opening to fake those we want to.
 
 int open64(const char *pathname, int flags,...) {
-   int r;
-
    // If O_CREAT is used to create a file, the file access mode must be given.
+   // We do not fake the create function at all.
    if (flags & O_CREAT) {
        va_list args;
        va_start(args, flags);
        int mode = va_arg(args, int);
        va_end(args);
-       r =  orig_open64(pathname, flags, mode);
-   } else {
-       r = orig_open64(pathname, flags);
+      return  orig_open64(pathname, flags, mode);
    }
 
-   // Specific part. Pseudo Bind product code
+   // Existing file
+   // Fake files sections
+
+   // product code
    if ( product_code_file_handler < 0 && strcmp(pathname,PRODUCT_CODE_PATH) == 0 ) {
-     // Save the product code file descriptor
-     product_code_file_handler = r;
-     fprintf(stdout,"[tkgl] %s handler found\n",PRODUCT_CODE_PATH);
+     // Create a fake file in memory
+     product_code_file_handler = fake_open(pathname,DeviceInfoBloc[MPCId].productCode, strlen(DeviceInfoBloc[MPCId].productCode) ) ;
+     return product_code_file_handler ;
    }
 
-   // Specific part. Pseudo Bind product compatible list
-   else
+   // product compatible
    if ( product_compatible_file_handler < 0 && strcmp(pathname,PRODUCT_COMPATIBLE_PATH) == 0 ) {
-     // Save the product compat file descriptor
-     product_compatible_file_handler = r;
-     fprintf(stdout,"[tkgl] %s handler found\n",PRODUCT_COMPATIBLE_PATH);
+     char buf[64];
+     sprintf(buf,PRODUCT_COMPATIBLE_STR,DeviceInfoBloc[MPCId].productCompatible);
+     product_compatible_file_handler = fake_open(pathname,buf, strlen(buf) ) ;
+     return product_compatible_file_handler ;
    }
 
    // Fake power supply files if necessary only (this allows battery mode)
    else
    if ( DeviceInfoBloc[MPCOriginalId].fakePowerSupply ) {
-     if      ( pws_online_file_handler   < 0 && strcmp(pathname,POWER_SUPPLY_ONLINE_PATH) == 0 )      pws_online_file_handler   = r ;
-     else if ( pws_voltage_file_handler  < 0 && strcmp(pathname,POWER_SUPPLY_VOLTAGE_NOW_PATH) == 0 ) pws_voltage_file_handler  = r ;
-     else if ( pws_present_file_handler  < 0 && strcmp(pathname,POWER_SUPPLY_PRESENT_PATH) == 0 )     pws_present_file_handler  = r ;
-     else if ( pws_status_file_handler   < 0 && strcmp(pathname,POWER_SUPPLY_STATUS_PATH) == 0 )      pws_status_file_handler   = r ;
-     else if ( pws_capacity_file_handler < 0 && strcmp(pathname,POWER_SUPPLY_CAPACITY_PATH) == 0 )    pws_capacity_file_handler = r ;
+
+     if ( pws_voltage_file_handler   < 0 && strcmp(pathname,POWER_SUPPLY_VOLTAGE_NOW_PATH) == 0 ) {
+        pws_voltage_file_handler = fake_open(pathname,POWER_SUPPLY_VOLTAGE_NOW,strlen(POWER_SUPPLY_VOLTAGE_NOW) ) ;
+        return pws_voltage_file_handler ;
+     }
+
+     if ( pws_online_file_handler   < 0 && strcmp(pathname,POWER_SUPPLY_ONLINE_PATH) == 0 ) {
+        pws_online_file_handler = fake_open(pathname,POWER_SUPPLY_ONLINE,strlen(POWER_SUPPLY_ONLINE) ) ;
+        return pws_online_file_handler ;
+     }
+
+     if ( pws_present_file_handler  < 0 && strcmp(pathname,POWER_SUPPLY_PRESENT_PATH) == 0 ) {
+       pws_present_file_handler = fake_open(pathname,POWER_SUPPLY_PRESENT,strlen(POWER_SUPPLY_PRESENT)  ) ;
+       return pws_present_file_handler ;
+     }
+
+     if ( pws_status_file_handler   < 0 && strcmp(pathname,POWER_SUPPLY_STATUS_PATH) == 0 ) {
+       pws_status_file_handler = fake_open(pathname,POWER_SUPPLY_STATUS,strlen(POWER_SUPPLY_STATUS) ) ;
+       return pws_status_file_handler ;
+     }
+
+     if ( pws_capacity_file_handler < 0 && strcmp(pathname,POWER_SUPPLY_CAPACITY_PATH) == 0 ) {
+       pws_capacity_file_handler = fake_open(pathname,POWER_SUPPLY_CAPACITY,strlen(POWER_SUPPLY_CAPACITY) ) ;
+       return pws_capacity_file_handler ;
+     }
    }
 
-   return r ;
+   return orig_open64(pathname, flags) ;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2458,7 +2500,6 @@ int open64(const char *pathname, int flags,...) {
 int open(const char *pathname, int flags,...) {
 
 //  printf("(tkgl) Open %s\n",pathname);
-
 
    // If O_CREAT is used to create a file, the file access mode must be given.
    if (flags & O_CREAT) {
@@ -2476,73 +2517,6 @@ int open(const char *pathname, int flags,...) {
 // read
 ///////////////////////////////////////////////////////////////////////////////
 ssize_t read(int fildes, void *buf, size_t nbyte) {
-
-  // If we got the product code file descriptor, we can swap the product code with the spoofed one.
-  if ( fildes == product_code_file_handler ) {
-    memcpy(buf,DeviceInfoBloc[MPCId].productCode,nbyte );
-    return strlen(DeviceInfoBloc[MPCId].productCode) ;
-  }
-
-  // idem for product compatible.
-  if ( fildes == product_compatible_file_handler ) {
-    sprintf(buf,PRODUCT_COMPATIBLE_STR,DeviceInfoBloc[MPCId].productCompatible);
-    return strlen(buf) ;
-  }
-
-  // Fake power supply files if necessary only (on battery)
-  if ( DeviceInfoBloc[MPCOriginalId].fakePowerSupply ) {
-
-    if ( fildes == pws_present_file_handler ) {
-//      fprintf(stdout,"[tkgl] POWER_SUPPLY_PRESENT buf \n" );
-//      ShowBufferHexDump(buf, r, 16);
-
-      memcpy(buf,POWER_SUPPLY_PRESENT,strlen(POWER_SUPPLY_PRESENT) );
-      return strlen(POWER_SUPPLY_PRESENT);
-    }
-
-    if ( fildes == pws_online_file_handler ) {
-      //fprintf(stdout,"[tkgl] POWER_SUPPLY_ONLINE buf \n" );
-      //ShowBufferHexDump(buf, r, 16);
-      memcpy(buf,POWER_SUPPLY_ONLINE,strlen(POWER_SUPPLY_ONLINE) );
-      return nbyte;
-    }
-
-    if ( fildes == pws_voltage_file_handler ) {
-
-      ssize_t r = orig_read(fildes,buf,nbyte);
-      if ( r == 1) {
-          static uint8_t voltStrIndex = 0;
-          char *b2 =  (char *) buf  ;
-          if ( *b2 == 0x0a ) {
-            voltStrIndex = 0;
-            return r;
-          }
-          char b1 = * ( (char * )(POWER_SUPPLY_VOLTAGE_NOW + voltStrIndex) );
-          *b2 = b1 ;
-          //fprintf(stdout,"[tkgl] My byte : %c %0x  Their byte %c %02x \n",b1,b1,*b2,*b2 );
-          voltStrIndex++;
-      }
-      return r;
-    }
-
-    if ( fildes == pws_capacity_file_handler ) {
-
-      //fprintf(stdout,"[tkgl] POWER_SUPPLY_CAPACITY \n" );
-      //ShowBufferHexDump(buf, r, 16);
-
-      memcpy(buf,POWER_SUPPLY_CAPACITY,strlen(POWER_SUPPLY_CAPACITY) );
-      return strlen(buf);
-    }
-
-    if ( fildes == pws_status_file_handler ) {
-      //fprintf(stdout,"[tkgl] POWER_SUPPLY_STATUS \n" );
-      //ShowBufferHexDump(buf, r, 16);
-
-      memcpy(buf,POWER_SUPPLY_STATUS,strlen(POWER_SUPPLY_STATUS) );
-      return strlen(buf);
-    }
-
-  }
 
   return orig_read(fildes,buf,nbyte);
 }
