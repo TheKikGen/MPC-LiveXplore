@@ -47,6 +47,8 @@ your own midi mapping to input and output midi messages.
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdbool.h>
+//#include <unistd.h>
+
 
 // MPC Controller names (regexp)
 #define CTRL_FORCE "Akai Pro Force"
@@ -55,8 +57,23 @@ your own midi mapping to input and output midi messages.
 #define CTRL_MPC_LIVE_2 "MPC Live II"
 #define CTRL_MPC_ALL "(.*MPC.*Controller.*|.*MPC Live II$|.*Akai Pro Force.*)"
 
-// Product code file
+// Product code file and diffrent file path to fake
 #define PRODUCT_CODE_PATH "/sys/firmware/devicetree/base/inmusic,product-code"
+#define PRODUCT_COMPATIBLE_PATH "/sys/firmware/devicetree/base/compatible"
+#define PRODUCT_COMPATIBLE_STR "inmusic,%sinmusic,az01rockchip,rk3288"
+
+// Power supply faking
+#define POWER_SUPPLY_ONLINE_PATH "/sys/class/power_supply/az01-ac-power/online"
+#define POWER_SUPPLY_VOLTAGE_NOW_PATH "/sys/class/power_supply/az01-ac-power/voltage_now"
+#define POWER_SUPPLY_PRESENT_PATH "/sys/class/power_supply/sbs-3-000b/present"
+#define POWER_SUPPLY_STATUS_PATH "/sys/class/power_supply/sbs-3-000b/status"
+#define POWER_SUPPLY_CAPACITY_PATH "/sys/class/power_supply/sbs-3-000b/capacity"
+
+#define POWER_SUPPLY_ONLINE "1"
+#define POWER_SUPPLY_VOLTAGE_NOW "18608000"
+#define POWER_SUPPLY_PRESENT "1"
+#define POWER_SUPPLY_STATUS "Full"
+#define POWER_SUPPLY_CAPACITY "100"
 
 // Colors R G B (nb . max r g b value is 7f. The bit 8 is always set )
 #define COLOR_FIRE       0xFF0000
@@ -160,6 +177,8 @@ static snd_rawmidi_t *rawvirt_user_out   = NULL ;
 // Device info block typedef
 typedef struct {
   char    * productCode;
+  char    * productCompatible;
+  bool      fakePowerSupply;
   uint8_t   sysexId;
   char    * productString;
   char    * productStringShort;
@@ -171,11 +190,11 @@ typedef struct {
 enum MPCIds  {  MPC_X,   MPC_LIVE,   MPC_FORCE, MPC_ONE,   MPC_LIVE_MK2, _END_MPCID };
 // Declare in the same order that enums above
 const static DeviceInfo_t DeviceInfoBloc[] = {
-  { .productCode = "ACV5", .sysexId = 0x3a, .productString = "MPC X",      .productStringShort = "X",     .qlinkKnobsCount = 16, .sysexIdReply = {0x3A,0x00,0x19,0x00,0x01,0x01,0x01} },
-  { .productCode = "ACV8", .sysexId = 0x3b, .productString = "MPC Live",   .productStringShort = "LIVE",  .qlinkKnobsCount = 4,  .sysexIdReply = {0x3B,0x00,0x19,0x00,0x01,0x01,0x01} },
-  { .productCode = "ADA2", .sysexId = 0x40, .productString = "Force",      .productStringShort = "FORCE", .qlinkKnobsCount = 8,  .sysexIdReply = {0x40,0x00,0x19,0x00,0x00,0x04,0x03} },
-  { .productCode = "ACVA", .sysexId = 0x46, .productString = "MPC One",    .productStringShort = "ONE",   .qlinkKnobsCount = 4,  .sysexIdReply = {0x46,0x00,0x19,0x00,0x01,0x01,0x01} },
-  { .productCode = "ACVB", .sysexId = 0x47, .productString = "MPC Live 2", .productStringShort = "LIVE2", .qlinkKnobsCount = 4,  .sysexIdReply = {0x47,0x00,0x19,0x00,0x01,0x01,0x01} },
+  { .productCode = "ACV5", .productCompatible = "acv5", .fakePowerSupply = false, .sysexId = 0x3a, .productString = "MPC X",      .productStringShort = "X",     .qlinkKnobsCount = 16, .sysexIdReply = {0x3A,0x00,0x19,0x00,0x01,0x01,0x01} },
+  { .productCode = "ACV8", .productCompatible = "acv8", .fakePowerSupply = true,  .sysexId = 0x3b, .productString = "MPC Live",   .productStringShort = "LIVE",  .qlinkKnobsCount = 4,  .sysexIdReply = {0x3B,0x00,0x19,0x00,0x01,0x01,0x01} },
+  { .productCode = "ADA2", .productCompatible = "ada2", .fakePowerSupply = false, .sysexId = 0x40, .productString = "Force",      .productStringShort = "FORCE", .qlinkKnobsCount = 8,  .sysexIdReply = {0x40,0x00,0x19,0x00,0x00,0x04,0x03} },
+  { .productCode = "ACVA", .productCompatible = "acva", .fakePowerSupply = false, .sysexId = 0x46, .productString = "MPC One",    .productStringShort = "ONE",   .qlinkKnobsCount = 4,  .sysexIdReply = {0x46,0x00,0x19,0x00,0x01,0x01,0x01} },
+  { .productCode = "ACVB", .productCompatible = "acvb", .fakePowerSupply = true,  .sysexId = 0x47, .productString = "MPC Live 2", .productStringShort = "LIVE2", .qlinkKnobsCount = 4,  .sysexIdReply = {0x47,0x00,0x19,0x00,0x01,0x01,0x01} },
 };
 
 // Columns pads
@@ -254,7 +273,16 @@ static int MPCId = -1;
 static int MPCSpoofedID = -1;
 
 // Internal product code file handler to change on the fly when the file will be opened
+// That avoids all binding stuff in shell
 static int product_code_file_handler = -1 ;
+static int product_compatible_file_handler = -1 ;
+
+// Power supply file handlers
+static int pws_online_file_handler = -1 ;
+static int pws_voltage_file_handler = -1 ;
+static int pws_present_file_handler = -1 ;
+static int pws_status_file_handler = -1 ;
+static int pws_capacity_file_handler = -1 ;
 
 // MPC alsa informations
 static int  mpc_midi_card = -1;
@@ -298,7 +326,7 @@ static int  snd_seq_virtual_port_clientid=-1;
 static typeof(&open64) orig_open64;
 static typeof(&read) orig_read;
 static typeof(&open) orig_open;
-
+static typeof(&close) orig_close;
 ///////////////////////////////////////////////////////////////////////////////
 // Match string against a regular expression
 ///////////////////////////////////////////////////////////////////////////////
@@ -807,6 +835,7 @@ static void tkgl_init()
   // System call hooks
   orig_open64 = dlsym(RTLD_NEXT, "open64");
   orig_open   = dlsym(RTLD_NEXT, "open");
+  orig_close  = dlsym(RTLD_NEXT, "close");
   orig_read   = dlsym(RTLD_NEXT, "read");
 
 	// Alsa hooks
@@ -841,6 +870,9 @@ static void tkgl_init()
     fprintf(stdout,"[tkgl]  Product code spoofed to %s (%s)\n",DeviceInfoBloc[MPCSpoofedID].productCode,DeviceInfoBloc[MPCSpoofedID].productString);
     MPCId = MPCSpoofedID ;
   } else MPCId = MPCOriginalId ;
+
+  // Fake the power supply ?
+  if ( DeviceInfoBloc[MPCOriginalId].fakePowerSupply ) fprintf(stdout,"[tkgl]  The power supply will be faked to allow battery mode.\n");
 
   // read mapping config file if any
   LoadMappingFromConfFile(configFileName);
@@ -2353,6 +2385,26 @@ long snd_midi_event_decode	(	snd_midi_event_t * 	dev,unsigned char * 	buf,long 	
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// close
+///////////////////////////////////////////////////////////////////////////////
+int close(int fd) {
+
+  int r = orig_close(fd);
+
+  if ( fd == product_code_file_handler )            product_code_file_handler = -1;
+  else if ( fd == product_compatible_file_handler ) product_compatible_file_handler = -1;
+  else if ( fd == pws_online_file_handler   )       pws_online_file_handler   = -1 ;
+  else if ( fd == pws_voltage_file_handler  )       pws_voltage_file_handler  = -1 ;
+  else if ( fd == pws_present_file_handler  )       pws_present_file_handler  = -1 ;
+  else if ( fd == pws_status_file_handler   )       pws_status_file_handler   = -1 ;
+  else if ( fd == pws_capacity_file_handler )       pws_capacity_file_handler = -1 ;
+
+  return r;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 // open64
 ///////////////////////////////////////////////////////////////////////////////
 // We intercept all file opening until we found inmusic,product-code in the path.
@@ -2360,8 +2412,6 @@ long snd_midi_event_decode	(	snd_midi_event_t * 	dev,unsigned char * 	buf,long 	
 
 int open64(const char *pathname, int flags,...) {
    int r;
-
-//   printf("(tkgl) Open64 %s\n",pathname);
 
    // If O_CREAT is used to create a file, the file access mode must be given.
    if (flags & O_CREAT) {
@@ -2374,10 +2424,29 @@ int open64(const char *pathname, int flags,...) {
        r = orig_open64(pathname, flags);
    }
 
-   // Specific part
+   // Specific part. Pseudo Bind product code
    if ( product_code_file_handler < 0 && strcmp(pathname,PRODUCT_CODE_PATH) == 0 ) {
      // Save the product code file descriptor
      product_code_file_handler = r;
+     fprintf(stdout,"[tkgl] %s handler found\n",PRODUCT_CODE_PATH);
+   }
+
+   // Specific part. Pseudo Bind product compatible list
+   else
+   if ( product_compatible_file_handler < 0 && strcmp(pathname,PRODUCT_COMPATIBLE_PATH) == 0 ) {
+     // Save the product compat file descriptor
+     product_compatible_file_handler = r;
+     fprintf(stdout,"[tkgl] %s handler found\n",PRODUCT_COMPATIBLE_PATH);
+   }
+
+   // Fake power supply files if necessary only (this allows battery mode)
+   else
+   if ( DeviceInfoBloc[MPCOriginalId].fakePowerSupply ) {
+     if      ( pws_online_file_handler   < 0 && strcmp(pathname,POWER_SUPPLY_ONLINE_PATH) == 0 )      pws_online_file_handler   = r ;
+     else if ( pws_voltage_file_handler  < 0 && strcmp(pathname,POWER_SUPPLY_VOLTAGE_NOW_PATH) == 0 ) pws_voltage_file_handler  = r ;
+     else if ( pws_present_file_handler  < 0 && strcmp(pathname,POWER_SUPPLY_PRESENT_PATH) == 0 )     pws_present_file_handler  = r ;
+     else if ( pws_status_file_handler   < 0 && strcmp(pathname,POWER_SUPPLY_STATUS_PATH) == 0 )      pws_status_file_handler   = r ;
+     else if ( pws_capacity_file_handler < 0 && strcmp(pathname,POWER_SUPPLY_CAPACITY_PATH) == 0 )    pws_capacity_file_handler = r ;
    }
 
    return r ;
@@ -2408,14 +2477,72 @@ int open(const char *pathname, int flags,...) {
 ///////////////////////////////////////////////////////////////////////////////
 ssize_t read(int fildes, void *buf, size_t nbyte) {
 
-  // Not yet
-  if ( product_code_file_handler < 0 )  return orig_read(fildes,buf,nbyte);
-
-  // If we got the file descriptor, we can swap the product code with the spoofed one.
+  // If we got the product code file descriptor, we can swap the product code with the spoofed one.
   if ( fildes == product_code_file_handler ) {
     memcpy(buf,DeviceInfoBloc[MPCId].productCode,nbyte );
-    product_code_file_handler = -1;
-    return nbyte;
+    return strlen(DeviceInfoBloc[MPCId].productCode) ;
   }
 
+  // idem for product compatible.
+  if ( fildes == product_compatible_file_handler ) {
+    sprintf(buf,PRODUCT_COMPATIBLE_STR,DeviceInfoBloc[MPCId].productCompatible);
+    return strlen(buf) ;
+  }
+
+  // Fake power supply files if necessary only (on battery)
+  if ( DeviceInfoBloc[MPCOriginalId].fakePowerSupply ) {
+
+    if ( fildes == pws_present_file_handler ) {
+//      fprintf(stdout,"[tkgl] POWER_SUPPLY_PRESENT buf \n" );
+//      ShowBufferHexDump(buf, r, 16);
+
+      memcpy(buf,POWER_SUPPLY_PRESENT,strlen(POWER_SUPPLY_PRESENT) );
+      return strlen(POWER_SUPPLY_PRESENT);
+    }
+
+    if ( fildes == pws_online_file_handler ) {
+      //fprintf(stdout,"[tkgl] POWER_SUPPLY_ONLINE buf \n" );
+      //ShowBufferHexDump(buf, r, 16);
+      memcpy(buf,POWER_SUPPLY_ONLINE,strlen(POWER_SUPPLY_ONLINE) );
+      return nbyte;
+    }
+
+    if ( fildes == pws_voltage_file_handler ) {
+
+      ssize_t r = orig_read(fildes,buf,nbyte);
+      if ( r == 1) {
+          static uint8_t voltStrIndex = 0;
+          char *b2 =  (char *) buf  ;
+          if ( *b2 == 0x0a ) {
+            voltStrIndex = 0;
+            return r;
+          }
+          char b1 = * ( (char * )(POWER_SUPPLY_VOLTAGE_NOW + voltStrIndex) );
+          *b2 = b1 ;
+          //fprintf(stdout,"[tkgl] My byte : %c %0x  Their byte %c %02x \n",b1,b1,*b2,*b2 );
+          voltStrIndex++;
+      }
+      return r;
+    }
+
+    if ( fildes == pws_capacity_file_handler ) {
+
+      //fprintf(stdout,"[tkgl] POWER_SUPPLY_CAPACITY \n" );
+      //ShowBufferHexDump(buf, r, 16);
+
+      memcpy(buf,POWER_SUPPLY_CAPACITY,strlen(POWER_SUPPLY_CAPACITY) );
+      return strlen(buf);
+    }
+
+    if ( fildes == pws_status_file_handler ) {
+      //fprintf(stdout,"[tkgl] POWER_SUPPLY_STATUS \n" );
+      //ShowBufferHexDump(buf, r, 16);
+
+      memcpy(buf,POWER_SUPPLY_STATUS,strlen(POWER_SUPPLY_STATUS) );
+      return strlen(buf);
+    }
+
+  }
+
+  return orig_read(fildes,buf,nbyte);
 }
