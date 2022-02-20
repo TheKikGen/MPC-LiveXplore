@@ -11,11 +11,11 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 
 | [Download link for MPC and Force images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing)  
 
-At the root folder, you will find last ssh update images for Akai MPCs and Force.  
+In the shh folder, you will find last ssh update images for Akai MPCs and Force.  
 - MPC 2.10.1 update image ssh   
 - Force 3.1.3 update image ssh 
 
-Bootstrap sdcard images (IamForce, IamX, bootstrap ) are stored in the "beta" folder. 
+Bootstrap sdcard images (IamForce, IamX, bootstrap ) are stored in the "bootstrap" folder. 
 - ImForce sdcard image (beta preliminary release) 
 - IamX sdcard image (beta preliminary release)
 - Simple bootstrap (without MPC and Force assets) sdcard image  
