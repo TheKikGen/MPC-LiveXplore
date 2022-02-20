@@ -105,7 +105,7 @@ Very few things have been modified in that mod :
 Remove any trailer after ".img" and copy the img to the root of an usb key.
 A non-empty usb key will work contrary to what is stated in the documentation.
 
-Check here to launch your own script : [tkgl_bootstrap](https://github.com/TheKikGen/MPC-LiveXplore/tree/master/tkgl_bootstrap) 
+Check here to launch your own script : [tkgl_bootstrap](https://github.com/TheKikGen/MPC-LiveXplore-bootstrap) 
 
 And here for more details about [SSH activation](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Enabling-SSH-on-the-MPC-Live-X-one-Force)
 
