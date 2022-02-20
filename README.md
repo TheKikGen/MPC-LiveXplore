@@ -18,6 +18,7 @@ Bootstrap sdcard images (IamForce, IamX, bootstrap ) are stored in the "bootstra
 - IamX sdcard image (beta preliminary release)  
 - Simple bootstrap (without MPC and Force assets) sdcard image  
   
+Ssh images for MPC and Force are also included in bootstrap images, and then can be used to unlock ssh too.  
 Important : IamForce and IamX bootstrap modules are absolutely not recommended for production.  
 
 To flash a sdcard image, I recommend to use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.  
