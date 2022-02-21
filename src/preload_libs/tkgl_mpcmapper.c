@@ -56,7 +56,6 @@ your own midi mapping to input and output midi messages.
 
 #include "tkgl_mpcmapper.h"
 
-
 // Log utilities ---------------------------------------------------------------
 
 enum { LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_FATAL };
@@ -391,7 +390,7 @@ static void LoadMappingFromConfFile(const char * confFileName) {
     return ;
   }
 
-  tklog_info("%d keys found in  %s . \n",keysCount,btLedMapSectionName);
+  tklog_info("%d keys found in section %s . \n",keysCount,btLedMapSectionName);
 
   if ( keysCount <= 0 ) {
     tklog_error("Missing section %s in configuration file %s or syntax error. No mapping set. \n",btLedMapSectionName,confFileName);
@@ -938,9 +937,12 @@ int __libc_start_main(
     typeof(&__libc_start_main) orig = dlsym(RTLD_NEXT, "__libc_start_main");
 
     // Banner
-    tklog_info("------------------------------------------\n");
-  	tklog_info("TKGL_MPCMAPPER V%s by the KikGen Labs\n",VERSION);
-  	tklog_info("------------------------------------------\n");
+    fprintf(stdout,"\n%s",TKGL_LOGO);
+    tklog_info("---------------------------------------------------------\n");
+  	tklog_info("TKGL_MPCMAPPER Version : %s\n",VERSION);
+    tklog_info("(c) The KikGen Labs.\n");
+    tklog_info("https://github.com/TheKikGen/MPC-LiveXplore\n");
+  	tklog_info("---------------------------------------------------------\n");
 
     // Show the command line
     tklog_info("MPC args : ") ;
@@ -1040,7 +1042,7 @@ int snd_rawmidi_open(snd_rawmidi_t **inputp, snd_rawmidi_t **outputp, const char
 {
 
 	//tklog_info("snd_rawmidi_open name %s mode %d\n",name,mode);
-  
+
   // Rename the virtual port as we need
   // Port Name must not be emtpy - 30 chars max
   if ( strncmp(name,"[virtual]",9) == 0 ) {
