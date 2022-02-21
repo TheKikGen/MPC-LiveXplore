@@ -36,6 +36,13 @@ your own midi mapping to input and output midi messages.
 
 #define VERSION "BETA2"
 
+#define TKGL_LOGO "\
+__ __| |           |  /_) |     ___|             |           |\n\
+  |   __ \\   _ \\  ' /  | |  / |      _ \\ __ \\   |      _` | __ \\   __|\n\
+  |   | | |  __/  . \\  |   <  |   |  __/ |   |  |     (   | |   |\\__ \\\n\
+ _|  _| |_|\\___| _|\\_\\_|_|\\_\\\\____|\\___|_|  _| _____|\\__,_|_.__/ ____/\n\
+"
+
 // MPC Controller names (regexp) - Use aconnect -l
 #define CTRL_FORCE "Akai Pro Force"
 #define CTRL_MPC_X "MPC X Controller"
