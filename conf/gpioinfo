@@ -1,0 +1,273 @@
+gpiochip0 - 24 lines:
+        line   0:  "PMU_SLEEP"       unused   input  active-high
+        line   1: "DDRIO_PWROFF" unused input active-high
+        line   2: "DDRIO_RETEN" unused input active-high
+        line   3:  "EFUSE_PWR"       unused   input  active-high
+        line   4:   "PMIC_INT"  "interrupt"   input  active-high [used]
+        line   5:    "PWR_KEY"      "Power"   input   active-low [used]
+        line   6:      unnamed       unused   input  active-high
+        line   7:      unnamed       unused   input  active-high
+        line   8:      unnamed       unused   input  active-high
+        line   9:      unnamed "gpio-restart" output active-high [used]
+        line  10:   "PWR_HOLD"       unused   input  active-high
+        line  11: "LED_STATE2" "az01:red:usr2" output active-low [used]
+        line  12:      unnamed "usb-otg-regulator" output active-high [used]
+        line  13: "SATA_PWR_EN" "vcc-sata" output active-high [used]
+        line  14:      unnamed "vcc-host-regulator" output active-high [used]
+        line  15: "I2C0_SDA_PMU" unused input active-high
+        line  16: "I2C0_SCL_PMU" unused input active-high
+        line  17:      unnamed       unused   input  active-high
+        line  18:    "USB_INT"       unused   input  active-high
+        line  19:      unnamed       unused   input  active-high
+        line  20:      unnamed       unused   input  active-high
+        line  21:      unnamed       unused   input  active-high
+        line  22:      unnamed       unused   input  active-high
+        line  23:      unnamed       unused   input  active-high
+gpiochip1 - 32 lines:
+        line   0:      unnamed       unused   input  active-high
+        line   1:      unnamed       unused   input  active-high
+        line   2:      unnamed       unused   input  active-high
+        line   3:      unnamed       unused   input  active-high
+        line   4:      unnamed       unused   input  active-high
+        line   5:      unnamed       unused   input  active-high
+        line   6:      unnamed       unused   input  active-high
+        line   7:      unnamed       unused   input  active-high
+        line   8:      unnamed       unused   input  active-high
+        line   9:      unnamed       unused   input  active-high
+        line  10:      unnamed       unused   input  active-high
+        line  11:      unnamed       unused   input  active-high
+        line  12:      unnamed       unused   input  active-high
+        line  13:      unnamed       unused   input  active-high
+        line  14:      unnamed       unused   input  active-high
+        line  15:      unnamed       unused   input  active-high
+        line  16:      unnamed       unused   input  active-high
+        line  17:      unnamed       unused   input  active-high
+        line  18:      unnamed       unused   input  active-high
+        line  19:      unnamed       unused   input  active-high
+        line  20:      unnamed       unused   input  active-high
+        line  21:      unnamed       unused   input  active-high
+        line  22:      unnamed       unused   input  active-high
+        line  23:      unnamed       unused   input  active-high
+        line  24:      unnamed       unused   input  active-high
+        line  25:      unnamed       unused   input  active-high
+        line  26:      unnamed       unused   input  active-high
+        line  27:      unnamed       unused   input  active-high
+        line  28:      unnamed       unused   input  active-high
+        line  29:      unnamed       unused   input  active-high
+        line  30:      unnamed       unused   input  active-high
+        line  31:      unnamed       unused   input  active-high
+gpiochip2 - 32 lines:
+        line   0: "nCODEC_RESET" unused input active-high
+        line   1: "nAN_POWER_EN" unused input active-high
+        line   2:       "MUTE"       unused   input  active-high
+        line   3:   "GPIO2_A3"       unused   input  active-high
+        line   4:   "GPIO2_A4"       unused   input  active-high
+        line   5:      unnamed       unused   input  active-high
+        line   6:      unnamed       unused   input  active-high
+        line   7: "MIPI_RESET"      "reset"  output  active-high [used]
+        line   8:      unnamed       unused   input  active-high
+        line   9:      unnamed       unused   input  active-high
+        line  10:      unnamed       unused   input  active-high
+        line  11:      unnamed       unused   input  active-high
+        line  12:      unnamed       unused   input  active-high
+        line  13:      unnamed       unused   input  active-high
+        line  14:      unnamed       unused   input  active-high
+        line  15:      unnamed       unused   input  active-high
+        line  16: "I2C3_SCL_CAM" unused input active-high
+        line  17: "I2C3_SDA_CAM" unused input active-high
+        line  18:      unnamed       unused   input  active-high
+        line  19:      unnamed       unused   input  active-high
+        line  20:      unnamed       unused   input  active-high
+        line  21:      unnamed       unused   input  active-high
+        line  22:      unnamed       unused   input  active-high
+        line  23:      unnamed       unused   input  active-high
+        line  24:      unnamed       unused   input  active-high
+        line  25:      unnamed       unused   input  active-high
+        line  26:      unnamed       unused   input  active-high
+        line  27:      unnamed       unused   input  active-high
+        line  28:      unnamed       unused   input  active-high
+        line  29:      unnamed       unused   input  active-high
+        line  30:      unnamed       unused   input  active-high
+        line  31:      unnamed       unused   input  active-high
+gpiochip3 - 32 lines:
+        line   0:  "FLASH0_D0"       unused   input  active-high
+        line   1:  "FLASH0_D1"       unused   input  active-high
+        line   2:  "FLASH0_D2"       unused   input  active-high
+        line   3:  "FLASH0_D3"       unused   input  active-high
+        line   4:  "FLASH0_D4"       unused   input  active-high
+        line   5:  "FLASH0_D5"       unused   input  active-high
+        line   6:  "FLASH0_D6"       unused   input  active-high
+        line   7:  "FLASH0_D7"       unused   input  active-high
+        line   8:      unnamed       unused   input  active-high
+        line   9: "EMMC_PWREN"      "reset"  output   active-low [used]
+        line  10:      unnamed       unused   input  active-high
+        line  11:      unnamed       unused   input  active-high
+        line  12:      unnamed       unused   input  active-high
+        line  13:      unnamed       unused   input  active-high
+        line  14:   "PHY_PMEB"       unused   input  active-high
+        line  15:    "PHY_INT"       unused   input  active-high
+        line  16:   "EMMC_CMD"       unused   input  active-high
+        line  17:   "EMMC_RST"       unused   input  active-high
+        line  18:  "EMMC_CLKO"       unused   input  active-high
+        line  19: "FLASH0_VOLTAGE_SEL" unused input active-high
+        line  20:      unnamed       unused   input  active-high
+        line  21:      unnamed       unused   input  active-high
+        line  22:      unnamed       unused   input  active-high
+        line  23:      unnamed       unused   input  active-high
+        line  24:   "MAC_TXD2"       unused   input  active-high
+        line  25:   "MAC_TXD3"       unused   input  active-high
+        line  26:  "FLASH1_D2"       unused   input  active-high
+        line  27:  "FLASH1_D3"       unused   input  active-high
+        line  28:   "MAC_TXD0"       unused   input  active-high
+        line  29:   "MAC_TXD1"       unused   input  active-high
+        line  30:  "FLASH1_D6"       unused   input  active-high
+        line  31:  "FLASH1_D7"       unused   input  active-high
+gpiochip4 - 32 lines:
+        line   0: "FLASH1_RDY"       unused   input  active-high
+        line   1:  "FLASH1_WP"       unused   input  active-high
+        line   2: "FLASH1_RDN"       unused   input  active-high
+        line   3: "FLASH1_ALE"       unused   input  active-high
+        line   4:   "MAC_TXEN"       unused   input  active-high
+        line   5: "FLASH1_WRN"       unused   input  active-high
+        line   6: "FLASH1_CSn0" unused input active-high
+        line   7: "FLASH1_CSn1" unused input active-high
+        line   8: "FLASH1_DQS"       unused   input  active-high
+        line   9:  "MAC_TXCLK"       unused   input  active-high
+        line  10:      unnamed       unused   input  active-high
+        line  11:      unnamed       unused   input  active-high
+        line  12:      unnamed       unused   input  active-high
+        line  13:      unnamed       unused   input  active-high
+        line  14:      unnamed       unused   input  active-high
+        line  15:      unnamed       unused   input  active-high
+        line  16:  "UART0_RXD"       unused   input  active-high
+        line  17:  "UART0_TXD"       unused   input  active-high
+        line  18:  "UART0_CTS"       unused   input  active-high
+        line  19:  "UART0_RTS"       unused   input  active-high
+        line  20:    "WIFI_D0"       unused   input  active-high
+        line  21:    "WIFI_D1"       unused   input  active-high
+        line  22:    "WIFI_D2"       unused   input  active-high
+        line  23:    "WIFI_D3"       unused   input  active-high
+        line  24:   "WIFI_CMD"       unused   input  active-high
+        line  25:   "WIFI_CLK"       unused   input  active-high
+        line  26:    "BT_WAKE" "device-wakeup" output active-high [used]
+        line  27:  "BT_REG_ON"       unused   input  active-high
+        line  28: "WIFI_REG_ON" "reset" output active-low [used]
+        line  29:     "BT_RST"   "shutdown"  output  active-high [used]
+        line  30: "WIFI_HOST_WAKE" unused input active-high
+        line  31: "BT_HOST_WAKE" unused input active-high
+gpiochip5 - 32 lines:
+        line   0:      unnamed       unused   input  active-high
+        line   1:      unnamed       unused   input  active-high
+        line   2:      unnamed       unused   input  active-high
+        line   3:      unnamed       unused   input  active-high
+        line   4:      unnamed       unused   input  active-high
+        line   5:      unnamed       unused   input  active-high
+        line   6:      unnamed       unused   input  active-high
+        line   7:      unnamed       unused   input  active-high
+        line   8:  "UART1_SIN"       unused   input  active-high
+        line   9: "UART1_SOUT"       unused   input  active-high
+        line  10: "UART1_CTSn"       unused   input  active-high
+        line  11: "UART1_RTSn"       unused   input  active-high
+        line  12:   "SPI0_CLK"       unused   input  active-high
+        line  13:  "SPI0_CSn0"       unused   input  active-high
+        line  14:   "SPI0_TXD"       unused   input  active-high
+        line  15:   "SPI0_RXD"       unused   input  active-high
+        line  16:  "SPI0_CSn1"       unused   input  active-high
+        line  17:      unnamed       unused   input  active-high
+        line  18:      unnamed       unused   input  active-high
+        line  19:      unnamed       unused   input  active-high
+        line  20:      unnamed       unused   input  active-high
+        line  21:      unnamed       unused   input  active-high
+        line  22:      unnamed       unused   input  active-high
+        line  23:      unnamed       unused   input  active-high
+        line  24:      unnamed       unused   input  active-high
+        line  25:      unnamed       unused   input  active-high
+        line  26:      unnamed       unused   input  active-high
+        line  27:      unnamed       unused   input  active-high
+        line  28:      unnamed       unused   input  active-high
+        line  29:      unnamed       unused   input  active-high
+        line  30:      unnamed       unused   input  active-high
+        line  31:      unnamed       unused   input  active-high
+gpiochip6 - 32 lines:
+        line   0:  "I2S0_SCLK"       unused   input  active-high
+        line   1: "I2S0_LRCK_RX" unused input active-high
+        line   2: "I2S0_LRCK_TX" unused input active-high
+        line   3:   "I2S0_SDI"       unused   input  active-high
+        line   4:  "I2S0_SDO0"       unused   input  active-high
+        line   5:  "I2S0_SDO1"       unused   input  active-high
+        line   6:  "I2S0_SDO2"       unused   input  active-high
+        line   7:  "I2S0_SDO3"       unused   input  active-high
+        line   8:   "I2S0_CLK"       unused   input  active-high
+        line   9: "I2C2_SDA_AUDIO" unused input active-high
+        line  10: "I2C2_SCL_AUDIO" unused input active-high
+        line  11:   "SPDIF_TX"       unused   input  active-high
+        line  12:      unnamed       unused   input  active-high
+        line  13:      unnamed       unused   input  active-high
+        line  14:      unnamed       unused   input  active-high
+        line  15:      unnamed       unused   input  active-high
+        line  16:   "SDMMC_D0"       unused  output  active-high
+        line  17:   "SDMMC_D1"       unused  output  active-high
+        line  18:   "SDMMC_D2"       unused  output  active-high
+        line  19:   "SDMMC_D3"       unused  output  active-high
+        line  20:  "SDMMC_CLK"       unused  output  active-high
+        line  21:  "SDMMC_CMD"       unused  output  active-high
+        line  22: "SDMMC_DET_EXT" unused output active-high
+        line  23:      unnamed       unused  output  active-high
+        line  24:      unnamed       unused   input  active-high
+        line  25:      unnamed       unused   input  active-high
+        line  26:      unnamed       unused   input  active-high
+        line  27:      unnamed       unused   input  active-high
+        line  28:      unnamed       unused   input  active-high
+        line  29:      unnamed       unused   input  active-high
+        line  30:      unnamed       unused   input  active-high
+        line  31:      unnamed       unused   input  active-high
+gpiochip7 - 32 lines:
+        line   0:   "PWM_LVDS"       unused   input  active-high
+        line   1:   "PWM_MIPI"       unused   input  active-high
+        line   2: "nUSB_HUB_RESET" "reset" output active-high [used]
+        line   3:      unnamed       unused   input  active-high
+        line   4:   "nMIPI_ON"   "vcc-mipi"  output   active-low [used]
+        line   5:  "TOUCH_RST"      "reset"  output  active-high [used]
+        line   6:  "TOUCH_INT"  "interrupt"   input  active-high [used]
+        line   7:  "UART3_RXD"       unused   input  active-high
+        line   8:  "UART3_TXD"       unused   input  active-high
+        line   9:      unnamed       unused   input  active-high
+        line  10:      unnamed       unused   input  active-high
+        line  11:  "SDMMC_PWR" "sdmmc-regulator" output active-low [used]
+        line  12:  "POWER_OUT"       unused   input  active-high
+        line  13:      unnamed       unused   input  active-high
+        line  14:      unnamed       unused   input  active-high
+        line  15: "LED_STATE1" "az01:red:usr1" output active-low [used]
+        line  16:   "HDMI_CEC"       unused   input  active-high
+        line  17: "I2C4_SDA_TP" unused input active-high
+        line  18: "I2C4_SCL_TP" unused input active-high
+        line  19: "I2C5_SDA_HDMI" unused input active-high
+        line  20: "I2C5_SCL_HDMI" unused input active-high
+        line  21:   "SATA_RST"       unused   input  active-high
+        line  22:  "UART2_RXD"       unused   input  active-high
+        line  23:  "UART2_TXD"       unused   input  active-high
+        line  24:      unnamed       unused   input  active-high
+        line  25:      unnamed       unused   input  active-high
+        line  26:      unnamed       unused   input  active-high
+        line  27:      unnamed       unused   input  active-high
+        line  28:      unnamed       unused   input  active-high
+        line  29:      unnamed       unused   input  active-high
+        line  30:      unnamed       unused   input  active-high
+        line  31:      unnamed       unused   input  active-high
+gpiochip8 - 16 lines:
+        line   0:   "nLVDS_ON"       unused   input  active-high
+        line   1: "USB_MUX_CTRL" unused input active-high
+        line   2:   "PMU_VSEL"       unused  output  active-high
+        line   3:      unnamed       unused   input  active-high
+        line   4:   "I2C1_SDA"       unused   input  active-high
+        line   5:   "I2C1_SCL"       unused   input  active-high
+        line   6:      unnamed       unused   input  active-high
+        line   7:      unnamed       unused   input  active-high
+        line   8:      unnamed       unused   input  active-high
+        line   9:      unnamed       unused   input  active-high
+        line  10:      unnamed       unused   input  active-high
+        line  11:      unnamed       unused   input  active-high
+        line  12:      unnamed       unused   input  active-high
+        line  13:      unnamed       unused   input  active-high
+        line  14:      unnamed       unused   input  active-high
+        line  15:      unnamed       unused   input  active-high

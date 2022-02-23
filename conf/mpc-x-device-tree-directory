@@ -1,0 +1,2298 @@
+/proc/device-tree/
+|-- #address-cells
+|-- #size-cells
+|-- ac-power
+|   |-- compatible
+|   |-- io-channels
+|   `-- name
+|-- aliases
+|   |-- ethernet0
+|   |-- i2c0
+|   |-- i2c1
+|   |-- i2c2
+|   |-- i2c3
+|   |-- i2c4
+|   |-- i2c5
+|   |-- mshc0
+|   |-- mshc1
+|   |-- mshc2
+|   |-- mshc3
+|   |-- name
+|   |-- serial0
+|   |-- serial1
+|   |-- serial2
+|   |-- serial3
+|   |-- serial4
+|   |-- spi0
+|   |-- spi1
+|   `-- spi2
+|-- amba
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- dma-controller@ff250000
+|   |   |-- #dma-cells
+|   |   |-- arm,pl330-broken-no-flushp
+|   |   |-- clock-names
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- reg
+|   |-- dma-controller@ff600000
+|   |   |-- #dma-cells
+|   |   |-- arm,pl330-broken-no-flushp
+|   |   |-- clock-names
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- reg
+|   |   `-- status
+|   |-- dma-controller@ffb20000
+|   |   |-- #dma-cells
+|   |   |-- arm,pl330-broken-no-flushp
+|   |   |-- clock-names
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- reg
+|   |-- name
+|   `-- ranges
+|-- arm-pmu
+|   |-- compatible
+|   |-- interrupt-affinity
+|   |-- interrupts
+|   `-- name
+|-- bus_intmem@ff700000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- name
+|   |-- ranges
+|   |-- reg
+|   `-- smp-sram@0
+|       |-- compatible
+|       |-- name
+|       `-- reg
+|-- chosen
+|   |-- bootargs
+|   |-- inmusic,internal-sd-fitted
+|   |-- name
+|   `-- stdout-path
+|-- clock-controller@ff760000
+|   |-- #clock-cells
+|   |-- #reset-cells
+|   |-- assigned-clock-parents
+|   |-- assigned-clock-rates
+|   |-- assigned-clocks
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   |-- reg
+|   `-- rockchip,grf
+|-- compatible
+|-- cpu-opp-table
+|   |-- compatible
+|   |-- name
+|   |-- opp-1008000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-1200000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-126000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-1416000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-1512000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-1608000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-216000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-312000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-408000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-600000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-696000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-816000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-shared
+|   `-- phandle
+|-- cpus
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- cpu@500
+|   |   |-- #cooling-cells
+|   |   |-- clock-latency
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- cpu0-supply
+|   |   |-- device_type
+|   |   |-- name
+|   |   |-- operating-points-v2
+|   |   |-- phandle
+|   |   |-- reg
+|   |   `-- resets
+|   |-- cpu@501
+|   |   |-- #cooling-cells
+|   |   |-- clock-latency
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- name
+|   |   |-- operating-points-v2
+|   |   |-- phandle
+|   |   |-- reg
+|   |   `-- resets
+|   |-- cpu@502
+|   |   |-- #cooling-cells
+|   |   |-- clock-latency
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- name
+|   |   |-- operating-points-v2
+|   |   |-- phandle
+|   |   |-- reg
+|   |   `-- resets
+|   |-- cpu@503
+|   |   |-- #cooling-cells
+|   |   |-- clock-latency
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- name
+|   |   |-- operating-points-v2
+|   |   |-- phandle
+|   |   |-- reg
+|   |   `-- resets
+|   |-- enable-method
+|   |-- name
+|   `-- rockchip,pmu
+|-- cypto-controller@ff8a0000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   `-- status
+|-- display-subsystem
+|   |-- compatible
+|   |-- memory-region
+|   |-- name
+|   `-- ports
+|-- dp@ff970000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- phy-names
+|   |-- phys
+|   |-- ports
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- name
+|   |   `-- port@0
+|   |       |-- #address-cells
+|   |       |-- #size-cells
+|   |       |-- endpoint@0
+|   |       |   |-- name
+|   |       |   |-- phandle
+|   |       |   |-- reg
+|   |       |   `-- remote-endpoint
+|   |       |-- endpoint@1
+|   |       |   |-- name
+|   |       |   |-- phandle
+|   |       |   |-- reg
+|   |       |   `-- remote-endpoint
+|   |       |-- name
+|   |       `-- reg
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- rockchip,grf
+|   `-- status
+|-- dwmmc@ff0c0000
+|   |-- broken-cd
+|   |-- bus-width
+|   |-- card-detect-delay
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- disable-wp
+|   |-- fifo-depth
+|   |-- interrupts
+|   |-- max-frequency
+|   |-- name
+|   |-- no-prescan-powerup
+|   |-- num-slots
+|   |-- pinctrl-0
+|   |-- pinctrl-1
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- rockchip,default-sample-phase
+|   |-- sd-uhs-sdr12
+|   |-- status
+|   |-- vmmc-supply
+|   `-- vqmmc-supply
+|-- dwmmc@ff0d0000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- bcrmf@0
+|   |   |-- compatible
+|   |   |-- interrupt-names
+|   |   |-- interrupt-parent
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- reg
+|   |   `-- status
+|   |-- broken-cd
+|   |-- bus-width
+|   |-- cap-sd-highspeed
+|   |-- cap-sdio-irq
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- disable-wp
+|   |-- fifo-depth
+|   |-- interrupts
+|   |-- max-frequency
+|   |-- mmc-pwrseq
+|   |-- name
+|   |-- non-removable
+|   |-- num-slots
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- rockchip,default-sample-phase
+|   |-- sd-uhs-sdr12
+|   |-- status
+|   |-- vmmc-supply
+|   `-- vqmmc-supply
+|-- dwmmc@ff0e0000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- fifo-depth
+|   |-- interrupts
+|   |-- max-frequency
+|   |-- name
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   `-- status
+|-- dwmmc@ff0f0000
+|   |-- broken-cd
+|   |-- bus-width
+|   |-- cap-mmc-highspeed
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- disable-wp
+|   |-- fifo-depth
+|   |-- interrupts
+|   |-- max-frequency
+|   |-- mmc-ddr-1_8v
+|   |-- mmc-pwrseq
+|   |-- name
+|   |-- non-removable
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- status
+|   |-- vmmc-supply
+|   `-- vqmmc-supply
+|-- efuse@ffb40000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- cpu_leakage@17
+|   |   |-- name
+|   |   `-- reg
+|   |-- name
+|   `-- reg
+|-- emmc-pwrseq
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   `-- reset-gpios
+|-- ethernet@ff290000
+|   |-- assigned-clock-parents
+|   |-- assigned-clocks
+|   |-- clock-names
+|   |-- clock_in_out
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- name
+|   |-- phy-mode
+|   |-- phy-supply
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- rockchip,grf
+|   |-- rx_delay
+|   |-- snps,reset-active-low
+|   |-- snps,reset-delays-us
+|   |-- snps,reset-gpio
+|   |-- status
+|   `-- tx_delay
+|-- external-gmac-clock
+|   |-- #clock-cells
+|   |-- clock-frequency
+|   |-- clock-output-names
+|   |-- compatible
+|   |-- name
+|   `-- phandle
+|-- flash-regulator
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   |-- regulator-max-microvolt
+|   |-- regulator-min-microvolt
+|   |-- regulator-name
+|   |-- startup-delay-us
+|   `-- vin-supply
+|-- gpio-keys
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   `-- power
+|       |-- debounce-interval
+|       |-- gpios
+|       |-- label
+|       |-- linux,code
+|       |-- name
+|       `-- wakeup-source
+|-- gpio-restart
+|   |-- active-delay
+|   |-- compatible
+|   |-- gpios
+|   |-- inactive-delay
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- priority
+|   `-- wait-delay
+|-- gpu-opp-table
+|   |-- compatible
+|   |-- name
+|   |-- opp-100000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-200000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-300000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-400000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-500000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   |-- opp-600000000
+|   |   |-- name
+|   |   |-- opp-hz
+|   |   `-- opp-microvolt
+|   `-- phandle
+|-- gpu@ffa30000
+|   |-- #cooling-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- downdifferential
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- mali-supply
+|   |-- name
+|   |-- operating-points-v2
+|   |-- power-domains
+|   |-- power_model
+|   |   |-- compatible
+|   |   |-- dynamic-coefficient
+|   |   |-- name
+|   |   |-- static-coefficient
+|   |   |-- thermal-zone
+|   |   `-- ts
+|   |-- reg
+|   |-- status
+|   `-- upthreshold
+|-- hdmi@ff980000
+|   |-- #sound-dai-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- ddc-i2c-bus
+|   |-- interrupts
+|   |-- name
+|   |-- ports
+|   |   |-- name
+|   |   `-- port
+|   |       |-- #address-cells
+|   |       |-- #size-cells
+|   |       |-- endpoint@0
+|   |       |   |-- name
+|   |       |   |-- phandle
+|   |       |   |-- reg
+|   |       |   `-- remote-endpoint
+|   |       `-- name
+|   |-- power-domains
+|   |-- reg
+|   |-- reg-io-width
+|   |-- rockchip,grf
+|   `-- status
+|-- i2c@ff140000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- status
+|   `-- usb5537@2d
+|       |-- compatible
+|       |-- inmusic,u-boot-status
+|       |-- name
+|       |-- phandle
+|       |-- pinctrl-0
+|       |-- pinctrl-names
+|       |-- reg
+|       |-- reset-gpios
+|       |-- smsc,config-file
+|       |-- smsc,ss-disable-mask
+|       `-- status
+|-- i2c@ff150000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- i2c@ff160000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- ili2116@41
+|   |   |-- compatible
+|   |   |-- interrupt-parent
+|   |   |-- interrupts
+|   |   |-- irq-gpios
+|   |   |-- name
+|   |   |-- pinctrl-0
+|   |   |-- pinctrl-names
+|   |   |-- reg
+|   |   |-- reset-gpios
+|   |   `-- status
+|   |-- ili2117@26
+|   |   |-- compatible
+|   |   |-- interrupt-parent
+|   |   |-- interrupts
+|   |   |-- irq-gpios
+|   |   |-- name
+|   |   |-- pinctrl-0
+|   |   |-- pinctrl-names
+|   |   |-- reg
+|   |   |-- reg-names
+|   |   |-- reset-gpios
+|   |   `-- status
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- i2c@ff170000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- phandle
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- i2c@ff650000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- act8846@5a
+|   |   |-- compatible
+|   |   |-- inl1-supply
+|   |   |-- inl2-supply
+|   |   |-- inl3-supply
+|   |   |-- name
+|   |   |-- reg
+|   |   |-- regulators
+|   |   |   |-- REG1
+|   |   |   |   |-- name
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG10
+|   |   |   |   |-- name
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG11
+|   |   |   |   |-- name
+|   |   |   |   |-- phandle
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG12
+|   |   |   |   |-- name
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG2
+|   |   |   |   |-- name
+|   |   |   |   |-- phandle
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG3
+|   |   |   |   |-- name
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG4
+|   |   |   |   |-- name
+|   |   |   |   |-- phandle
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG5
+|   |   |   |   |-- name
+|   |   |   |   |-- phandle
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG6
+|   |   |   |   |-- name
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG7
+|   |   |   |   |-- name
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG8
+|   |   |   |   |-- name
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   |-- REG9
+|   |   |   |   |-- name
+|   |   |   |   |-- phandle
+|   |   |   |   |-- regulator-always-on
+|   |   |   |   |-- regulator-max-microvolt
+|   |   |   |   |-- regulator-min-microvolt
+|   |   |   |   `-- regulator-name
+|   |   |   `-- name
+|   |   |-- system-power-controller
+|   |   |-- vp1-supply
+|   |   |-- vp2-supply
+|   |   |-- vp3-supply
+|   |   `-- vp4-supply
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- hym8563@51
+|   |   |-- #clock-cells
+|   |   |-- clock-frequency
+|   |   |-- clock-output-names
+|   |   |-- compatible
+|   |   |-- haoyu,clock-is-critical
+|   |   |-- interrupt-parent
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   |-- pinctrl-0
+|   |   |-- pinctrl-names
+|   |   `-- reg
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- status
+|   |-- syr827@40
+|   |   |-- compatible
+|   |   |-- fcs,suspend-voltage-selector
+|   |   |-- name
+|   |   |-- phandle
+|   |   |-- reg
+|   |   |-- regulator-always-on
+|   |   |-- regulator-boot-on
+|   |   |-- regulator-enable-ramp-delay
+|   |   |-- regulator-initial-mode
+|   |   |-- regulator-max-microvolt
+|   |   |-- regulator-min-microvolt
+|   |   |-- regulator-name
+|   |   |-- regulator-ramp-delay
+|   |   `-- vin-supply
+|   `-- syr828@41
+|       |-- compatible
+|       |-- fcs,suspend-voltage-selector
+|       |-- name
+|       |-- phandle
+|       |-- reg
+|       |-- regulator-always-on
+|       |-- regulator-enable-ramp-delay
+|       |-- regulator-initial-mode
+|       |-- regulator-max-microvolt
+|       |-- regulator-min-microvolt
+|       |-- regulator-name
+|       |-- regulator-ramp-delay
+|       `-- vin-supply
+|-- i2c@ff660000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- i2s@ff890000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- #sound-dai-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- dma-names
+|   |-- dmas
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- rockchip,capture-channels
+|   |-- rockchip,playback-channels
+|   `-- status
+|-- inmusic,panel-rotation
+|-- inmusic,product-code
+|-- interrupt-controller@ffc01000
+|   |-- #address-cells
+|   |-- #interrupt-cells
+|   |-- compatible
+|   |-- interrupt-controller
+|   |-- interrupts
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- interrupt-parent
+|-- iommu@ff900800
+|   |-- #iommu-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- name
+|   |-- reg
+|   `-- status
+|-- iommu@ff914000
+|   |-- #iommu-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- name
+|   |-- reg
+|   |-- rockchip,disable-mmu-reset
+|   `-- status
+|-- iommu@ff930300
+|   |-- #iommu-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- name
+|   |-- phandle
+|   |-- power-domains
+|   |-- reg
+|   `-- status
+|-- iommu@ff940300
+|   |-- #iommu-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- name
+|   |-- phandle
+|   |-- power-domains
+|   |-- reg
+|   `-- status
+|-- iommu@ff9a0800
+|   |-- #iommu-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- name
+|   |-- reg
+|   `-- status
+|-- iommu@ff9c0440
+|   |-- #iommu-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupt-names
+|   |-- interrupts
+|   |-- name
+|   |-- reg
+|   `-- status
+|-- leds
+|   |-- compatible
+|   |-- led1
+|   |   |-- gpios
+|   |   |-- label
+|   |   |-- linux,default-trigger
+|   |   `-- name
+|   |-- led2
+|   |   |-- gpios
+|   |   |-- label
+|   |   |-- linux,default-trigger
+|   |   `-- name
+|   |-- name
+|   |-- pinctrl-0
+|   `-- pinctrl-names
+|-- lvds@ff96c000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- ports
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- name
+|   |   `-- port@0
+|   |       |-- #address-cells
+|   |       |-- #size-cells
+|   |       |-- endpoint@0
+|   |       |   |-- name
+|   |       |   |-- phandle
+|   |       |   |-- reg
+|   |       |   `-- remote-endpoint
+|   |       |-- endpoint@1
+|   |       |   |-- name
+|   |       |   |-- phandle
+|   |       |   |-- reg
+|   |       |   `-- remote-endpoint
+|   |       |-- name
+|   |       `-- reg
+|   |-- power-domains
+|   |-- reg
+|   |-- rockchip,grf
+|   `-- status
+|-- memory@0
+|   |-- device_type
+|   |-- name
+|   `-- reg
+|-- mipi-backlight
+|   |-- brightness-levels
+|   |-- compatible
+|   |-- default-brightness-level
+|   |-- name
+|   |-- phandle
+|   |-- power-supply
+|   |-- pwms
+|   `-- status
+|-- mipi@ff960000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- panel@0
+|   |   |-- backlight
+|   |   |-- compatible
+|   |   |-- enable-gpios
+|   |   |-- name
+|   |   |-- pinctrl-0
+|   |   |-- pinctrl-names
+|   |   |-- power-supply
+|   |   `-- reg
+|   |-- ports
+|   |   |-- name
+|   |   `-- port
+|   |       |-- #address-cells
+|   |       |-- #size-cells
+|   |       |-- endpoint@1
+|   |       |   |-- name
+|   |       |   |-- phandle
+|   |       |   |-- reg
+|   |       |   `-- remote-endpoint
+|   |       `-- name
+|   |-- power-domains
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- rockchip,grf
+|   `-- status
+|-- model
+|-- name
+|-- oscillator
+|   |-- #clock-cells
+|   |-- clock-frequency
+|   |-- clock-output-names
+|   |-- compatible
+|   |-- name
+|   `-- phandle
+|-- pinctrl
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- bluetooth
+|   |   |-- bt-host-wake
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- bt-reg-on
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- bt-wake
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- buttons
+|   |   |-- name
+|   |   `-- pwr-key-l
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- compatible
+|   |-- edp
+|   |   |-- edp-hpd
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- emmc
+|   |   |-- emmc-bus1
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- emmc-bus4
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- emmc-bus8
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- emmc-clk
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- emmc-cmd
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- emmc-pwr
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- emmc-reset
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- gmac
+|   |   |-- name
+|   |   |-- phy-rst
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- rgmii-pins
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- rmii-pins
+|   |       |-- name
+|   |       `-- rockchip,pins
+|   |-- gpio0@ff750000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- reg
+|   |-- gpio1@ff780000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   `-- reg
+|   |-- gpio2@ff790000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- reg
+|   |-- gpio3@ff7a0000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- reg
+|   |-- gpio4@ff7b0000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- reg
+|   |-- gpio5@ff7c0000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   `-- reg
+|   |-- gpio6@ff7d0000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   `-- reg
+|   |-- gpio7@ff7e0000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- reg
+|   |-- gpio8@ff7f0000
+|   |   |-- #gpio-cells
+|   |   |-- #interrupt-cells
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- gpio-controller
+|   |   |-- gpio-line-names
+|   |   |-- interrupt-controller
+|   |   |-- interrupts
+|   |   |-- name
+|   |   `-- reg
+|   |-- hdmi
+|   |   |-- hdmi-cec-c0
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- hdmi-cec-c7
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- hdmi-ddc
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- i2c0
+|   |   |-- i2c0-xfer
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- i2c1
+|   |   |-- i2c1-xfer
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- i2c2
+|   |   |-- i2c2-xfer
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- i2c3
+|   |   |-- i2c3-xfer
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- i2c4
+|   |   |-- i2c4-xfer
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- i2c5
+|   |   |-- i2c5-xfer
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- i2s0
+|   |   |-- i2s0-bus
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- lcdc
+|   |   |-- lcdc-ctl
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- leds
+|   |   |-- led-1
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- led-2
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- led1
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- led2
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- mipi_panel
+|   |   |-- lcd-cs
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- mipi-reset
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- name
+|   |-- pcfg-output-4ma-fast
+|   |   |-- bias-disable
+|   |   |-- drive-strength
+|   |   |-- name
+|   |   `-- slew-rate
+|   |-- pcfg-output-4ma-slow
+|   |   |-- bias-disable
+|   |   |-- drive-strength
+|   |   |-- name
+|   |   `-- slew-rate
+|   |-- pcfg-output-high
+|   |   |-- bias-disable
+|   |   |-- name
+|   |   |-- output-high
+|   |   `-- phandle
+|   |-- pcfg-output-low
+|   |   |-- bias-disable
+|   |   |-- name
+|   |   |-- output-low
+|   |   `-- phandle
+|   |-- pcfg-pull-down
+|   |   |-- bias-pull-down
+|   |   |-- name
+|   |   `-- phandle
+|   |-- pcfg-pull-none
+|   |   |-- bias-disable
+|   |   |-- name
+|   |   `-- phandle
+|   |-- pcfg-pull-none-12ma
+|   |   |-- bias-disable
+|   |   |-- drive-strength
+|   |   |-- name
+|   |   `-- phandle
+|   |-- pcfg-pull-none-12ma-slow
+|   |   |-- bias-disable
+|   |   |-- drive-strength
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- slew-rate
+|   |-- pcfg-pull-none-2ma
+|   |   |-- bias-disable
+|   |   |-- drive-strength
+|   |   |-- name
+|   |   `-- phandle
+|   |-- pcfg-pull-up
+|   |   |-- bias-pull-up
+|   |   |-- name
+|   |   `-- phandle
+|   |-- pcfg-pull-up-12ma
+|   |   |-- bias-pull-up
+|   |   |-- drive-strength
+|   |   |-- name
+|   |   `-- phandle
+|   |-- pmic
+|   |   |-- name
+|   |   `-- pmic-int
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- pwm0
+|   |   |-- name
+|   |   `-- pwm0-pin
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- pwm1
+|   |   |-- name
+|   |   `-- pwm1-pin
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- pwm2
+|   |   |-- name
+|   |   `-- pwm2-pin
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- pwm3
+|   |   |-- name
+|   |   `-- pwm3-pin
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- ranges
+|   |-- reboot
+|   |   |-- name
+|   |   `-- pwr-off-delay
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- rockchip,grf
+|   |-- rockchip,pmu
+|   |-- sata
+|   |   |-- name
+|   |   |-- sata-pwr
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- sata-reset
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- sdio
+|   |   |-- name
+|   |   `-- wifi-enable
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- sdio0
+|   |   |-- name
+|   |   |-- sdio0-bkpwr
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio0-bus1
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio0-bus4
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio0-cd
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio0-clk
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio0-cmd
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio0-int
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio0-pwr
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   `-- sdio0-wp
+|   |       |-- name
+|   |       `-- rockchip,pins
+|   |-- sdio1
+|   |   |-- name
+|   |   |-- sdio1-bkpwr
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio1-bus1
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio1-bus4
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio1-cd
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio1-clk
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio1-cmd
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio1-int
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdio1-pwr
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   `-- sdio1-wp
+|   |       |-- name
+|   |       `-- rockchip,pins
+|   |-- sdmmc
+|   |   |-- name
+|   |   |-- sdmmc-bus1
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-bus4
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-cd
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-clk
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-cmd
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-ext-cd-gpio
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-gpios
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-int-cd-gpio
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-pwr
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-sel-ext
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- sdmmc-sel-int
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- sdmmc-wp-gpio
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- sleep
+|   |   |-- ddr0-retention
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- ddr1-retention
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- ddrio-pwroff
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- global-pwroff
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- spdif
+|   |   |-- name
+|   |   `-- spdif-tx
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- spi0
+|   |   |-- name
+|   |   |-- spi0-clk
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- spi0-cs0
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- spi0-cs1
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- spi0-rx
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- spi0-tx
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- spi1
+|   |   |-- name
+|   |   |-- spi1-clk
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- spi1-cs0
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- spi1-rx
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- spi1-tx
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- spi2
+|   |   |-- name
+|   |   |-- spi2-clk
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- spi2-cs0
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- spi2-cs1
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- spi2-rx
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- spi2-tx
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- touch
+|   |   |-- name
+|   |   |-- touch-int
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- touch-rst
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- tsadc
+|   |   |-- name
+|   |   |-- otp-gpio
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- otp-out
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- uart0
+|   |   |-- name
+|   |   |-- uart0-cts
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- uart0-rts
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- uart0-xfer
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- uart1
+|   |   |-- name
+|   |   |-- uart1-cts
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- uart1-rts
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- uart1-xfer
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- uart2
+|   |   |-- name
+|   |   `-- uart2-xfer
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- uart3
+|   |   |-- name
+|   |   |-- uart3-cts
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- uart3-rts
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   `-- uart3-xfer
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- uart4
+|   |   |-- name
+|   |   |-- uart4-cts
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- uart4-rts
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   `-- uart4-xfer
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- usb-hub
+|   |   |-- name
+|   |   |-- usb-mux-sel
+|   |   |   |-- name
+|   |   |   `-- rockchip,pins
+|   |   |-- usb-reset-pin
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   |-- usb-sel-ext
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- usb-sel-int
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   |-- usb_host
+|   |   |-- host-vbus-drv
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   `-- rockchip,pins
+|   |   `-- name
+|   |-- usb_otg
+|   |   |-- name
+|   |   `-- otg-vbus-drv
+|   |       |-- name
+|   |       |-- phandle
+|   |       `-- rockchip,pins
+|   `-- vcc_lcd
+|       |-- lcd-en
+|       |   |-- name
+|       |   `-- rockchip,pins
+|       `-- name
+|-- power-management@ff730000
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   |-- power-controller
+|   |   |-- #address-cells
+|   |   |-- #power-domain-cells
+|   |   |-- #size-cells
+|   |   |-- assigned-clock-parents
+|   |   |-- assigned-clocks
+|   |   |-- compatible
+|   |   |-- name
+|   |   |-- pd_gpu@13
+|   |   |   |-- clocks
+|   |   |   |-- name
+|   |   |   |-- pm_qos
+|   |   |   `-- reg
+|   |   |-- pd_hevc@11
+|   |   |   |-- clocks
+|   |   |   |-- name
+|   |   |   |-- pm_qos
+|   |   |   `-- reg
+|   |   |-- pd_video@12
+|   |   |   |-- clocks
+|   |   |   |-- name
+|   |   |   |-- pm_qos
+|   |   |   `-- reg
+|   |   |-- pd_vio@9
+|   |   |   |-- clocks
+|   |   |   |-- name
+|   |   |   |-- pm_qos
+|   |   |   |-- reg
+|   |   |   `-- rockchip,pd-always-on
+|   |   `-- phandle
+|   |-- reboot-mode
+|   |   |-- compatible
+|   |   |-- mode-bootloader
+|   |   |-- mode-loader
+|   |   |-- mode-normal
+|   |   |-- mode-recovery
+|   |   |-- name
+|   |   `-- offset
+|   `-- reg
+|-- pwm@ff680000
+|   |-- #pwm-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- pwm@ff680010
+|   |-- #pwm-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- pwm@ff680020
+|   |-- #pwm-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- pwm@ff680030
+|   |-- #pwm-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- qos@ffaa0000
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffaa0080
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0000
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0100
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0180
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0400
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0480
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0500
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0800
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0880
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffad0900
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffae0000
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffaf0000
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- qos@ffaf0080
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   `-- reg
+|-- reserved-memory
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- dma-unusable@fe000000
+|   |   |-- name
+|   |   `-- reg
+|   |-- framebuffer
+|   |   |-- compatible
+|   |   |-- name
+|   |   |-- phandle
+|   |   |-- reg
+|   |   `-- status
+|   |-- name
+|   `-- ranges
+|-- rga@ff920000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- power-domains
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   `-- status
+|-- saradc@ff100000
+|   |-- #io-channel-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- phandle
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- status
+|   `-- vref-supply
+|-- sdio-pwrseq
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- post-ios-power-on
+|   |-- pre-power-on-delay-ms
+|   `-- reset-gpios
+|-- sdmmc-regulator
+|   |-- compatible
+|   |-- gpio
+|   |-- name
+|   |-- off-on-delay-us
+|   |-- phandle
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- regulator-max-microvolt
+|   |-- regulator-min-microvolt
+|   |-- regulator-name
+|   |-- status
+|   `-- vin-supply
+|-- serial-number
+|-- serial@ff180000
+|   |-- assigned-clock-rates
+|   |-- assigned-clocks
+|   |-- bluetooth
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- device-wakeup-gpios
+|   |   |-- max-speed
+|   |   |-- name
+|   |   |-- pinctrl-0
+|   |   |-- pinctrl-names
+|   |   `-- shutdown-gpios
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reg-io-width
+|   |-- reg-shift
+|   `-- status
+|-- serial@ff190000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reg-io-width
+|   |-- reg-shift
+|   `-- status
+|-- serial@ff1b0000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reg-io-width
+|   |-- reg-shift
+|   `-- status
+|-- serial@ff1c0000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reg-io-width
+|   |-- reg-shift
+|   `-- status
+|-- serial@ff690000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reg-io-width
+|   |-- reg-shift
+|   `-- status
+|-- sound@ff88b0000
+|   |-- #sound-dai-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- dma-names
+|   |-- dmas
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- rockchip,grf
+|   `-- status
+|-- spi@ff110000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- dma-names
+|   |-- dmas
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- spi@ff120000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- dma-names
+|   |-- dmas
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- spi@ff130000
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- dma-names
+|   |-- dmas
+|   |-- interrupts
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- reg
+|   `-- status
+|-- sram@ff720000
+|   |-- compatible
+|   |-- name
+|   `-- reg
+|-- syscon@ff740000
+|   |-- compatible
+|   |-- name
+|   `-- reg
+|-- syscon@ff770000
+|   |-- compatible
+|   |-- edp-phy
+|   |   |-- #phy-cells
+|   |   |-- clock-names
+|   |   |-- clocks
+|   |   |-- compatible
+|   |   |-- name
+|   |   |-- phandle
+|   |   `-- status
+|   |-- io-domains
+|   |   |-- audio-supply
+|   |   |-- bb-supply
+|   |   |-- compatible
+|   |   |-- dvp-supply
+|   |   |-- flash0-supply
+|   |   |-- flash1-supply
+|   |   |-- gpio1830
+|   |   |-- gpio30-supply
+|   |   |-- lcdc-supply
+|   |   |-- name
+|   |   |-- sdcard-supply
+|   |   |-- status
+|   |   `-- wifi-supply
+|   |-- name
+|   |-- phandle
+|   |-- reg
+|   `-- usbphy
+|       |-- #address-cells
+|       |-- #size-cells
+|       |-- compatible
+|       |-- name
+|       |-- status
+|       |-- usb-phy@320
+|       |   |-- #clock-cells
+|       |   |-- #phy-cells
+|       |   |-- clock-names
+|       |   |-- clocks
+|       |   |-- name
+|       |   |-- phandle
+|       |   `-- reg
+|       |-- usb-phy@334
+|       |   |-- #clock-cells
+|       |   |-- #phy-cells
+|       |   |-- clock-names
+|       |   |-- clocks
+|       |   |-- name
+|       |   |-- phandle
+|       |   `-- reg
+|       `-- usb-phy@348
+|           |-- #clock-cells
+|           |-- #phy-cells
+|           |-- clock-names
+|           |-- clocks
+|           |-- name
+|           |-- phandle
+|           `-- reg
+|-- thermal-zones
+|   |-- cpu-thermal
+|   |   |-- name
+|   |   |-- polling-delay
+|   |   |-- polling-delay-passive
+|   |   |-- thermal-sensors
+|   |   `-- trips
+|   |       |-- cpu_crit
+|   |       |   |-- hysteresis
+|   |       |   |-- name
+|   |       |   |-- temperature
+|   |       |   `-- type
+|   |       `-- name
+|   |-- gpu-thermal
+|   |   |-- name
+|   |   |-- polling-delay
+|   |   |-- polling-delay-passive
+|   |   |-- thermal-sensors
+|   |   `-- trips
+|   |       |-- gpu_crit
+|   |       |   |-- hysteresis
+|   |       |   |-- name
+|   |       |   |-- temperature
+|   |       |   `-- type
+|   |       `-- name
+|   |-- name
+|   `-- reserve-thermal
+|       |-- name
+|       |-- polling-delay
+|       |-- polling-delay-passive
+|       `-- thermal-sensors
+|-- timer
+|   |-- arm,cpu-registers-not-fw-configured
+|   |-- arm,no-tick-in-suspend
+|   |-- clock-frequency
+|   |-- compatible
+|   |-- interrupts
+|   `-- name
+|-- timer@ff810000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   `-- reg
+|-- tsadc@ff280000
+|   |-- #thermal-sensor-cells
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- phandle
+|   |-- pinctrl-0
+|   |-- pinctrl-1
+|   |-- pinctrl-2
+|   |-- pinctrl-names
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   |-- rockchip,hw-tshut-mode
+|   |-- rockchip,hw-tshut-polarity
+|   |-- rockchip,hw-tshut-temp
+|   `-- status
+|-- usb-mux
+|   |-- compatible
+|   |-- default-state
+|   |-- name
+|   |-- post-switch-delay-ms
+|   `-- status
+|-- usb-otg-mux
+|   |-- compatible
+|   |-- default-state
+|   |-- name
+|   |-- state-host
+|   |   |-- fragment@0
+|   |   |   |-- __overlay__
+|   |   |   |   |-- dr_mode
+|   |   |   |   |-- name
+|   |   |   |   `-- status
+|   |   |   |-- name
+|   |   |   `-- target
+|   |   `-- name
+|   |-- state-otg
+|   |   |-- fragment@0
+|   |   |   |-- __overlay__
+|   |   |   |   |-- dr_mode
+|   |   |   |   |-- name
+|   |   |   |   `-- status
+|   |   |   |-- name
+|   |   |   `-- target
+|   |   `-- name
+|   |-- state-peripheral
+|   |   |-- fragment@0
+|   |   |   |-- __overlay__
+|   |   |   |   |-- dr_mode
+|   |   |   |   |-- name
+|   |   |   |   `-- status
+|   |   |   |-- name
+|   |   |   `-- target
+|   |   `-- name
+|   `-- status
+|-- usb-otg-regulator
+|   |-- compatible
+|   |-- enable-active-high
+|   |-- gpio
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- regulator-always-on
+|   |-- regulator-max-microvolt
+|   |-- regulator-min-microvolt
+|   `-- regulator-name
+|-- usb@ff500000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- phy-names
+|   |-- phys
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   `-- status
+|-- usb@ff520000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- phy-names
+|   |-- phys
+|   |-- reg
+|   `-- status
+|-- usb@ff540000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- dr_mode
+|   |-- interrupts
+|   |-- name
+|   |-- phy-names
+|   |-- phys
+|   |-- reg
+|   `-- status
+|-- usb@ff580000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- dr_mode
+|   |-- g-np-tx-fifo-size
+|   |-- g-rx-fifo-size
+|   |-- g-tx-fifo-size
+|   |-- interrupts
+|   |-- name
+|   |-- phandle
+|   |-- phy-names
+|   |-- phys
+|   |-- reg
+|   `-- status
+|-- usb@ff5c0000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- name
+|   |-- reg
+|   `-- status
+|-- vcc-host-regulator
+|   |-- compatible
+|   |-- enable-active-high
+|   |-- gpio
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- regulator-always-on
+|   `-- regulator-name
+|-- vcc-mipi
+|   |-- compatible
+|   |-- gpio
+|   |-- name
+|   |-- phandle
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- regulator-boot-on
+|   |-- regulator-max-microvolt
+|   |-- regulator-min-microvolt
+|   |-- regulator-name
+|   |-- startup-delay-us
+|   |-- status
+|   `-- vin-supply
+|-- vcc-sata
+|   |-- compatible
+|   |-- enable-active-high
+|   |-- gpio
+|   |-- name
+|   |-- pinctrl-0
+|   |-- pinctrl-names
+|   |-- regulator-always-on
+|   |-- regulator-max-microvolt
+|   |-- regulator-min-microvolt
+|   |-- regulator-name
+|   `-- vin-supply
+|-- vop@ff930000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- iommus
+|   |-- name
+|   |-- port
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- endpoint@0
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   |-- reg
+|   |   |   `-- remote-endpoint
+|   |   |-- endpoint@1
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   |-- reg
+|   |   |   `-- remote-endpoint
+|   |   |-- endpoint@3
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   |-- reg
+|   |   |   `-- remote-endpoint
+|   |   |-- name
+|   |   `-- phandle
+|   |-- power-domains
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   `-- status
+|-- vop@ff940000
+|   |-- clock-names
+|   |-- clocks
+|   |-- compatible
+|   |-- interrupts
+|   |-- iommus
+|   |-- name
+|   |-- port
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- endpoint@1
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   |-- reg
+|   |   |   `-- remote-endpoint
+|   |   |-- endpoint@2
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   |-- reg
+|   |   |   `-- remote-endpoint
+|   |   |-- endpoint@3
+|   |   |   |-- name
+|   |   |   |-- phandle
+|   |   |   |-- reg
+|   |   |   `-- remote-endpoint
+|   |   |-- name
+|   |   `-- phandle
+|   |-- power-domains
+|   |-- reg
+|   |-- reset-names
+|   |-- resets
+|   `-- status
+|-- vsys-regulator
+|   |-- compatible
+|   |-- name
+|   |-- phandle
+|   |-- regulator-always-on
+|   |-- regulator-boot-on
+|   |-- regulator-max-microvolt
+|   |-- regulator-min-microvolt
+|   `-- regulator-name
+`-- watchdog@ff800000
+    |-- clocks
+    |-- compatible
+    |-- interrupts
+    |-- name
+    |-- reg
+    `-- status
+
+385 directories, 1910 files
