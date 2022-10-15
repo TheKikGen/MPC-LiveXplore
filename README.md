@@ -8,6 +8,7 @@
 # MPC-LiveXplore
 Akai MPC Live/X/Force/One technical explorations and hacks
 
+Don't forget the wiki here : https://github.com/TheKikGen/MPC-LiveXplore/wiki
 
 | [Download link for MPC and Force images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing)  
 
