@@ -34,8 +34,22 @@ ____
 
 ## DIRECT DOWNLOAD LINKS FOR AKAI/AIR PLUGINS
 
-If you want to get instant download from any computer rather than doing that from your Force or MPC preference menu, here are direct download links to all current plugins.  You need to unzip and copy the content in the "Synths" directory as follow :
+If you want to get instant download from any computer rather than doing that from your Force or MPC preference menu, here are direct download links to all current plugins.  You need to unzip and copy the content in the "Synths" directory, on your external HD or USB key as follow :
 
+AIR Music Technology - MPC - Fabric
+AIR Music Technology - MPC - Fabric Electric Piano
+AIR Music Technology - MPC - Fabric Piano
+AIR Music Technology - MPC - Fabric XL
+AIR Music Technology - MPC - Hype
+AIR Music Technology - MPC - Mellotron
+AIR Music Technology - MPC - Mini D
+AIR Music Technology - MPC - OPx-4
+AIR Music Technology - MPC - Organ
+AIR Music Technology - MPC - Solina
+AIR Music Technology - MPC - Stage EP
+AIR Music Technology - MPC - Stage Piano
+AIR Music Technology - MPC - Studio Strings
+WayOutWare - MPC - Odyssey
 
 
 C:\Users\tkgl>ssh root@192.168.x.y
