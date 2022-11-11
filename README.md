@@ -40,23 +40,22 @@ Synths/
 
 [AIR Music Technology - MPC - Fabric](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Fabric.zip)<br>
 [AIR Music Technology - MPC - Fabric Electric Piano](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Fabric%20Electric%20Piano.zip)<br> 
-[AIR Music Technology - MPC - Fabric Piano]()<br>
-[AIR Music Technology - MPC - Fabric XL]()<br>
-[AIR Music Technology - MPC - Hype]()<br>
-[AIR Music Technology - MPC - Mellotron]()<br> 
-[AIR Music Technology - MPC - Mini D]()<br>
-[AIR Music Technology - MPC - OPx-4]()<br>
-[AIR Music Technology - MPC - Organ]()<br>
-[AIR Music Technology - MPC - Solina]()<br>
-[AIR Music Technology - MPC - Stage EP]()<br>
-[AIR Music Technology - MPC - Stage Piano]()<br>
-[AIR Music Technology - MPC - Studio Strings]()<br>
-[WayOutWare - MPC - Odyssey]()<br>
-[AIR Music Technology - MPC - AIR Flavor Pro]()<br>
+[AIR Music Technology - MPC - Fabric Piano](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Fabric%20Piano.zip)<br>
+[AIR Music Technology - MPC - Fabric XL](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Fabric%20XL.zip)<br>
+[AIR Music Technology - MPC - Hype](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Hype.zip)<br>
+[AIR Music Technology - MPC - Mellotron](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Mellotron.zip)<br> 
+[AIR Music Technology - MPC - Mini D](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Mini%20D.2.zip)<br>
+[AIR Music Technology - MPC - OPx-4](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20OPx-4.zip)<br>
+[AIR Music Technology - MPC - Organ](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Organ.zip)<br>
+[AIR Music Technology - MPC - Solina](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Solina.zip)<br>
+[AIR Music Technology - MPC - Stage EP](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Stage%20EP.zip)<br>
+[AIR Music Technology - MPC - Stage Piano](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Stage%20Piano.zip)<br>
+[AIR Music Technology - MPC - Studio Strings](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Studio%20Strings.zip)<br>
+[WayOutWare - MPC - Odyssey](https://cdn.inmusicbrands.com/akai/20421/WayOutWare%20-%20MPC%20-%20Odyssey.zip)<br>
+[AIR Music Technology - MPC - AIR Flavor Pro](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Flavor%20Pro.2.zip)<br>
 
 To download a plugin, simply click on one of the link above.  
-NB : You'll need activation fom Akai. This is just the content download.
-
+NB : You'll need activation from Akai. This is just the content download.
 ____
 
 ## NEW SSH IMAGES RELEASED FOR MPC AND FORCE (2022-02-07)
