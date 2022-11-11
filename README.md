@@ -38,10 +38,8 @@ If you want to get instant download from any computer rather than doing that fro
 
 Synths/                        
 
-[Download link for MPC and Force images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing)  
-
-[AIR Music Technology - MPC - Fabric]()<br>
-[AIR Music Technology - MPC - Fabric Electric Piano]()<br> 
+[AIR Music Technology - MPC - Fabric](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Fabric.zip)<br>
+[AIR Music Technology - MPC - Fabric Electric Piano](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Fabric%20Electric%20Piano.zip)<br> 
 [AIR Music Technology - MPC - Fabric Piano]()<br>
 [AIR Music Technology - MPC - Fabric XL]()<br>
 [AIR Music Technology - MPC - Hype]()<br>
@@ -54,8 +52,9 @@ Synths/
 [AIR Music Technology - MPC - Stage Piano]()<br>
 [AIR Music Technology - MPC - Studio Strings]()<br>
 [WayOutWare - MPC - Odyssey]()<br>
+[AIR Music Technology - MPC - AIR Flavor Pro]()<br>
 
-To download a plugin, simply click on the link above.  
+To download a plugin, simply click on one of the link above.  
 NB : You'll need activation fom Akai. This is just the content download.
 
 ____
