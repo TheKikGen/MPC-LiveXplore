@@ -34,24 +34,26 @@ ____
 
 ## DIRECT DOWNLOAD LINKS FOR AKAI/AIR PLUGINS CONTENTS
 
-If you want to get instant download from any computer rather than doing that from your Force or MPC preferences menu, here are direct download links to all current plugins.  You need to unzip and copy the content in the "Synths" directory, on your external HD or USB key as follow :
+If you want to get instant download from any computer rather than doing that from your Force or MPC preferences menu, here are direct download links to all current plugins.  You need to unzip and copy the content in tha ad-hoc subdirectroy of the "Synths" contents directory, on your external HD or USB key as follow :
 
 Synths/                        
 
-AIR Music Technology - MPC - Fabric<br>
-AIR Music Technology - MPC - Fabric Electric Piano<br> 
-AIR Music Technology - MPC - Fabric Piano <br>
-AIR Music Technology - MPC - Fabric XL <br>
-AIR Music Technology - MPC - Hype <br>
-AIR Music Technology - MPC - Mellotron<br> 
-AIR Music Technology - MPC - Mini D <br>
-AIR Music Technology - MPC - OPx-4 <br>
-AIR Music Technology - MPC - Organ <br>
-AIR Music Technology - MPC - Solina <br>
-AIR Music Technology - MPC - Stage EP <br>
-AIR Music Technology - MPC - Stage Piano <br>
-AIR Music Technology - MPC - Studio Strings <br>
-WayOutWare - MPC - Odyssey <br>
+[Download link for MPC and Force images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing)  
+
+[AIR Music Technology - MPC - Fabric]()<br>
+[AIR Music Technology - MPC - Fabric Electric Piano]()<br> 
+[AIR Music Technology - MPC - Fabric Piano]()<br>
+[AIR Music Technology - MPC - Fabric XL]()<br>
+[AIR Music Technology - MPC - Hype]()<br>
+[AIR Music Technology - MPC - Mellotron]()<br> 
+[AIR Music Technology - MPC - Mini D]()<br>
+[AIR Music Technology - MPC - OPx-4]()<br>
+[AIR Music Technology - MPC - Organ]()<br>
+[AIR Music Technology - MPC - Solina]()<br>
+[AIR Music Technology - MPC - Stage EP]()<br>
+[AIR Music Technology - MPC - Stage Piano]()<br>
+[AIR Music Technology - MPC - Studio Strings]()<br>
+[WayOutWare - MPC - Odyssey]()<br>
 
 To download a plugin, simply click on the link above.  
 NB : You'll need activation fom Akai. This is just the content download.
