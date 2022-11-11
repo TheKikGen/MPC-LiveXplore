@@ -36,9 +36,9 @@ ____
 
 If you want to get instant download from any computer rather than doing that from your Force or MPC preferences menu, here are direct download links to all current plugins.  You need to unzip and copy the content in the "Synths" directory, on your external HD or USB key as follow :
 
-Synths/                        
+                Synths/                        
 
-AIR Music Technology - MPC - Fabric 
+AIR Music Technology - MPC - Fabric<br>
 AIR Music Technology - MPC - Fabric Electric Piano 
 AIR Music Technology - MPC - Fabric Piano 
 AIR Music Technology - MPC - Fabric XL 
