@@ -29,6 +29,19 @@ If you download any of these images, please consider making a small donation to 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=thekikgen@gmail.com&lc=FR&item_name=Donation+to+TheKikGen+projects&no_note=0&cn=&currency_code=EUR&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
 
 Thanks : Gian Andrea, Christopher, Egil, Conte de Sociale, Jamie Fenton, Harald Fiekler !
+
+____
+
+## DIRECT DOWNLOAD LINKS FOR AKAI/AIR PLUGINS
+
+If you want to get instant download from any computer rather than doing that from your Force or MPC preference menu, here are direct download links to all current plugins.  You need to unzip and copy the content in the "Synths" directory as follow :
+
+
+
+C:\Users\tkgl>ssh root@192.168.x.y
+
+  
+
 ____
 
 ## NEW SSH IMAGES RELEASED FOR MPC AND FORCE (2022-02-07)
