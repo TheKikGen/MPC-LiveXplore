@@ -36,7 +36,7 @@ ____
 
 <img width="500" border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t39.30808-6/315564419_6108706025824949_4250314527451773036_n.jpg?stp=cp6_dst-jpg&_nc_cat=105&ccb=1-7&_nc_sid=5cd70e&_nc_ohc=eDhyHJzNoH8AX-L1aCj&_nc_ht=scontent-cdt1-1.xx&oh=00_AfChuTqbi1hZjUwI1RYG21BFh0m05Vot1dSz_J8Ikk0neg&oe=63A61FC0"  />
 
-While exploring the last Force 3.2 image update from Akai, someone from the [Mpc live X and Force hacking modding custom group](https://www.facebook.com/groups/550328948678055) found a shell script containing an "ACV5S" hardware id in front of "MPC XL" label.  There are also similar traces in the latest Akai images header.  So it seems that a new MPC x is about to be released soon, maybe wigth larger screen, more pads, more knobs, more memory, more etc... to be a XL one !
+While exploring the last Force 3.2 image update from Akai, someone from the [Mpc live X and Force hacking modding custom group](https://www.facebook.com/groups/550328948678055) found a shell script containing an "ACV5S" hardware id in front of "MPC XL" label.  There are also similar traces in the latest Akai images header.  So it seems that a new MPC x is about to be released soon, maybe with larger screen, more pads, more knobs, more memory, more etc... to be a XL one !
 
 ____
 
