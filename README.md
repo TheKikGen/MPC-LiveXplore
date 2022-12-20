@@ -10,7 +10,7 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 
 Don't forget the wiki here : https://github.com/TheKikGen/MPC-LiveXplore/wiki
 
-| [Download link for MPC and Force images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing)  Last version availables : Force 3.2.1.15 ,  MPC 2.11.6
+| [Download link for Force 3.2.1.15 and MPC 2.11.6 images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing) 
 
 In the ssh folder, you will find last ssh update images for Akai MPCs and Force.  
 
