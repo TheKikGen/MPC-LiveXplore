@@ -44,6 +44,9 @@ ____
 
 If you want to get instant download from any computer rather than doing that from your Force or MPC preferences menu, here are direct download links to all current plugins.  You need to unzip and copy the content in the ad-hoc subdirectroy of the "Synths" contents directory, on your external HD or USB key as follow :
 
+Note: the Fabric collection are not individual plugins. The main Fabric plugin is required for the other 3 to work (XL, Piano, Electric Piano).
+
+
 Synths/                        
 
 [AIR Music Technology - MPC - Fabric](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Fabric.zip)<br>
