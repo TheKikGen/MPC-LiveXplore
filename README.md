@@ -34,18 +34,14 @@ ____
 
 ## MPC XL - CODE NAME ACV5S - A NEW MPC X FOR SOON (2022-12-20)
 
-<img width="500" border="0" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t39.30808-6/315564419_6108706025824949_4250314527451773036_n.jpg?stp=cp6_dst-jpg&_nc_cat=105&ccb=1-7&_nc_sid=5cd70e&_nc_ohc=eDhyHJzNoH8AX-L1aCj&_nc_ht=scontent-cdt1-1.xx&oh=00_AfChuTqbi1hZjUwI1RYG21BFh0m05Vot1dSz_J8Ikk0neg&oe=63A61FC0"  />
-
 While exploring the last Force 3.2 image update from Akai, someone from the [Mpc live X and Force hacking modding custom group](https://www.facebook.com/groups/550328948678055) found a shell script containing an "ACV5S" hardware id in front of "MPC XL" label.  There are also similar traces in the latest Akai images header.  So it seems that a new MPC x is about to be released soon, maybe with larger screen, more pads, more knobs, more memory, more etc... to be a XL one !
+Discussion [here](https://github.com/TheKikGen/MPC-LiveXplore/discussions/47)
 
 ____
 
 ## DIRECT DOWNLOAD LINKS FOR AKAI/AIR PLUGINS CONTENTS (2022-11-11)
 
 If you want to get instant download from any computer rather than doing that from your Force or MPC preferences menu, here are direct download links to all current plugins.  You need to unzip and copy the content in the ad-hoc subdirectroy of the "Synths" contents directory, on your external HD or USB key as follow :
-
-Note: the Fabric collection are not individual plugins. The main Fabric plugin is required for the other 3 to work (XL, Piano, Electric Piano).
-
 
 Synths/                        
 
@@ -65,7 +61,9 @@ Synths/
 [WayOutWare - MPC - Odyssey](https://cdn.inmusicbrands.com/akai/20421/WayOutWare%20-%20MPC%20-%20Odyssey.zip)<br>
 [AIR Music Technology - MPC - AIR Flavor Pro](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Flavor%20Pro.2.zip)<br>
 
-To download a plugin, simply click on one of the link above.  
+To download a plugin, simply click on one of the link above. 
+The Fabric collection are not individual plugins. The main Fabric plugin is required for the other 3 to work (XL, Piano, Electric Piano).
+
 NB : You'll need activation from Akai. This is just the content download.
 ____
 
