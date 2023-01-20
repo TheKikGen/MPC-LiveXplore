@@ -30,6 +30,12 @@ If you download any of these images, please consider making a small donation to 
 
 Thanks : Gian Andrea, Christopher, Egil, Conte de Sociale, Jamie Fenton, Harald Fiekler !
 
+Other Github projects : 
+[Hacking libraries and code for MPC and Force devices](https://github.com/TheKikGen/MPCLiveXplore-libs) 
+[Bootstrap : MPC/Force boot time customization](https://github.com/TheKikGen/MPC-LiveXplore-bootstrap) 
+[An advanced multi-port USB MIDI interface](https://github.com/TheKikGen/USBMidiKliK4x4) 
+
+
 ____
 
 ## MPC XL - CODE NAME ACV5S - A NEW MPC X FOR SOON (2022-12-20)
