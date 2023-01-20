@@ -34,7 +34,7 @@ Other Github projects : <br>
 [Hacking libraries and code for MPC and Force devices](https://github.com/TheKikGen/MPCLiveXplore-libs)<br>
 [Bootstrap : MPC/Force boot time customization](https://github.com/TheKikGen/MPC-LiveXplore-bootstrap)<br>
 [USBMidiKlik4x4 : advanced multi-port USB MIDI interface](https://github.com/TheKikGen/USBMidiKliK4x4)<br>
-[Kikpad : new firmware for the Smartpad, a launchpad clone from Midiplus]([https://github.com/TheKikGen/USBMidiKliK4x4](https://github.com/TheKikGen/kikpad))<br>
+[Kikpad : new firmware for the Smartpad, a launchpad clone from Midiplus](https://github.com/TheKikGen/USBMidiKliK4x4](https://github.com/TheKikGen/kikpad))<br>
 
 ____
 
