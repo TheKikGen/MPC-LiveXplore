@@ -28,7 +28,7 @@ If you download any of these images, please consider making a small donation to 
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=thekikgen@gmail.com&lc=FR&item_name=Donation+to+TheKikGen+projects&no_note=0&cn=&currency_code=EUR&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
 
-Thanks : Gian Andrea, Christopher, Egil, Conte de Sociale, Jamie Fenton, Harald Fiekler !
+Thanks : Gian Andrea, Christopher, Egil, Conte de Sociale, Jamie Fenton, Harald Fiekler, Michael Hess !
 
 Other Github projects : <br>
 [Hacking libraries and code for MPC and Force devices](https://github.com/TheKikGen/MPCLiveXplore-libs)<br>
