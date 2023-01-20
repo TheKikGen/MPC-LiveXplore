@@ -30,13 +30,11 @@ If you download any of these images, please consider making a small donation to 
 
 Thanks : Gian Andrea, Christopher, Egil, Conte de Sociale, Jamie Fenton, Harald Fiekler !
 
-Other Github projects : 
-[Hacking libraries and code for MPC and Force devices](https://github.com/TheKikGen/MPCLiveXplore-libs) 
-
-[Bootstrap : MPC/Force boot time customization](https://github.com/TheKikGen/MPC-LiveXplore-bootstrap) 
-
-[An advanced multi-port USB MIDI interface](https://github.com/TheKikGen/USBMidiKliK4x4) 
-
+Other Github projects : <br>
+[Hacking libraries and code for MPC and Force devices](https://github.com/TheKikGen/MPCLiveXplore-libs)<br>
+[Bootstrap : MPC/Force boot time customization](https://github.com/TheKikGen/MPC-LiveXplore-bootstrap)<br>
+[USBMidiKlik4x4 : advanced multi-port USB MIDI interface](https://github.com/TheKikGen/USBMidiKliK4x4)<br>
+[Kikpad : new firmware for the Smartpad, a launchpad clone from Midiplus]([https://github.com/TheKikGen/USBMidiKliK4x4](https://github.com/TheKikGen/kikpad))<br>
 
 ____
 
