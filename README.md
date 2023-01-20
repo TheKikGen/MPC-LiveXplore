@@ -32,7 +32,9 @@ Thanks : Gian Andrea, Christopher, Egil, Conte de Sociale, Jamie Fenton, Harald 
 
 Other Github projects : 
 [Hacking libraries and code for MPC and Force devices](https://github.com/TheKikGen/MPCLiveXplore-libs) 
+
 [Bootstrap : MPC/Force boot time customization](https://github.com/TheKikGen/MPC-LiveXplore-bootstrap) 
+
 [An advanced multi-port USB MIDI interface](https://github.com/TheKikGen/USBMidiKliK4x4) 
 
 
