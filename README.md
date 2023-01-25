@@ -38,6 +38,23 @@ Other Github projects : <br>
 
 ____
 
+## MPC ONE MK2 FOR SOON  ?? (2023-01-26)
+
+I just realized that a new hardware identifier has been added in the latest MPC 2.11.7 image: ACVA2. ACVA is the MPC One.  
+Is there an MPC One MK2 in preparation in addition to the MPC XL (ACV5S) or is it just an identical hardware version that has evolved?
+
+                        Akai image [MPC-2.11.7-Update.img] details :
+                        timestamp : 639b5f86
+                        description : MPC upgrade image
+                        compatible : inmusic,acv5 inmusic,acv8 inmusic,acva
+                        => inmusic,acva2
+                        inmusic,acvb inmusic,acvm inmusic,acv5s
+                        inmusic,devices : 9e8403a 9e8403b 9e84046
+                        => 9e84056
+                        9e84047 9e8404b 9e84052
+
+____
+
 ## MPC XL - CODE NAME ACV5S - A NEW MPC X FOR SOON (2022-12-20)
 
 While exploring the last Force 3.2 image update from Akai, someone from the [Mpc live X and Force hacking modding custom group](https://www.facebook.com/groups/550328948678055) found a shell script containing an "ACV5S" hardware id in front of "MPC XL" label.  There are also similar traces in the latest Akai images header.  So it seems that a new MPC x is about to be released soon, maybe with larger screen, more pads, more knobs, more memory, more etc... to be a XL one !
