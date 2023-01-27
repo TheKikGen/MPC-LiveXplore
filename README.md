@@ -38,6 +38,25 @@ Other Github projects : <br>
 
 ____
 
+## Collection of our Stats usage by AKAI/InMusic (2023-01-27)
+
+Despite the fact that the checkbox "collect usage statistics" is unchecked in the preferences, my MPC keeps sending requests to Google Analytics.  
+A network sniff of the WLAN0 interface (the WIFI) shows this without any doubt.
+
+                        Host: www.google-analytics.com
+                        Accept: */*
+                        User-Agent: MPC/2.11 (AZ01; ACV8U; <unknown>; 5.15.78)
+                        Content-Type: application/x-www-form-urlencoded
+                        Content-length: 159
+                        192.168.002.025.49444-142.250.075.238.00080: POST /collect HTTP/1.1
+                        Host: www.google-analytics.com
+                        Accept: */*
+                        User-Agent: MPC/2.11 (AZ01; ACV8U; <unknown>; 5.15.78)
+                        Content-Type: application/x-www-form-urlencoded
+                        Content-length: 203
+
+and so on (more than 10 HTTP POST). As far as I know Google Analytics is not a license activation server ....
+
 ## MPC ONE MK2 FOR SOON  ?? (2023-01-26)
 
 I just realized that a new hardware identifier has been added in the latest MPC 2.11.7 image: ACVA2. ACVA is the MPC One.  
