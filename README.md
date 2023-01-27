@@ -40,8 +40,7 @@ ____
 
 ## Collection of our Stats usage by AKAI/InMusic (2023-01-27)
 
-Despite the fact that the checkbox "collect usage statistics" is unchecked in the preferences, my MPC keeps sending requests to Google Analytics.  
-A network sniff of the WLAN0 interface (the WIFI) shows this without any doubt.
+Despite the fact that the checkbox "collect usage statistics" is unchecked in the preferences, my MPC keeps sending requests to Google Analytics.  A network sniff of the WLAN0 interface (the WIFI) shows this without any doubt.
 
                         Host: www.google-analytics.com
                         Accept: */*
