@@ -100,7 +100,13 @@ Synths/
 [AIR Music Technology - MPC - Stage Piano](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Stage%20Piano.zip)<br>
 [AIR Music Technology - MPC - Studio Strings](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20Studio%20Strings.zip)<br>
 [WayOutWare - MPC - Odyssey](https://cdn.inmusicbrands.com/akai/20421/WayOutWare%20-%20MPC%20-%20Odyssey.zip)<br>
+
 [AIR Music Technology - MPC - AIR Flavor Pro](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Flavor%20Pro.2.zip)<br>
+[AIR Music Technology - MPC - AIR Flavor Chorus](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Choruszip)<br>
+[AIR Music Technology - MPC - AIR Delay Pro](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Delay%20Pro.zip)<br>
+[AIR Music Technology - MPC - AIR Vintage Filter](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Vintage%20Filter.zip)<br>
+
+
 
 To download a plugin, simply click on one of the link above. 
 The Fabric collection are not individual plugins. The main Fabric plugin is required for the other 3 to work (XL, Piano, Electric Piano).
