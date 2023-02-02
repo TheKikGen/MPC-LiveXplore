@@ -71,6 +71,7 @@ Is there an MPC One MK2 in preparation in addition to the MPC XL (ACV5S) or is i
                         => 9e84056
                         9e84047 9e8404b 9e84052
 
+update : So it's confirmed. Compliance documentation available at FCC.GOV web site...
 ____
 
 ## MPC XL - CODE NAME ACV5S - A NEW MPC X FOR SOON (2022-12-20)
