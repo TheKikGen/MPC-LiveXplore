@@ -103,7 +103,7 @@ Synths/
 [WayOutWare - MPC - Odyssey](https://cdn.inmusicbrands.com/akai/20421/WayOutWare%20-%20MPC%20-%20Odyssey.zip)<br>
 
 [AIR Music Technology - MPC - AIR Flavor Pro](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Flavor%20Pro.2.zip)<br>
-[AIR Music Technology - MPC - AIR Flavor Chorus](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Choruszip)<br>
+[AIR Music Technology - MPC - AIR Flavor Chorus](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Chorus.zip)<br>
 [AIR Music Technology - MPC - AIR Delay Pro](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Delay%20Pro.zip)<br>
 [AIR Music Technology - MPC - AIR Vintage Filter](https://cdn.inmusicbrands.com/akai/20421/AIR%20Music%20Technology%20-%20MPC%20-%20AIR%20Vintage%20Filter.zip)<br>
 
