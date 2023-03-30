@@ -10,7 +10,7 @@ Akai MPC Live/X/Force/One technical explorations and hacks
 
 Don't forget the wiki here : https://github.com/TheKikGen/MPC-LiveXplore/wiki
 
-| [Download link for Force 3.2.3.3 and MPC 2.11.8 SSH images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing) 
+| [Download link for Force 3.2.3.3, MPC 2.11.8 SSH and bootstrap images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing) 
 
 In the ssh folder, you will find last ssh update images for Akai MPCs and Force.  
 Bootstrap sdcard images (IamForce2, rtpmidi, .. ) are stored in the "bootstrap" folder. 
@@ -40,10 +40,9 @@ IamForce2 supports 4 differents midi devices with a plugin system, and a new sta
 [Download the last bootstrap sddcard img](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing) and burn it to a USB stick or a sdcard.  
 
 IamForce2 does not update your MPC, but launches an isolated environment for the Force software from the external SD card. If you remove the card, you will find your MPC again at the next boot. However, you must have installed a modified MPC image for ssh activation.  The latest version of the MPC SSH tkgl firmware is provided on the root of the card, so you can update directly from the MPC user interface.
+If you own a MPC Live mk1 or mk2, IamForce2 can be used unplugged, on battery.
 
-One last point for MPC Live users : it can be used on battery.
-
-A [documentation](https://github.com/TheKikGen/MPCLiveXplore-libs/wiki) is available here (still in progress).
+A [documentation](https://github.com/TheKikGen/MPCLiveXplore-libs/wiki) is available (still in progress).
 
 ## Collection of our Stats usage by AKAI/InMusic (2023-01-27)
 
