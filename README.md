@@ -13,15 +13,8 @@ Don't forget the wiki here : https://github.com/TheKikGen/MPC-LiveXplore/wiki
 | [Download link for Force 3.2.3.3 and MPC 2.11.8 SSH images](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing) 
 
 In the ssh folder, you will find last ssh update images for Akai MPCs and Force.  
-
-Bootstrap sdcard images (IamForce, IamX, bootstrap ) are stored in the "bootstrap" folder. 
-- ImForce sdcard image (beta preliminary release) 
-- IamX sdcard image (beta preliminary release)  
-- Simple bootstrap (without MPC and Force assets) sdcard image  
+Bootstrap sdcard images (IamForce2, rtpmidi, .. ) are stored in the "bootstrap" folder. 
   
-Ssh images for MPC and Force are also included in bootstrap images, and then can be used to unlock ssh too.  
-Important : IamForce and IamX bootstrap modules are absolutely not recommended for production.  
-
 To flash a sdcard image, I recommend to use Balena [Etcher](https://www.balena.io/etcher/).  This is secure. You need a usb/sdcard at less of 4G of capacity.  
 
 If you download any of these images, please consider making a small donation to encourage our team to continue their research into your favorite toys.  This will pay for the coffees swallowed during the long nights of reverse-engineering!
@@ -37,6 +30,20 @@ Other Github projects : <br>
 [Kikpad : new firmware for the Smartpad, a Launchpad clone from Midiplus](https://github.com/TheKikGen/kikpad)<br>
 
 ____
+
+## I AM FORCE - V2 - BETA RELEASE (2023-03-30)
+[![iamforce video](https://img.youtube.com/vi/Ivp53UNk8ck/0.jpg)](https://www.youtube.com/watch?v=Ivp53UNk8ck) 
+[![iamforce video](https://img.youtube.com/vi/gVtn33kzCa4/0.jpg)](https://www.youtube.com/watch?v=gVtn33kzCa4) 
+
+You liked IamForce, allowing your MPC to become a Force, so here is the V2 BETA,  an entirely rewritten version of IamForce V1.
+IamForce2 supports 4 differents midi devices with a plugin system, and a new standalone mode is you haven't any external controller. 
+[Download the last bootstrap sddcard img](https://drive.google.com/drive/folders/1Bq1lbtcFUft9sbbCdm-z_temecFJeeSV?usp=sharing) and burn it to a USB stick or a sdcard.  
+
+IamForce2 does not update your MPC, but launches an isolated environment for the Force software from the external SD card. If you remove the card, you will find your MPC again at the next boot. However, you must have installed a modified MPC image for ssh activation.  The latest version of the MPC SSH tkgl firmware is provided on the root of the card, so you can update directly from the MPC user interface.
+
+One last point for MPC Live users : it can be used on battery.
+
+A [documentation](https://github.com/TheKikGen/MPCLiveXplore-libs/wiki) is available here (still in progress).
 
 ## Collection of our Stats usage by AKAI/InMusic (2023-01-27)
 
