@@ -35,7 +35,7 @@ ____
 [![VNC4MPC video](https://img.youtube.com/vi/Dc77jStsER8/0.jpg)](https://www.youtube.com/watch?v=Dc77jStsER8) 
  
 A new module will be available soon within the Bootstrap : VNC4MPC.  It allows you to control remotely your Force or your MPC 
-from any computer with a VNC client installed (TightVNC? UltraVNC, VNCViewer...).  
+from any computer with a VNC client installed (TightVNC, UltraVNC, VNCViewer...).  
 
 ## I AM FORCE - V2 - BETA RELEASE (2023-03-30)
 [![iamforce video](https://img.youtube.com/vi/Ivp53UNk8ck/0.jpg)](https://www.youtube.com/watch?v=Ivp53UNk8ck) 
