@@ -33,7 +33,7 @@ ____
 
 
 ## ACVR : A new MPC for Christmas ? (2023-11-15)
-
+(ACVR is the MPC KEY 37)
 A member of the "MPC X LIVE ONE KEYS FORCE hacking group" reported that a new "ACVR" Id was under examination (prototype stage) at the FCC. 
 Most probably a new device, maybe the "MPC MINI" , or a boosted MPC LIVE with 4GB memory..., like the One+.
 
