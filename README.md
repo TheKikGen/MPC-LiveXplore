@@ -37,7 +37,7 @@ ____
 A member of the "MPC X LIVE ONE KEYS FORCE hacking group" reported that a new "ACVR" Id was under examination (prototype stage) at the FCC. 
 Most probably a new device, maybe the "MPC MINI" , or a boosted MPC LIVE with 4GB memory..., like the One+.
 
-https://fccid.io/Y4O-ACVR
+[https://fccid.io/Y4O-ACVR](https://device.report/INMUSIC/)
 
 ## VNC4MPC : Remote control any MPC or Force from a computer with VNC (2023-04-15)
 [![VNC4MPC video](https://img.youtube.com/vi/Dc77jStsER8/0.jpg)](https://www.youtube.com/watch?v=Dc77jStsER8) 
