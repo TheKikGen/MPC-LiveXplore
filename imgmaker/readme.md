@@ -28,7 +28,7 @@ Usage is :
                 make-mpc | make-force [rootfs file in] [img file out] [version string]
 
 
-# mpcimg2 : image maker from MPC and Force from V3.4
+# mpcimg2 : image maker from MPC and Force V3.4
 
 The image structure is not the same than previous firmware versions.
 This is a C binary tool for Linux and WIN32/WIN64.
