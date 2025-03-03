@@ -34,7 +34,7 @@ Other Github projects : <br>
 ____
 ## SSH for 3.4.2 and new image make tool available 
 As InMusic changed the img format since the V3.4 BETA, it was necessary to write a new image extractor and maker utility. 
-The utility was entirely rewrittent in C language for speed. 
+The utility was entirely rewritten in C language for speed. 
 You will find it in the /mpcimg directory of the gihub. Binaries are precompiled in the /mpcimg/bin sub directory.
 
 ## ACVR : A new MPC for Christmas ? (2023-11-15)
