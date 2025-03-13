@@ -151,37 +151,41 @@ def extract(in_update_img, out_img):
 def create(mpc,in_img, out_update_img,version_string):
 
     tmpl_header = "/dts-v1/;\n/ {{\n"
-    tmpl_header = tmpl_header + "timestamp = <0x5dee18e1>;\n"
+    tmpl_header += "timestamp = <0x5dee18e1>;\n"
 
     if mpc == "make-force":
         print("Force image maker.")
-        tmpl_header = tmpl_header + "description = \"Akai Professional FORCE upgrade image\";\n"
-        tmpl_header = tmpl_header + "compatible = \"inmusic,ada2\";\n"
-        tmpl_header = tmpl_header + "inmusic,devices = <0x9e84040>;\n"
+        tmpl_header += "description = \"Akai Professional FORCE upgrade image\";\n"
+        tmpl_header += "compatible = \"inmusic,ada2\";\n"
+        tmpl_header += "inmusic,devices = <0x9e84040>;\n"
 
     else:
         print("MPC image maker.")
-        tmpl_header = tmpl_header + "description = \"MPC upgrade image\";\n"
-        #tmpl_header = tmpl_header + "compatible = \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acvb\", \"inmusic,acvm\";\n"
-        #tmpl_header = tmpl_header + "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047 0x9e8404b>;\n"
-# Since MPC 2.11
-# inmusic,acv5 inmusic,acv8 inmusic,acva inmusic,acvb inmusic,acvm inmusic,acv5s
-#
+        tmpl_header += "description = \"MPC upgrade image\";\n"
+        #tmpl_header += "compatible = \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acvb\", \"inmusic,acvm\";\n"
+        #tmpl_header += "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047 0x9e8404b>;\n"
 
-        tmpl_header = tmpl_header + "compatible =   \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acvb\", \"inmusic,acvm\", \"inmusic,acv5s\";\n"
-        tmpl_header = tmpl_header + "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047 0x9e8404b 0x9e84052>;\n"
+        # Since MPC 2.11
+        # inmusic,acv5 inmusic,acv8 inmusic,acva inmusic,acvb inmusic,acvm inmusic,acv5s
+        # tmpl_header += "compatible =   \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acvb\", \"inmusic,acvm\", \"inmusic,acv5s\";\n"
+        # tmpl_header += "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84047 0x9e8404b 0x9e84052>;\n"
 
-    tmpl_header = tmpl_header + "inmusic,version = \"{version}\";\n"
-    tmpl_header = tmpl_header + "images {{\n      rootfs {{\n"
-    tmpl_header = tmpl_header + "          description = \"Root filesystem\";\n"
-    tmpl_header = tmpl_header + "          data = <"
+        # Since MPC 2.14
+        # inmusic,acv5 inmusic,acv8 inmusic,acva inmusic,acva2 inmusic,acvb inmusic,acvm inmusic,acvr inmusic,acv5s
+        tmpl_header += "compatible = \"inmusic,acv5\", \"inmusic,acv8\", \"inmusic,acva\", \"inmusic,acva2\", \"inmusic,acvb\", \"inmusic,acvm\", \"inmusic,acvr\", \"inmusic,acv5s\";\n"
+        tmpl_header += "inmusic,devices = <0x9e8403a 0x9e8403b 0x9e84046 0x9e84056 0x9e84047 0x9e8404b 0x9e84052 0x9e84057>;\n"
+
+    tmpl_header += "inmusic,version = \"{version}\";\n"
+    tmpl_header += "images {{\n      rootfs {{\n"
+    tmpl_header += "          description = \"Root filesystem\";\n"
+    tmpl_header += "          data = <"
 
     tmpl_footer = ">;\n"
-    tmpl_footer = tmpl_footer + "          partition = \"rootfs\";\n"
-    tmpl_footer = tmpl_footer + "          compression = \"xz\";\n\n"
-    tmpl_footer = tmpl_footer + "          hash {{\n"
-    tmpl_footer = tmpl_footer + "            value = <{sha}>;\n"
-    tmpl_footer = tmpl_footer + "            algo = \"sha1\";\n   }};\n  }};\n }};\n}};\n"
+    tmpl_footer += "          partition = \"rootfs\";\n"
+    tmpl_footer += "          compression = \"xz\";\n\n"
+    tmpl_footer += "          hash {{\n"
+    tmpl_footer += "            value = <{sha}>;\n"
+    tmpl_footer += "            algo = \"sha1\";\n   }};\n  }};\n }};\n}};\n"
 
 
     tmp_filename = "imgdata.tmp"
