@@ -1,0 +1,14 @@
+{
+  "value0": {
+    "files": [], 
+    "scripts": [
+      {
+        "askQuestion": true, 
+        "path": "tkgl_static_script.sh", 
+        "message": "Install content? This will execute tkgl_static_script.sh", 
+        "noButtonText": "no", 
+        "yesButtonText": "yes"
+      }
+    ]
+  }
+}
