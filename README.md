@@ -32,6 +32,11 @@ Other Github projects : <br>
 [Kikpad : new firmware for the Smartpad, a Launchpad clone from Midiplus](https://github.com/TheKikGen/kikpad)<br>
 
 ____
+## Autorun hack until 3.9 version
+By default, the built-in autorun feature is a low-level system mechanism designed only to execute official, digitally signed AKAI update scripts or factory content deployments from an external drive at boot or when a storage device is hot-plugged. This Hack is a workaround that bypasses the native cryptographic signature checks on the MPC's Linux-based operating system.
+
+Read the wiki here : [Custom scripts with autorun on AKAI MPC](https://github.com/TheKikGen/MPC-LiveXplore/wiki/Custom-scripts-with-autorun-on-AKAI-MPC)
+
 ## SSH for V3.4.2 and new image maker tool available 
 As InMusic changed the img format since the V3.4 BETA, it was necessary to write a new image extractor and maker utility. 
 The utility was entirely rewritten in C language for speed. 
