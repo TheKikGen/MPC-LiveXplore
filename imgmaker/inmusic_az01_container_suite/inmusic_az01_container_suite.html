@@ -589,7 +589,7 @@
       payload:     { text: 'text-zinc-300', bg: 'bg-zinc-800/40', label: 'Payload Stream' }
     };
 
-    const C_COMPANION_SOURCE_CODE = `/*
+    const C_COMPANION_SOURCE_CODE = `
 /*
  * ============================================================================
  * INMUSIC AZ01 CONTAINER SUITE — C XZ Companion Utility (az01_xz_companion.c)
@@ -685,7 +685,7 @@ int xz_compress_file(FILE *infile, FILE *outfile, uint32_t preset) {
     lzma_stream strm = LZMA_STREAM_INIT;
     lzma_ret ret = lzma_easy_encoder(&strm, preset, LZMA_CHECK_CRC32);
     if (ret != LZMA_OK) {
-        fprintf(stderr, "[!] lzma_easy_encoder init error: %d\n", (int)ret);
+        fprintf(stderr, "[!] lzma_easy_encoder init error: %d\\n", (int)ret);
         return -1;
     }
 
@@ -723,7 +723,7 @@ int xz_compress_file(FILE *infile, FILE *outfile, uint32_t preset) {
 
         if (ret != LZMA_OK) {
             if (ret == LZMA_STREAM_END) break;
-            fprintf(stderr, "[!] lzma_code compression error: %d\n", (int)ret);
+            fprintf(stderr, "[!] lzma_code compression error: %d\\n", (int)ret);
             lzma_end(&strm);
             return -4;
         }
@@ -737,7 +737,7 @@ int xz_decompress_file(FILE *infile, FILE *outfile) {
     lzma_stream strm = LZMA_STREAM_INIT;
     lzma_ret ret = lzma_stream_decoder(&strm, UINT64_MAX, LZMA_CONCATENATED);
     if (ret != LZMA_OK) {
-        fprintf(stderr, "[!] lzma_stream_decoder init error: %d\n", (int)ret);
+        fprintf(stderr, "[!] lzma_stream_decoder init error: %d\\n", (int)ret);
         return -1;
     }
 
@@ -775,7 +775,7 @@ int xz_decompress_file(FILE *infile, FILE *outfile) {
 
         if (ret != LZMA_OK) {
             if (ret == LZMA_STREAM_END) break;
-            fprintf(stderr, "[!] lzma_code decompression error: %d\n", (int)ret);
+            fprintf(stderr, "[!] lzma_code decompression error: %d\\n", (int)ret);
             lzma_end(&strm);
             return -4;
         }
@@ -798,7 +798,7 @@ int az01_extract_and_decompress(const char *az01_path, const char *out_raw_path)
     uint8_t header[65536];
     size_t n = fread(header, 1, sizeof(header), fp);
     if (n < 64 || memcmp(header, "AZ01", 4) != 0) {
-        fprintf(stderr, "[!] Invalid AZ01 container header.\n");
+        fprintf(stderr, "[!] Invalid AZ01 container header.\\n");
         fclose(fp);
         return 1;
     }
@@ -811,7 +811,7 @@ int az01_extract_and_decompress(const char *az01_path, const char *out_raw_path)
         }
     }
     if (partl_offset < 0) {
-        fprintf(stderr, "[!] PARTL descriptor not found in first 64 KB.\n");
+        fprintf(stderr, "[!] PARTL descriptor not found in first 64 KB.\\n");
         fclose(fp);
         return 1;
     }
@@ -820,7 +820,7 @@ int az01_extract_and_decompress(const char *az01_path, const char *out_raw_path)
     memcpy(&payload_size, header + partl_offset + 0x08, sizeof(uint64_t));
     long payload_offset = partl_offset + 0x4C;
 
-    printf("[+] AZ01 PARTL @ 0x%04X | Payload @ 0x%04lX (%llu bytes)\n",
+    printf("[+] AZ01 PARTL @ 0x%04X | Payload @ 0x%04lX (%llu bytes)\\n",
            partl_offset, payload_offset, (unsigned long long)payload_size);
 
     if (fseek(fp, payload_offset, SEEK_SET) != 0) {
@@ -840,7 +840,7 @@ int az01_extract_and_decompress(const char *az01_path, const char *out_raw_path)
     fclose(out);
     fclose(fp);
     if (rc == 0) {
-        printf("[+] Decompressed XZ partition to '%s' successfully.\n", out_raw_path);
+        printf("[+] Decompressed XZ partition to '%s' successfully.\\n", out_raw_path);
     }
     return rc;
 }
@@ -865,7 +865,7 @@ int run_http_companion_bridge(int port) {
         return 1;
     }
     listen(srv, 8);
-    printf("[+] INMUSIC AZ01 C XZ Companion listening on http://127.0.0.1:%d\n", port);
+    printf("[+] INMUSIC AZ01 C XZ Companion listening on http://127.0.0.1:%d\\n", port);
 
     while (1) {
         int cli = accept(srv, NULL, NULL);
@@ -878,10 +878,10 @@ int run_http_companion_bridge(int port) {
 
         if (strncmp(req, "OPTIONS ", 8) == 0) {
             const char *cors =
-                "HTTP/1.1 204 No Content\r\n"
-                "Access-Control-Allow-Origin: *\r\n"
-                "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n"
-                "Access-Control-Allow-Headers: Content-Type\r\n\r\n";
+                "HTTP/1.1 204 No Content\\r\\n"
+                "Access-Control-Allow-Origin: *\\r\\n"
+                "Access-Control-Allow-Methods: GET, POST, OPTIONS\\r\\n"
+                "Access-Control-Allow-Headers: Content-Type\\r\n\\r\\n";
             write(cli, cors, strlen(cors));
             close(cli);
             continue;
@@ -890,9 +890,9 @@ int run_http_companion_bridge(int port) {
         if (strncmp(req, "GET /status", 11) == 0) {
             char resp[512];
             snprintf(resp, sizeof(resp),
-                "HTTP/1.1 200 OK\r\n"
-                "Content-Type: application/json\r\n"
-                "Access-Control-Allow-Origin: *\r\n\r\n"
+                "HTTP/1.1 200 OK\\r\\n"
+                "Content-Type: application/json\\r\\n"
+                "Access-Control-Allow-Origin: *\\r\n\\r\\n"
                 "{\"online\":true,\"version\":\"liblzma %s\"}",
                 lzma_version_string());
             write(cli, resp, strlen(resp));
@@ -907,12 +907,12 @@ int run_http_companion_bridge(int port) {
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        printf("INMUSIC AZ01 C XZ Companion — by The KikGen Labs\n");
-        printf("Usage:\n");
-        printf("  %s --serve [port]               Start localhost bridge for HTML page (default 8765)\n", argv[0]);
-        printf("  %s -z <in.img> <out.xz> [0-9]   Compress raw partition to .xz\n", argv[0]);
-        printf("  %s -d <in.xz>  <out.img>        Decompress .xz stream to raw partition\n", argv[0]);
-        printf("  %s -x <fw.img> <out.img>        Slice & decompress AZ01 firmware payload\n", argv[0]);
+        printf("INMUSIC AZ01 C XZ Companion — by The KikGen Labs\\n");
+        printf("Usage:\\n");
+        printf("  %s --serve [port]               Start localhost bridge for HTML page (default 8765)\\n", argv[0]);
+        printf("  %s -z <in.img> <out.xz> [0-9]   Compress raw partition to .xz\\n", argv[0]);
+        printf("  %s -d <in.xz>  <out.img>        Decompress .xz stream to raw partition\\n", argv[0]);
+        printf("  %s -x <fw.img> <out.img>        Slice & decompress AZ01 firmware payload\\n", argv[0]);
         return 0;
     }
 
@@ -946,7 +946,7 @@ int main(int argc, char **argv) {
         return az01_extract_and_decompress(argv[2], argv[3]);
     }
 
-    fprintf(stderr, "[!] Unknown arguments. Run without arguments for usage help.\n");
+    fprintf(stderr, "[!] Unknown arguments. Run without arguments for usage help.\\n");
     return 1;
 }
 `;
