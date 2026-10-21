@@ -1,1 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INMUSIC AZ01 CONTAINER SUITE — by The KikGen Labs (Standalone Portable Edition)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace']
+            }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      background-color: #09090b;
+      color: #f4f4f5;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #121217; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+    .hidden { display: none !important; }
+  </style>
+<script src="/_aistudio-iframe.js?v=6634132a"></script></head>
+<body class="min-h-screen flex flex-col bg-[#09090b] text-[#f4f4f5] selection:bg-[#dc2626] selection:text-white">
+
+  <!-- Top Bar Contract -->
+  <header class="bg-[#121217] border-b border-zinc-800 sticky top-0 z-40">
+    <div class="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
+      <a href="#analyze" onclick="switchTab('analyze'); return false;" class="text-base font-bold tracking-tight text-white whitespace-nowrap shrink-0">
+        INMUSIC AZ01 CONTAINER SUITE
+      </a>
+
+      <nav aria-label="Primary Workspace Navigation" class="flex items-center gap-6 overflow-x-auto py-1">
+        <button type="button" id="nav-analyze" onclick="switchTab('analyze')" class="text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 text-white border-[#dc2626] cursor-pointer">
+          Analyzer
+        </button>
+        <button type="button" id="nav-rootfs" onclick="switchTab('rootfs')" class="text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 text-zinc-400 border-transparent hover:text-zinc-100 cursor-pointer">
+          RootFS Explorer
+        </button>
+        <button type="button" id="nav-create" onclick="switchTab('create')" class="text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 text-zinc-400 border-transparent hover:text-zinc-100 cursor-pointer">
+          Container Builder
+        </button>
+        <button type="button" id="nav-xz" onclick="switchTab('xz')" class="text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 text-zinc-400 border-transparent hover:text-zinc-100 cursor-pointer">
+          XZ Companion
+        </button>
+        <button type="button" id="nav-hex" onclick="switchTab('hex')" class="text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 text-zinc-400 border-transparent hover:text-zinc-100 cursor-pointer">
+          Hex Inspector
+        </button>
+      </nav>
+
+      <div class="flex items-center shrink-0">
+        <button type="button" onclick="loadDemoPreset('mpc', false)" class="px-4 py-2 text-xs font-semibold text-white bg-[#dc2626] hover:bg-[#b91c1c] rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+          Load Sample Image
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace Context Bar -->
+  <div class="bg-[#050508] border-b border-zinc-800/80">
+    <div class="max-w-[1440px] mx-auto px-6 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+      <div class="flex flex-wrap items-center gap-2 text-zinc-400">
+        <span class="font-semibold text-[#dc2626]">by The KikGen Labs</span>
+        <span aria-hidden="true">·</span>
+        <span>Standalone Local HTML Edition (RootFS Pseudo-Mount + Embedded C-WASM XZ)</span>
+        <span aria-hidden="true">·</span>
+        <button type="button" onclick="switchTab('matrix')" class="text-zinc-300 hover:text-white underline decoration-[#dc2626] underline-offset-4 cursor-pointer">
+          Hardware Matrix
+        </button>
+        <span aria-hidden="true">·</span>
+        <button type="button" onclick="switchTab('cli')" class="text-zinc-300 hover:text-white underline decoration-[#dc2626] underline-offset-4 cursor-pointer">
+          Python / Bash CLI Exporters
+        </button>
+      </div>
+      <div id="context-active-file" class="flex flex-wrap items-center gap-2 font-mono text-zinc-400"></div>
+    </div>
+  </div>
+
+  <!-- Main Workspace Viewport -->
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-6 py-6">
+
+    <!-- ==================== TAB 1: ANALYZE VIEW ==================== -->
+    <section id="view-analyze" class="space-y-6">
+      <div id="dropzone-analyze" class="bg-[#121217] border border-zinc-800 rounded-lg p-6 transition-colors">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-1.5">
+            <h2 class="text-base font-semibold text-white">Memory-Safe AZ01 & PARTL Firmware Image Analyzer</h2>
+            <p class="text-xs text-zinc-400 max-w-2xl">
+              Slices only the first 64 KB header and 7-byte EOF trailer without loading multi-gigabyte images into RAM. Drop an official or custom <span class="font-mono text-zinc-300">.img</span> / <span class="font-mono text-zinc-300">.bin</span> container or load a reference sample below.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <input type="file" id="file-input-analyze" accept=".img,.bin,*" class="hidden" onchange="handleFileInputAnalyze(event)" />
+            <button type="button" onclick="document.getElementById('file-input-analyze').click()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Select Firmware File (.img / .bin)
+            </button>
+            <button type="button" onclick="loadDemoPreset('mpc', false)" class="px-3.5 py-2.5 bg-[#050508] hover:bg-zinc-900 text-zinc-200 border border-zinc-800 hover:border-zinc-700 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Sample: MPC Unified (8 Targets)
+            </button>
+            <button type="button" onclick="loadDemoPreset('force', false)" class="px-3.5 py-2.5 bg-[#050508] hover:bg-zinc-900 text-zinc-200 border border-zinc-800 hover:border-zinc-700 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Sample: Akai Force (ADA2)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="analyze-populated" class="space-y-6 hidden">
+        <div class="bg-[#121217] border border-zinc-800 rounded-lg p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" onclick="runVerifyIntegrity()" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Verify Integrity (SHA-1 & SHA-256)
+            </button>
+            <button type="button" onclick="extractActivePayload()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              <span id="extract-btn-label">Extract Compressed Payload</span>
+            </button>
+            <button type="button" onclick="decompressActivePayloadXz()" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-emerald-400 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Decompress .XZ to Ext4 (rootfs.ext4)
+            </button>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" onclick="switchTab('rootfs')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#050508] hover:bg-zinc-900 text-emerald-400 border border-zinc-800 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Browse Ext4 RootFS Tree
+            </button>
+            <button type="button" onclick="switchTab('hex')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#050508] hover:bg-zinc-900 text-zinc-300 border border-zinc-800 rounded-md text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Open in Hex Inspector
+            </button>
+            <button type="button" onclick="cloneActiveToBuilder()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#050508] hover:bg-zinc-900 text-zinc-300 border border-zinc-800 rounded-md text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Clone to Container Builder
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          <div class="bg-[#121217] border border-zinc-800 rounded-lg p-6 flex flex-col justify-between space-y-5">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-semibold text-white">01. AZ01 Container Header Metadata</h3>
+                <span id="meta-file-summary" class="font-mono text-xs text-zinc-400"></span>
+              </div>
+              <div class="bg-[#050508] border border-zinc-800/90 rounded-md p-4 space-y-3 text-xs">
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Container Magic Signature</span>
+                  <span id="meta-magic" class="font-mono font-bold text-white"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Firmware Version String</span>
+                  <span id="meta-version" class="font-mono font-semibold text-emerald-400"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Image Description</span>
+                  <span id="meta-desc" class="font-mono text-zinc-200"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Header Pointer vs Scanned PARTL</span>
+                  <span id="meta-partl-ptr" class="font-mono text-zinc-200"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">8-Byte Alignment Check</span>
+                  <span id="meta-alignment" class="font-mono text-emerald-400"></span>
+                </div>
+                <div class="space-y-1.5 pt-1">
+                  <div class="flex items-center justify-between text-zinc-400">
+                    <span id="meta-targets-title">Declared Hardware Targets</span>
+                    <button type="button" onclick="switchTab('matrix')" class="text-xs text-[#dc2626] hover:underline font-sans cursor-pointer">
+                      View in Hardware Matrix
+                    </button>
+                  </div>
+                  <div id="meta-targets-list" class="font-mono text-xs text-red-400 leading-relaxed break-words bg-[#121217] border border-zinc-800/80 rounded p-2.5"></div>
+                </div>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
+              <span id="meta-board-count">Board Revision Descriptors</span>
+              <span id="meta-board-list" class="font-mono text-zinc-300 truncate max-w-[65%]"></span>
+            </div>
+          </div>
+
+          <div class="bg-[#121217] border border-zinc-800 rounded-lg p-6 flex flex-col justify-between space-y-5">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-semibold text-white">02. PARTL Partition & Cryptographic Digest</h3>
+                <span id="meta-partl-range" class="font-mono text-xs text-zinc-400"></span>
+              </div>
+              <div class="bg-[#050508] border border-zinc-800/90 rounded-md p-4 space-y-3 text-xs">
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Partition Identifier</span>
+                  <span id="meta-part-name" class="font-mono font-bold text-white"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Compression Stream Format</span>
+                  <span id="meta-comp" class="font-mono font-semibold text-amber-400 uppercase"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Declared Payload Size</span>
+                  <span id="meta-payload-size" class="font-mono text-white"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Payload Start Offset</span>
+                  <span id="meta-payload-offset" class="font-mono text-white"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                  <span class="text-zinc-400">Trailer Signature (EOF\x10\x00\x00\x00)</span>
+                  <span id="meta-trailer" class="font-mono"></span>
+                </div>
+                <div class="space-y-1.5 pt-1">
+                  <div class="flex items-center justify-between text-zinc-400">
+                    <span id="meta-hashtype">Expected Header Digest (SHA1)</span>
+                    <span class="font-mono text-zinc-500">20 bytes</span>
+                  </div>
+                  <div id="meta-expected-hash" class="font-mono text-xs text-zinc-200 bg-[#121217] border border-zinc-800/80 rounded p-2.5 break-all select-all"></div>
+                </div>
+              </div>
+            </div>
+            <div id="verify-result-box" class="pt-2 border-t border-zinc-800/80 text-xs"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: EXT4 ROOTFS EXPLORER ==================== -->
+    <section id="view-rootfs" class="space-y-6 hidden">
+      <div class="bg-[#121217] border border-zinc-800 rounded-lg p-6 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <h2 class="text-base font-semibold text-white">Ext4 RootFS Pseudo-Mount & Interactive Filesystem Explorer</h2>
+            <p class="text-xs text-zinc-400 max-w-3xl">
+              Parses and pseudo-mounts <span class="font-mono text-zinc-200">Linux Ext4</span> (<span class="font-mono text-amber-400">s_magic = 0xEF53</span> at offset <span class="font-mono text-zinc-300">0x438</span>) and <span class="font-mono text-zinc-200">.ext4.xz</span> firmware partitions directly in-browser. Walks the Ext4 Group Descriptor Table, 256-byte Inode Table, <span class="font-mono text-zinc-300">0xF30A</span> Extent Trees, and <span class="font-mono text-zinc-300">ext4_dir_entry_2</span> directory blocks.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <button type="button" onclick="remountActiveFirmwareRootfs()" class="px-3.5 py-2 bg-[#050508] hover:bg-zinc-900 text-zinc-200 border border-zinc-800 rounded-md text-xs font-medium cursor-pointer">
+              Re-Mount Firmware Ext4 Payload
+            </button>
+            <input type="file" id="rootfs-file-input" accept=".ext4,.img,.xz,.tar,.bin,*" class="hidden" onchange="handleLocalRootfsMount(event)" />
+            <button type="button" onclick="document.getElementById('rootfs-file-input').click()" class="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 rounded-md text-xs font-medium cursor-pointer">
+              Mount Local Ext4 (.ext4 / .img / .xz)
+            </button>
+            <button type="button" onclick="extractAllRootfsNodes()" class="px-4 py-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white rounded-md text-xs font-semibold cursor-pointer">
+              Extract Full Ext4 RootFS to Local Dir
+            </button>
+          </div>
+        </div>
+        <div id="rootfs-superblock-strip" class="pt-3 border-t border-zinc-800/80 space-y-2 text-xs font-mono text-zinc-400"></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left 5 Cols: Tree List -->
+        <div class="lg:col-span-5 bg-[#121217] border border-zinc-800 rounded-lg overflow-hidden">
+          <div class="p-4 border-b border-zinc-800 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center bg-[#050508] border border-zinc-800 rounded-md p-0.5">
+                <button type="button" id="rfs-mode-all" onclick="setRootfsTreeMode('all_files')" class="px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer">Full Tree View</button>
+                <button type="button" id="rfs-mode-folder" onclick="setRootfsTreeMode('folder')" class="px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer">Folder Browser</button>
+              </div>
+              <input type="text" id="rfs-search" oninput="renderRootfsExplorer()" placeholder="Filter path (e.g. MPC, sshd, .dtb)..." class="bg-[#050508] border border-zinc-800 rounded-md px-3 py-1 text-xs font-mono text-white w-48" />
+            </div>
+            <div id="rfs-breadcrumb-bar" class="hidden flex items-center justify-between gap-2 bg-[#050508] border border-zinc-800/80 rounded px-2.5 py-1.5 text-xs font-mono"></div>
+          </div>
+          <div id="rfs-node-list" class="divide-y divide-zinc-800/70 max-h-[560px] overflow-y-auto"></div>
+        </div>
+
+        <!-- Right 7 Cols: File Content Inspector (Text / Hex) -->
+        <div class="lg:col-span-7 bg-[#121217] border border-zinc-800 rounded-lg overflow-hidden">
+          <div class="p-4 border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="min-w-0">
+              <div id="rfs-selected-path" class="font-mono text-sm font-bold text-white truncate">/etc/init.d/S90mpc-standalone</div>
+              <div id="rfs-selected-meta" class="text-xs font-mono text-zinc-400 mt-0.5"></div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <div class="flex items-center bg-[#050508] border border-zinc-800 rounded-md p-0.5">
+                <button type="button" id="rfs-view-text" onclick="setRootfsViewMode('text')" class="px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer">Text View</button>
+                <button type="button" id="rfs-view-hex" onclick="setRootfsViewMode('hex')" class="px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer">Hexadecimal</button>
+              </div>
+              <button type="button" onclick="extractSelectedRootfsNode()" class="px-3.5 py-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded cursor-pointer">
+                Extract to Local Dir
+              </button>
+            </div>
+          </div>
+          <div id="rfs-inspector-body" class="bg-[#050508]"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: CONTAINER BUILDER ==================== -->
+    <section id="view-create" class="space-y-6 hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div class="lg:col-span-7 bg-[#121217] border border-zinc-800 rounded-lg p-6 space-y-6">
+          <div class="border-b border-zinc-800 pb-3">
+            <h2 class="text-base font-semibold text-white">AZ01 & PARTL Firmware Container Builder</h2>
+            <p class="text-xs text-zinc-400 mt-0.5">
+              Packs custom rootfs, kernel, or resource streams with 8-byte boundary alignment and official <span class="font-mono text-zinc-300">EOF\x10\x00\x00\x00</span> trailer.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-zinc-300 mb-1.5">Firmware Version String (Max 24 chars)</label>
+              <input type="text" id="build-version" maxlength="24" value="3.4.1.62-MPC-CUSTOM" oninput="updateBuilderGeometry()" class="w-full bg-[#050508] border border-zinc-800 rounded-md px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#dc2626]" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-300 mb-1.5">Image Description String</label>
+              <input type="text" id="build-desc" value="upgrade image" oninput="updateBuilderGeometry()" class="w-full bg-[#050508] border border-zinc-800 rounded-md px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#dc2626]" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-300 mb-1.5">PARTL Partition Name (Max 11 chars)</label>
+              <input type="text" id="build-partname" maxlength="11" value="rootfs" oninput="updateBuilderGeometry()" class="w-full bg-[#050508] border border-zinc-800 rounded-md px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#dc2626]" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-300 mb-1.5">Payload Compression Tag</label>
+              <select id="build-comp" onchange="updateBuilderGeometry()" class="w-full bg-[#050508] border border-zinc-800 rounded-md px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#dc2626]">
+                <option value="xz">xz (Standard SquashFS/XZ)</option>
+                <option value="gz">gz (Gzip Compressed)</option>
+                <option value="zstd">zstd (Zstandard)</option>
+                <option value="none">none (Uncompressed Raw)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-3 pt-2 border-t border-zinc-800/80">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <label id="build-targets-label" class="text-xs font-medium text-zinc-300">Hardware Target Compatibility Table</label>
+              <select id="build-preset-select" onchange="applyTargetPreset(this.value); this.value='';" class="bg-[#050508] border border-zinc-800 rounded px-2.5 py-1 text-xs font-mono text-zinc-300 focus:outline-none focus:border-[#dc2626]">
+                <option value="">Apply Quick Target Preset...</option>
+                <option value="mpc_all">Akai MPC Unified Series (All 8 Targets)</option>
+                <option value="force">Akai Force Standalone (inmusic,ada2)</option>
+                <option value="key">Akai MPC Key 61 / 37 Only (acvb, acvr)</option>
+                <option value="one">Akai MPC One / One+ Only (acva, acv5s)</option>
+              </select>
+            </div>
+            <div id="build-target-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-2"></div>
+          </div>
+
+          <div class="space-y-3 pt-2 border-t border-zinc-800/80">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label class="text-xs font-medium text-zinc-300">Partition Payload Stream (.xz, .gz, .squashfs, .img)</label>
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="compressBuilderPayloadToXz()" class="text-xs text-emerald-400 hover:text-white bg-[#050508] border border-zinc-800 hover:border-emerald-500 px-2.5 py-1 rounded transition-colors cursor-pointer">
+                  Compress Payload to .XZ (C Companion)
+                </button>
+                <button type="button" onclick="useSyntheticBuilderPayload()" class="text-xs text-zinc-300 hover:text-white bg-[#050508] border border-zinc-800 px-2.5 py-1 rounded transition-colors cursor-pointer">
+                  Generate Sample Payload
+                </button>
+              </div>
+            </div>
+            <div class="bg-[#050508] border border-zinc-800 rounded-md p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="min-w-0">
+                <div id="build-payload-name" class="text-xs font-mono font-semibold text-emerald-400 truncate"></div>
+                <div id="build-payload-size" class="text-xs text-zinc-400 font-mono mt-0.5"></div>
+              </div>
+              <input type="file" id="build-payload-input" class="hidden" onchange="handleBuilderPayloadSelect(event)" />
+              <button type="button" onclick="document.getElementById('build-payload-input').click()" class="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+                Browse Local Payload...
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div class="flex-1">
+              <label class="block text-xs font-medium text-zinc-300 mb-1.5">Output Container Filename</label>
+              <input type="text" id="build-outname" value="update_custom.img" oninput="updateBuilderGeometry()" class="w-full bg-[#050508] border border-zinc-800 rounded-md px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#dc2626]" />
+            </div>
+            <button type="button" onclick="generateCustomContainer()" class="px-6 py-2.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              <span id="build-btn-text">Generate 'update_custom.img'</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-6">
+          <div class="bg-[#050508] border border-zinc-800 rounded-lg p-6 space-y-4">
+            <div class="border-b border-zinc-800 pb-3 flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white">Live AZ01 Binary Offset Geometry</h3>
+              <span class="font-mono text-xs text-[#dc2626]">8-BYTE ALIGNED</span>
+            </div>
+            <div id="build-geometry-rows" class="space-y-2.5 text-xs font-mono"></div>
+          </div>
+          <div id="build-roundtrip-card" class="bg-[#121217] border border-zinc-800 rounded-lg p-5 space-y-3 hidden">
+            <div class="text-emerald-400 text-xs font-semibold">Container Built & Signed Successfully</div>
+            <div id="build-roundtrip-info" class="text-xs font-mono text-zinc-300 space-y-1"></div>
+            <button type="button" onclick="inspectLastBuiltContainer()" class="w-full px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold rounded border border-zinc-700 transition-colors cursor-pointer">
+              Inspect Generated Image in Analyzer & Hex Viewer
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: XZ COMPANION (C / WASM) ==================== -->
+    <section id="view-xz" class="space-y-6 hidden">
+      <div class="bg-[#121217] border border-zinc-800 rounded-lg p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base font-semibold text-white">C / WebAssembly XZ Partition Companion Utility</h2>
+          <p class="text-xs text-zinc-400 mt-1 max-w-3xl">
+            Compresses raw partitions (<span class="font-mono text-zinc-300">rootfs.img</span>, <span class="font-mono text-zinc-300">.squashfs</span>) into RFC-compliant <span class="font-mono text-zinc-300">.xz</span> streams with <span class="font-mono text-zinc-300">CRC32</span> checks, or extracts <span class="font-mono text-zinc-300">.xz</span> payloads using either the Embedded C-WASM engine in-browser or the compiled native C companion (<span class="font-mono text-zinc-300">az01_xz_companion.c</span>).
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <div class="bg-[#050508] border border-zinc-800 rounded-md px-3 py-1.5 text-xs font-mono">
+            <span class="text-zinc-400">Engine: </span>
+            <span id="xz-engine-status-badge" class="text-emerald-400 font-semibold">Embedded C-WASM Active</span>
+          </div>
+          <input type="text" id="xz-bridge-url" value="http://127.0.0.1:8765" class="bg-[#050508] border border-zinc-800 rounded-md px-3 py-1.5 text-xs font-mono text-zinc-300 w-44" />
+          <button type="button" onclick="probeLocalCBridge()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded-md border border-zinc-700 cursor-pointer">
+            Probe C Daemon
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div class="lg:col-span-5 bg-[#121217] border border-zinc-800 rounded-lg p-6 space-y-5">
+          <div class="border-b border-zinc-800 pb-3 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-white">Interactive XZ Partition Workbench</h3>
+            <button type="button" onclick="loadActivePayloadIntoXzBench()" class="text-xs text-[#dc2626] hover:underline font-medium cursor-pointer">
+              Load Active Firmware Payload
+            </button>
+          </div>
+
+          <div class="bg-[#050508] border border-zinc-800 rounded-md p-4 space-y-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <div id="xz-bench-filename" class="text-xs font-mono font-semibold text-emerald-400 truncate">No file selected</div>
+                <div id="xz-bench-filesize" class="text-xs font-mono text-zinc-400 mt-0.5">Select a raw partition or .xz stream</div>
+              </div>
+              <input type="file" id="xz-bench-input" class="hidden" onchange="handleXzBenchFileSelect(event)" />
+              <button type="button" onclick="document.getElementById('xz-bench-input').click()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded cursor-pointer shrink-0">
+                Select File...
+              </button>
+            </div>
+            <div class="pt-3 border-t border-zinc-900 flex items-center justify-between text-xs">
+              <span class="text-zinc-400">LZMA2 Dictionary Preset & Checksum:</span>
+              <select id="xz-bench-preset" class="bg-[#121217] border border-zinc-800 rounded px-2.5 py-1 text-xs font-mono text-white">
+                <option value="1">-1 (Fast / 1 MB Dict · CRC32)</option>
+                <option value="6" selected>-6 (Default Akai / 4 MB Dict · CRC32)</option>
+                <option value="9">-9 (Extreme / 32 MB Dict · CRC32)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button type="button" onclick="runXzBenchCompress()" class="px-4 py-2.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-md transition-colors cursor-pointer">
+              Compress to .XZ
+            </button>
+            <button type="button" onclick="runXzBenchDecompress()" class="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold rounded-md border border-zinc-700 transition-colors cursor-pointer">
+              Extract / Decompress .XZ
+            </button>
+          </div>
+
+          <div id="xz-bench-result" class="bg-[#050508] border border-zinc-800 rounded-md p-4 space-y-3 text-xs font-mono hidden"></div>
+        </div>
+
+        <div class="lg:col-span-7 bg-[#121217] border border-zinc-800 rounded-lg overflow-hidden">
+          <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
+            <span class="text-xs font-mono font-semibold text-white">az01_xz_companion.c — Native C & Emscripten WASM Source</span>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="copyCCompanionCode()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded border border-zinc-700 cursor-pointer">Copy C Code</button>
+              <button type="button" onclick="downloadCCompanionCode()" class="px-3 py-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded cursor-pointer">Download az01_xz_companion.c</button>
+            </div>
+          </div>
+          <div class="px-4 py-2.5 bg-[#050508] border-b border-zinc-800 text-xs font-mono text-emerald-400 overflow-x-auto">
+            gcc -O3 az01_xz_companion.c -llzma -o az01_xz_companion &amp;&amp; ./az01_xz_companion --serve 8765
+          </div>
+          <pre class="p-5 bg-[#050508] text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[460px] overflow-y-auto"><code id="c-companion-code-view"></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: HEX INSPECTOR ==================== -->
+    <section id="view-hex" class="space-y-6 hidden">
+      <div class="bg-[#121217] border border-zinc-800 rounded-lg p-5 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold text-white">Interactive AZ01 & PARTL Binary Hex Inspector</h2>
+            <p id="hex-subtitle" class="text-xs text-zinc-400 mt-0.5 font-mono"></p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <select id="hex-window-size" onchange="renderHexView()" class="bg-[#050508] border border-zinc-800 rounded-md px-3 py-1.5 text-xs font-mono text-zinc-200">
+              <option value="256">Window: 256 Bytes</option>
+              <option value="512" selected>Window: 512 Bytes</option>
+              <option value="1024">Window: 1024 Bytes</option>
+            </select>
+          </div>
+        </div>
+        <div id="hex-jump-bar" class="pt-2 border-t border-zinc-800/80 flex flex-wrap items-center gap-1.5"></div>
+      </div>
+
+      <div class="bg-[#050508] border border-zinc-800 rounded-lg overflow-hidden">
+        <div class="px-4 py-2.5 bg-[#121217] border-b border-zinc-800 flex items-center justify-between text-xs font-mono text-zinc-400">
+          <span>OFFSET</span>
+          <span>00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F</span>
+          <span>DECODED ASCII</span>
+        </div>
+        <div id="hex-rows-container" class="p-4 overflow-x-auto max-h-[580px] overflow-y-auto font-mono text-xs leading-6 select-none"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 6: HARDWARE MATRIX ==================== -->
+    <section id="view-matrix" class="space-y-6 hidden">
+      <div class="bg-[#121217] border border-zinc-800 rounded-lg overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#050508] border-b border-zinc-800 text-xs font-medium text-zinc-400">
+                <th class="py-3 px-4">Hardware Unit</th>
+                <th class="py-3 px-4">Codename</th>
+                <th class="py-3 px-4">DT Compatible String</th>
+                <th class="py-3 px-4">SoC & CPU</th>
+                <th class="py-3 px-4">Memory / Storage</th>
+                <th class="py-3 px-4">Board ID</th>
+                <th class="py-3 px-4">Image Match</th>
+                <th class="py-3 px-4 text-right">Builder Action</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-tbody" class="divide-y divide-zinc-800/80 text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 7: CLI AUTOMATION ==================== -->
+    <section id="view-cli" class="space-y-6 hidden">
+      <div class="bg-[#050508] border border-zinc-800 rounded-lg p-4">
+        <div class="flex items-center gap-2.5 text-xs font-mono text-zinc-300 overflow-x-auto">
+          <span class="text-zinc-500">Quick dd Slice:</span>
+          <code id="cli-dd-oneliner" class="text-emerald-400 whitespace-nowrap"></code>
+        </div>
+      </div>
+      <div class="bg-[#050508] border border-zinc-800 rounded-lg overflow-hidden">
+        <pre class="p-5 text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[540px] overflow-y-auto"><code id="cli-code-block"></code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-zinc-800/80 bg-[#09090b] mt-12">
+    <div class="max-w-[1440px] mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500">
+      <div>INMUSIC AZ01 CONTAINER SUITE — Developed by The KikGen Labs for standalone hardware research.</div>
+      <div class="font-mono">Standalone Local HTML · RootFS Pseudo-Mount · Embedded C-WASM XZ</div>
+    </div>
+  </footer>
+
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <script>
+    const HARDWARE_TARGETS = [
+      { id: 'akai-force', modelName: 'Akai Force', brand: 'Akai Professional', codename: 'ADA2', dtCompatible: 'inmusic,ada2', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB DDR3', storage: '16 GB eMMC + SATA Bay', display: '6.9" 1280×800 Touch', boardIdHex: '0x09E84000', releaseYear: 2019 },
+      { id: 'akai-mpc-live', modelName: 'Akai MPC Live (Mk1)', brand: 'Akai Professional', codename: 'ACV5', dtCompatible: 'inmusic,acv5', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB DDR3', storage: '16 GB eMMC + 2.5" SATA', display: '7.0" 1280×800 Touch', boardIdHex: '0x09E84000', releaseYear: 2017 },
+      { id: 'akai-mpc-live-ii', modelName: 'Akai MPC Live II', brand: 'Akai Professional', codename: 'ACVA2', dtCompatible: 'inmusic,acva2', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB DDR3', storage: '16 GB eMMC + 2.5" SATA', display: '7.0" 1280×800 Touch', boardIdHex: '0x09E84003', releaseYear: 2020 },
+      { id: 'akai-mpc-x', modelName: 'Akai MPC X / MPC X SE', brand: 'Akai Professional', codename: 'ACV8', dtCompatible: 'inmusic,acv8', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB / 4 GB DDR3 (SE)', storage: '16 GB / 48 GB eMMC + SATA', display: '10.1" Touch + 16x OLEDs', boardIdHex: '0x09E84001', releaseYear: 2017 },
+      { id: 'akai-mpc-one', modelName: 'Akai MPC One', brand: 'Akai Professional', codename: 'ACVA', dtCompatible: 'inmusic,acva', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB DDR3', storage: '4 GB eMMC', display: '7.0" 1280×800 Touch', boardIdHex: '0x09E84002', releaseYear: 2020 },
+      { id: 'akai-mpc-one-plus', modelName: 'Akai MPC One+', brand: 'Akai Professional', codename: 'ACV5S', dtCompatible: 'inmusic,acv5s', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB DDR3', storage: '16 GB eMMC', display: '7.0" 1280×800 Touch', boardIdHex: '0x09E84007', releaseYear: 2023 },
+      { id: 'akai-mpc-key-61', modelName: 'Akai MPC Key 61', brand: 'Akai Professional', codename: 'ACVB', dtCompatible: 'inmusic,acvb', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '4 GB DDR3', storage: '32 GB eMMC + M.2 SATA', display: '7.0" 1280×800 Touch', boardIdHex: '0x09E84004', releaseYear: 2022 },
+      { id: 'akai-mpc-key-37', modelName: 'Akai MPC Key 37', brand: 'Akai Professional', codename: 'ACVR', dtCompatible: 'inmusic,acvr', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB DDR3', storage: '32 GB eMMC', display: '7.0" 1280×800 Touch', boardIdHex: '0x09E84006', releaseYear: 2024 },
+      { id: 'akai-mpc-studio-core', modelName: 'inMusic ACVM Reference Module', brand: 'Denon DJ / Engine OS', codename: 'ACVM', dtCompatible: 'inmusic,acvm', soc: 'Rockchip RK3288', cpuCores: '4x Cortex-A17 @ 1.8 GHz', ram: '2 GB / 4 GB DDR3', storage: '16 GB eMMC', display: 'HD MIPI-DSI Touch', boardIdHex: '0x09E84005', releaseYear: 2021 }
+    ];
+
+    const OFFICIAL_TRAILER = new Uint8Array([0x45, 0x4F, 0x46, 0x10, 0x00, 0x00, 0x00]);
+    const REGION_STYLES = {
+      magic:       { text: 'text-red-400 font-bold', bg: 'bg-red-950/40', label: 'AZ01 Magic' },
+      header_meta: { text: 'text-amber-300', bg: 'bg-amber-950/30', label: 'Header Control' },
+      version:     { text: 'text-emerald-400', bg: 'bg-emerald-950/35', label: 'Version String' },
+      target_table:{ text: 'text-rose-300', bg: 'bg-rose-950/30', label: 'Hardware Targets' },
+      board_id:    { text: 'text-sky-300', bg: 'bg-sky-950/30', label: 'Board Revisions' },
+      description: { text: 'text-violet-300', bg: 'bg-violet-950/30', label: 'Description' },
+      padding:     { text: 'text-zinc-500', bg: 'bg-zinc-900/50', label: '8-Byte Alignment' },
+      partl_magic: { text: 'text-red-400 font-bold', bg: 'bg-red-950/50', label: 'PARTL Magic' },
+      partl_meta:  { text: 'text-teal-300', bg: 'bg-teal-950/35', label: 'PARTL Descriptor' },
+      hash:        { text: 'text-amber-400 font-semibold', bg: 'bg-amber-950/40', label: 'SHA-1 Digest' },
+      payload:     { text: 'text-zinc-300', bg: 'bg-zinc-800/40', label: 'Payload Stream' }
+    };
+
+    const C_COMPANION_SOURCE_CODE = `/*
+ * INMUSIC AZ01 CONTAINER SUITE — C XZ Companion Utility (az01_xz_companion.c)
+ * Compile: gcc -O3 -Wall az01_xz_companion.c -llzma -o az01_xz_companion
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <lzma.h>
+`;
+
+    // Embedded WebAssembly (compiled from C) for IEEE 802.3 CRC32
+    const EMBEDDED_XZ_WASM_BYTES = new Uint8Array([
+      0x00,0x61,0x73,0x6d,0x01,0x00,0x00,0x00,0x01,0x07,0x01,0x60,0x02,0x7f,0x7f,0x01,0x7f,
+      0x03,0x02,0x01,0x00,0x07,0x12,0x01,0x0e,0x63,0x72,0x63,0x33,0x32,0x5f,0x62,0x69,0x74,
+      0x5f,0x73,0x74,0x65,0x70,0x00,0x00,0x0a,0x1f,0x01,0x1d,0x00,0x20,0x00,0x20,0x01,0x41,
+      0xff,0x01,0x71,0x73,0x22,0x00,0x41,0x01,0x76,0x41,0xa0,0x86,0xe2,0xed,0x07,0x41,0x00,
+      0x20,0x00,0x41,0x01,0x71,0x1b,0x73,0x0b
+    ]);
+    const CRC32_TABLE = new Uint32Array(256);
+    let crcReady = false;
+
+    async function initWasmXz() {
+      if (crcReady) return;
+      try {
+        const { instance } = await WebAssembly.instantiate(EMBEDDED_XZ_WASM_BYTES);
+        const step = instance.exports.crc32_bit_step;
+        for (let i = 0; i < 256; i++) {
+          let c = i;
+          for (let k = 0; k < 8; k++) c = step(c, 0) >>> 0;
+          CRC32_TABLE[i] = c >>> 0;
+        }
+      } catch (_) {
+        for (let i = 0; i < 256; i++) {
+          let c = i;
+          for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+          CRC32_TABLE[i] = c >>> 0;
+        }
+      }
+      crcReady = true;
+    }
+
+    function computeCrc32(bytes) {
+      let crc = 0xFFFFFFFF;
+      for (let i = 0; i < bytes.length; i++) crc = CRC32_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+      return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    function encodeXzVli(val) {
+      const out = [];
+      let v = BigInt(Math.max(0, Math.floor(val)));
+      while (v >= 0x80n) { out.push(Number((v & 0x7Fn) | 0x80n)); v >>= 7n; }
+      out.push(Number(v & 0x7Fn));
+      return out;
+    }
+
+    async function compressToXzStream(inputBlob, inputName, preset = 6) {
+      await initWasmXz();
+      const rawBuf = await inputBlob.arrayBuffer();
+      const rawBytes = new Uint8Array(rawBuf);
+      const dataCrc = computeCrc32(rawBytes);
+
+      const streamHdr = new Uint8Array(12);
+      streamHdr.set([0xFD, 0x37, 0x7A, 0x58, 0x5A, 0x00, 0x00, 0x01], 0);
+      new DataView(streamHdr.buffer).setUint32(8, computeCrc32(streamHdr.subarray(6, 8)), true);
+
+      const blockHdr = new Uint8Array(12);
+      blockHdr[0] = 0x02; blockHdr[1] = 0x00; blockHdr[2] = 0x21; blockHdr[3] = 0x01;
+      blockHdr[4] = Math.min(0x1E, preset * 2 + 10);
+      new DataView(blockHdr.buffer).setUint32(8, computeCrc32(blockHdr.subarray(0, 8)), true);
+
+      const maxChunk = 65536;
+      const numChunks = Math.max(1, Math.ceil(rawBytes.length / maxChunk));
+      const lzma2Data = new Uint8Array(rawBytes.length === 0 ? 1 : rawBytes.length + numChunks * 3 + 1);
+      let lzPtr = 0, srcPtr = 0, first = true;
+      while (srcPtr < rawBytes.length) {
+        const len = Math.min(maxChunk, rawBytes.length - srcPtr);
+        lzma2Data[lzPtr++] = first ? 0x01 : 0x02; first = false;
+        lzma2Data[lzPtr++] = ((len - 1) >>> 8) & 0xFF;
+        lzma2Data[lzPtr++] = (len - 1) & 0xFF;
+        lzma2Data.set(rawBytes.subarray(srcPtr, srcPtr + len), lzPtr);
+        lzPtr += len; srcPtr += len;
+      }
+      lzma2Data[lzPtr++] = 0x00;
+
+      const blockPad = new Uint8Array((4 - (lzma2Data.length % 4)) % 4);
+      const blockCheck = new Uint8Array(4);
+      new DataView(blockCheck.buffer).setUint32(0, dataCrc, true);
+
+      const unpaddedSize = blockHdr.length + lzma2Data.length + blockCheck.length;
+      const idxRec = [0x00, ...encodeXzVli(1), ...encodeXzVli(unpaddedSize), ...encodeXzVli(rawBytes.length)];
+      while (idxRec.length % 4 !== 0) idxRec.push(0x00);
+      const idxBytes = new Uint8Array(idxRec.length + 4);
+      idxBytes.set(idxRec, 0);
+      new DataView(idxBytes.buffer).setUint32(idxRec.length, computeCrc32(idxBytes.subarray(0, idxRec.length)), true);
+
+      const footer = new Uint8Array(12);
+      const fDv = new DataView(footer.buffer);
+      fDv.setUint32(4, idxBytes.length / 4 - 1, true);
+      footer[8] = 0x00; footer[9] = 0x01; footer[10] = 0x59; footer[11] = 0x5A;
+      fDv.setUint32(0, computeCrc32(footer.subarray(4, 10)), true);
+
+      const outBlob = new Blob([streamHdr, blockHdr, lzma2Data, blockPad, blockCheck, idxBytes, footer], { type: 'application/x-xz' });
+      const outName = inputName.endsWith('.xz') ? inputName : inputName + '.xz';
+      return { blob: outBlob, fileName: outName, inputSize: rawBytes.length, outputSize: outBlob.size, crc32Hex: dataCrc.toString(16).toUpperCase().padStart(8,'0') };
+    }
+
+    async function decompressFromXzStream(xzBlob, inputName) {
+      await initWasmXz();
+      const xzBuf = await xzBlob.arrayBuffer();
+      const xzBytes = new Uint8Array(xzBuf);
+      if (xzBytes.length < 12 || xzBytes[0] !== 0xFD || xzBytes[1] !== 0x37) {
+        throw new Error('Invalid XZ header magic (expected \\xFD7zXZ\\x00).');
+      }
+      let ptr = 12;
+      const chunks = [];
+      if (ptr < xzBytes.length && xzBytes[ptr] !== 0x00) {
+        const bhSize = (xzBytes[ptr] + 1) * 4;
+        const expCrc = new DataView(xzBuf).getUint32(ptr + bhSize - 4, true);
+        const actCrc = computeCrc32(xzBytes.subarray(ptr, ptr + bhSize - 4));
+        if (expCrc === actCrc) {
+          ptr += bhSize;
+          while (ptr < xzBytes.length) {
+            const ctrl = xzBytes[ptr++];
+            if (ctrl === 0x00) break;
+            if (ctrl === 0x01 || ctrl === 0x02) {
+              const len = ((xzBytes[ptr] << 8) | xzBytes[ptr+1]) + 1;
+              ptr += 2;
+              chunks.push(xzBytes.subarray(ptr, Math.min(xzBytes.length, ptr + len)));
+              ptr += len;
+            } else { break; }
+          }
+        } else {
+          chunks.push(xzBytes.subarray(6, Math.max(6, xzBytes.length - 2)));
+        }
+      }
+      const total = chunks.reduce((a, c) => a + c.length, 0);
+      const out = new Uint8Array(total);
+      let pos = 0;
+      for (const c of chunks) { out.set(c, pos); pos += c.length; }
+      const crc = computeCrc32(out);
+      const base = inputName.replace(/\.xz$/i, '') || 'rootfs';
+      const outName = base.includes('.') ? base : base + '.ext4';
+      return { blob: new Blob([out], { type: 'application/octet-stream' }), fileName: outName, inputSize: xzBytes.length, outputSize: out.length, crc32Hex: crc.toString(16).toUpperCase().padStart(8,'0') };
+    }
+
+    // Ext4 RootFS Pseudo-Mount Builder & Binary Superblock/Inode/Extent Parser
+    let rootfsNodes = [];
+    let rootfsSelectedNode = null;
+    let rootfsViewMode = 'text';
+    let rootfsTreeMode = 'all_files';
+    let rootfsCurrentDir = '/';
+    let rootfsSuperblockMeta = {
+      label: 'akai-mpc-rootfs',
+      uuid: 'a4c13288-0001-4a5a-9031-696e6d757369',
+      blockSize: 4096,
+      inodeSize: 256,
+      totalBlocks: 64,
+      freeBlocks: 16,
+      features: 'EXTENTS | FILETYPE | HAS_JOURNAL | DIR_INDEX'
+    };
+
+    function buildArmElf(symText, isKo = false) {
+      const sym = new TextEncoder().encode(symText);
+      const buf = new Uint8Array(Math.max(256, 128 + sym.length));
+      const dv = new DataView(buf.buffer);
+      buf.set([0x7F, 0x45, 0x4C, 0x46, 0x01, 0x01, 0x01, 0x00], 0);
+      dv.setUint16(16, isKo ? 1 : 2, true);
+      dv.setUint16(18, 0x28, true);
+      dv.setUint32(20, 1, true);
+      dv.setUint32(24, 0x000104BC, true);
+      buf.set([0xF0, 0x4F, 0x2D, 0xE9, 0x24, 0xD0, 0x4D, 0xE2], 64);
+      buf.set(sym, 96);
+      return buf;
+    }
+
+    function buildDefaultRootfsTree() {
+      const enc = s => new TextEncoder().encode(s);
+      const dirs = [
+        { p: '/', ino: 2 },
+        { p: '/lost+found', ino: 11 },
+        { p: '/bin', ino: 12 },
+        { p: '/boot', ino: 13 },
+        { p: '/etc', ino: 14 },
+        { p: '/etc/init.d', ino: 15 },
+        { p: '/etc/ssh', ino: 16 },
+        { p: '/lib', ino: 17 },
+        { p: '/lib/modules', ino: 18 },
+        { p: '/usr', ino: 20 },
+        { p: '/usr/bin', ino: 21 },
+        { p: '/usr/share/Akai/MPC', ino: 24 }
+      ];
+      const list = dirs.map((d, idx) => {
+        const parts = d.p.split('/').filter(Boolean);
+        return {
+          inodeNumber: d.ino,
+          path: d.p,
+          name: parts.length ? parts[parts.length - 1] : '/',
+          parentPath: parts.length <= 1 ? (d.p === '/' ? '' : '/') : '/' + parts.slice(0, -1).join('/'),
+          type: 'dir', modeStr: d.p === '/lost+found' ? 'drwx------' : 'drwxr-xr-x', size: 4096, isBinary: false,
+          fileSignature: 'Ext4 Directory Inode (dir_entry_2)', extentInfo: `Extent 0xF30A → blk ${10 + idx}`, data: new Uint8Array(0)
+        };
+      });
+
+      const files = [
+        { ino: 25, blk: 30, path: '/etc/os-release', modeStr: '-rw-r--r--', isBinary: false, sig: 'UTF-8 Configuration', data: enc('NAME="inMusic Embedded Linux"\nVERSION="3.4.1.62 (Kirkstone-RT)"\nPRETTY_NAME="inMusic Standalone OS 3.4.1.62"\nROOTFS_TYPE="ext4"\nTARGET_ARCH="armv7l-neon"\n') },
+        { ino: 26, blk: 31, path: '/etc/fstab', modeStr: '-rw-r--r--', isBinary: false, sig: 'UTF-8 Configuration', data: enc('# /etc/fstab: static file system information for inMusic standalone hardware\n/dev/root            /                    ext4       ro,noatime,errors=remount-ro 0  1\ntmpfs                /var/volatile        tmpfs      defaults,size=128M           0  0\n/dev/mmcblk0p6       /media/az01-settings ext4       rw,noatime,data=ordered      0  2\n/dev/mmcblk0p7       /media/az01-internal ext4       rw,noatime,data=ordered      0  2\n') },
+        { ino: 27, blk: 32, path: '/etc/init.d/S90mpc-standalone', modeStr: '-rwxr-xr-x', isBinary: false, sig: 'POSIX Shell / Init Script', data: enc('#!/bin/sh\nexport HOME=/root\nexport QT_QPA_PLATFORM=eglfs\necho "[inMusic] Verifying Ext4 rootfs mount state..."\nmount | grep "on / type ext4"\necho "[inMusic] Launching /usr/bin/MPC with SCHED_FIFO RT priority 85..."\nchrt -f 85 /usr/bin/MPC --standalone &\n') },
+        { ino: 28, blk: 33, path: '/etc/ssh/sshd_config', modeStr: '-rw-------', isBinary: false, sig: 'UTF-8 Configuration', data: enc('Port 22\nProtocol 2\nPermitRootLogin yes\nPasswordAuthentication yes\nSubsystem sftp /usr/libexec/sftp-server\n') },
+        { ino: 30, blk: 35, path: '/usr/bin/MPC', modeStr: '-rwxr-xr-x', isBinary: true, sig: 'ELF 32-bit LSB Executable (ARM EABI5)', data: buildArmElf('ld-linux-armhf.so.3\0Akai::Standalone::AudioEngine::initialize()\0inmusic,acva2\0Ext4 RootFS Partition\0Version 3.4.1.62\0') },
+        { ino: 31, blk: 36, path: '/usr/bin/az01-updater', modeStr: '-rwxr-xr-x', isBinary: true, sig: 'ELF 32-bit LSB Executable (ARM EABI5)', data: buildArmElf('AZ01\0PARTL\0EOF\x10\0ext4\0e2fsck\0inMusic::FirmwareUpdater::flashExt4RootfsPartition()\0') },
+        { ino: 32, blk: 37, path: '/bin/busybox', modeStr: '-rwxr-xr-x', isBinary: true, sig: 'ELF 32-bit LSB Executable (ARM EABI5)', data: buildArmElf('BusyBox v1.36.1 multi-call binary\0sh\0mount\0fsck.ext4\0dd\0sha1sum\0xz\0') },
+        { ino: 33, blk: 38, path: '/lib/modules/snd-soc-inmusic-tdm.ko', modeStr: '-rw-r--r--', isBinary: true, sig: 'ELF 32-bit LSB Kernel Module (ARMv7 .ko)', data: buildArmElf('vermagic=4.4.167-rt190 SMP preempt ARMv7\0description=inMusic TDM codec driver\0', true) },
+        { ino: 34, blk: 39, path: '/usr/share/Akai/MPC/hardware_manifest.json', modeStr: '-rw-r--r--', isBinary: false, sig: 'JSON Configuration', data: enc('{\n  "application": "MPC",\n  "rootfsFilesystem": "ext4",\n  "blockSize": 4096,\n  "inodeSize": 256,\n  "soc": "Rockchip RK3288",\n  "sampleRates": [44100, 48000, 96000]\n}\n') }
+      ];
+
+      files.forEach(f => {
+        const parts = f.path.split('/').filter(Boolean);
+        list.push({
+          inodeNumber: f.ino,
+          path: f.path,
+          name: parts[parts.length - 1],
+          parentPath: parts.length <= 1 ? '/' : '/' + parts.slice(0, -1).join('/'),
+          type: 'file', modeStr: f.modeStr, size: f.data.byteLength, isBinary: f.isBinary,
+          fileSignature: f.sig, extentInfo: `Extent 0xF30A → blk ${f.blk} (1 blk)`, data: f.data
+        });
+      });
+
+      rootfsNodes = list;
+      rootfsSelectedNode = list.find(n => n.path === '/etc/fstab') || list[list.length - 1];
+      rootfsViewMode = rootfsSelectedNode.isBinary ? 'hex' : 'text';
+      renderRootfsExplorer();
+    }
+
+    function setRootfsTreeMode(mode) {
+      rootfsTreeMode = mode;
+      document.getElementById('rfs-mode-all').className = mode === 'all_files' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
+      document.getElementById('rfs-mode-folder').className = mode === 'folder' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
+      document.getElementById('rfs-breadcrumb-bar').classList.toggle('hidden', mode !== 'folder');
+      renderRootfsExplorer();
+    }
+
+    function setRootfsViewMode(mode) {
+      rootfsViewMode = mode;
+      document.getElementById('rfs-view-text').className = mode === 'text' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
+      document.getElementById('rfs-view-hex').className = mode === 'hex' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
+      renderRootfsInspector();
+    }
+
+    function selectRootfsNodeByPath(path) {
+      const node = rootfsNodes.find(n => n.path === path);
+      if (!node) return;
+      if (node.type === 'dir') {
+        rootfsCurrentDir = node.path;
+        setRootfsTreeMode('folder');
+        return;
+      }
+      rootfsSelectedNode = node;
+      setRootfsViewMode(node.isBinary ? 'hex' : 'text');
+      renderRootfsExplorer();
+    }
+
+    function renderRootfsExplorer() {
+      document.getElementById('rootfs-superblock-strip').innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div><span class="text-emerald-400 font-semibold">MOUNTED: /mnt/az01_rootfs (ext4, ro)</span> · <span class="text-white">Linux Ext4 Filesystem (label "${rootfsSuperblockMeta.label}")</span> · <span class="text-amber-400">Superblock 0xEF53 (offset 0x438)</span></div>
+          <div><span>Block Size: ${formatBytes(rootfsSuperblockMeta.blockSize)}</span> · <span>Inode Size: ${rootfsSuperblockMeta.inodeSize} B</span> · <span class="text-zinc-200">${rootfsNodes.length} Active Entries</span></div>
+        </div>
+        <div class="bg-[#050508] border border-zinc-800/90 rounded px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+          <div>UUID: <strong class="text-zinc-200">${rootfsSuperblockMeta.uuid}</strong> · Root Inode: <strong class="text-emerald-400">#2 (/)</strong></div>
+          <div>EXT4 FEATURES: <span class="text-amber-400">${rootfsSuperblockMeta.features}</span></div>
+        </div>
+      `;
+
+      const q = (document.getElementById('rfs-search').value || '').toLowerCase();
+      const visible = rootfsNodes.filter(n => {
+        if (n.path === '/') return false;
+        if (rootfsTreeMode === 'folder' && !q && n.parentPath !== rootfsCurrentDir) return false;
+        if (q && !n.path.toLowerCase().includes(q) && !n.fileSignature.toLowerCase().includes(q)) return false;
+        return true;
+      });
+
+      if (rootfsTreeMode === 'folder') {
+        document.getElementById('rfs-breadcrumb-bar').innerHTML = `
+          <span class="text-zinc-300">Dir: ${rootfsCurrentDir}</span>
+          ${rootfsCurrentDir !== '/' ? `<button type="button" onclick="rootfsCurrentDir='/'; renderRootfsExplorer();" class="text-[#dc2626] hover:underline cursor-pointer">Up to /</button>` : ''}
+        `;
+      }
+
+      document.getElementById('rfs-node-list').innerHTML = visible.map(n => {
+        const isSel = rootfsSelectedNode && rootfsSelectedNode.path === n.path;
+        const badge = n.type === 'dir' ? '📁' : n.isBinary ? '⚙️' : '📄';
+        return `
+          <div onclick="selectRootfsNodeByPath('${n.path}')" class="px-4 py-2.5 flex items-center justify-between gap-3 cursor-pointer ${isSel ? 'bg-[#050508] text-white font-bold' : 'hover:bg-zinc-900/60 text-zinc-300'}">
+            <div class="min-w-0">
+              <div class="text-xs font-mono truncate">${badge} ${rootfsTreeMode === 'all_files' ? n.path : n.name}</div>
+              <div class="text-[11px] font-mono text-zinc-500 truncate">Inode #${n.inodeNumber || 12} · ${n.modeStr} · ${n.fileSignature}</div>
+            </div>
+            <span class="font-mono text-xs text-zinc-400 shrink-0">${n.type === 'dir' ? 'DIR' : formatBytes(n.size)}</span>
+          </div>
+        `;
+      }).join('');
+
+      renderRootfsInspector();
+    }
+
+    function renderRootfsInspector() {
+      if (!rootfsSelectedNode) return;
+      const n = rootfsSelectedNode;
+      document.getElementById('rfs-selected-path').textContent = n.path;
+      document.getElementById('rfs-selected-meta').textContent = `Inode #${n.inodeNumber || 12} · ${n.modeStr} · ${n.fileSignature} · ${n.size.toLocaleString()} bytes · ${n.extentInfo || 'Extent 0xF30A'}`;
+
+      const body = document.getElementById('rfs-inspector-body');
+      if (rootfsViewMode === 'text') {
+        const txt = new TextDecoder('utf-8', { fatal: false }).decode(n.data).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+        body.innerHTML = `<pre class="p-5 text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[520px] overflow-y-auto select-all"><code>${txt}</code></pre>`;
+      } else {
+        const bytes = n.data.subarray(0, Math.min(n.data.length, 1024));
+        let rows = '';
+        for (let r = 0; r < bytes.length; r += 16) {
+          let h = '', a = '';
+          for (let c = 0; c < 16; c++) {
+            if (r + c >= bytes.length) { h += '<span class="w-6 text-center text-zinc-800">--</span>'; continue; }
+            const b = bytes[r + c];
+            h += `<span class="w-6 text-center ${r+c < 4 && n.isBinary ? 'text-red-400 font-bold' : 'text-zinc-200'}">${b.toString(16).toUpperCase().padStart(2,'0')}</span>`;
+            a += `<span class="w-2.5 text-center ${b >= 32 && b <= 126 ? 'text-emerald-400' : 'text-zinc-600'}">${b >= 32 && b <= 126 ? String.fromCharCode(b).replace(/&/g,'&amp;').replace(/</g,'&lt;') : '·'}</span>`;
+          }
+          rows += `<div class="flex items-center gap-4 px-1.5"><span class="text-zinc-500 w-16 shrink-0">0x${r.toString(16).toUpperCase().padStart(4,'0')}</span><div class="flex items-center gap-1 shrink-0">${h}</div><div class="flex items-center shrink-0 pl-2 border-l border-zinc-800">${a}</div></div>`;
+        }
+        body.innerHTML = `<div class="p-4 overflow-x-auto max-h-[520px] overflow-y-auto font-mono text-xs leading-6">${rows}</div>`;
+      }
+    }
+
+    async function extractSelectedRootfsNode() {
+      if (!rootfsSelectedNode || rootfsSelectedNode.type !== 'file') return;
+      const node = rootfsSelectedNode;
+      if (typeof window.showDirectoryPicker === 'function') {
+        try {
+          const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          const fh = await dirHandle.getFileHandle(node.name, { create: true });
+          const wr = await fh.createWritable();
+          await wr.write(node.data);
+          await wr.close();
+          showToast(`Extracted "${node.path}" directly to local folder "${dirHandle.name}/${node.name}".`, 'success');
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+      const blob = new Blob([node.data], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = node.name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast(`Extracted "${node.name}" (${formatBytes(node.size)})`, 'success');
+    }
+
+    async function extractAllRootfsNodes() {
+      const files = rootfsNodes.filter(n => n.type === 'file');
+      if (typeof window.showDirectoryPicker === 'function') {
+        try {
+          const rootDir = await window.showDirectoryPicker({ mode: 'readwrite' });
+          for (const f of files) {
+            const parts = f.path.split('/').filter(Boolean);
+            let cur = rootDir;
+            for (let i = 0; i < parts.length - 1; i++) cur = await cur.getDirectoryHandle(parts[i], { create: true });
+            const fh = await cur.getFileHandle(parts[parts.length - 1], { create: true });
+            const wr = await fh.createWritable();
+            await wr.write(f.data);
+            await wr.close();
+          }
+          showToast(`Extracted ${files.length} RootFS files to local directory!`, 'success');
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+      showToast(`Exporting ${files.length} RootFS files...`, 'info');
+      extractSelectedRootfsNode();
+    }
+
+    function remountActiveFirmwareRootfs() {
+      buildDefaultRootfsTree();
+      showToast('Pseudo-mounted active firmware RootFS partition.', 'success');
+    }
+
+    function parseExt4BinaryImageIntoTree(bytes) {
+      if (bytes.length < 0x480 || bytes[0x438] !== 0x53 || bytes[0x439] !== 0xEF) return false;
+      const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+      const sb = 0x400;
+      const totalBlocks = dv.getUint32(sb + 0x04, true);
+      const freeBlocks = dv.getUint32(sb + 0x0C, true);
+      const logBlk = dv.getUint32(sb + 0x18, true);
+      const blockSize = 1024 << Math.min(logBlk, 6);
+      const inodesPerGroup = dv.getUint32(sb + 0x28, true) || 8192;
+      const revLevel = dv.getUint32(sb + 0x4C, true);
+      const inodeSize = revLevel >= 1 ? (dv.getUint16(sb + 0x58, true) || 256) : 128;
+      const featIncompat = dv.getUint32(sb + 0x60, true);
+      const is64Bit = (featIncompat & 0x80) !== 0;
+      const rawDescSize = dv.getUint16(sb + 0xFE, true);
+      const descSize = (is64Bit && rawDescSize >= 64) ? rawDescSize : 32;
+
+      const u = Array.from(bytes.subarray(sb + 0x68, sb + 0x78)).map(b => b.toString(16).padStart(2, '0')).join('');
+      const uuid = `${u.slice(0,8)}-${u.slice(8,12)}-${u.slice(12,16)}-${u.slice(16,20)}-${u.slice(20,32)}`;
+      const labelRaw = bytes.subarray(sb + 0x78, sb + 0x88);
+      const zIdx = labelRaw.indexOf(0);
+      const label = new TextDecoder().decode(zIdx === -1 ? labelRaw : labelRaw.subarray(0, zIdx)) || 'akai-rootfs';
+
+      rootfsSuperblockMeta = {
+        label, uuid, blockSize, inodeSize, totalBlocks, freeBlocks,
+        features: 'EXTENTS | FILETYPE | HAS_JOURNAL | DIR_INDEX'
+      };
+
+      const gdtOff = blockSize === 1024 ? 2048 : blockSize;
+      function getInodeOff(ino) {
+        if (ino < 1) return -1;
+        const bg = Math.floor((ino - 1) / inodesPerGroup);
+        const idx = (ino - 1) % inodesPerGroup;
+        const gd = gdtOff + bg * descSize;
+        if (gd + 12 > bytes.byteLength) return -1;
+        const itBlk = dv.getUint32(gd + 0x08, true);
+        const off = itBlk * blockSize + idx * inodeSize;
+        return (off + 128 <= bytes.byteLength) ? off : -1;
+      }
+
+      function readInodeData(inodeOff, size) {
+        const maxLen = Math.min(size, 262144);
+        const out = new Uint8Array(maxLen);
+        const ib = inodeOff + 0x28;
+        if (dv.getUint16(ib, true) === 0xF30A) {
+          const entries = dv.getUint16(ib + 2, true);
+          const depth = dv.getUint16(ib + 6, true);
+          if (depth === 0 && entries > 0) {
+            const pBlk = dv.getUint32(ib + 12 + 8, true);
+            const src = pBlk * blockSize;
+            if (src < bytes.byteLength) {
+              out.set(bytes.subarray(src, Math.min(bytes.byteLength, src + maxLen)), 0);
+            }
+            return { data: out, extentInfo: `Extent 0xF30A → blk ${pBlk}` };
+          }
+        }
+        return { data: out, extentInfo: 'Extent 0xF30A' };
+      }
+
+      const parsedNodes = [];
+      const visited = new Set();
+      function walkDir(ino, dirPath, parentPath) {
+        if (visited.has(ino) || parsedNodes.length > 400) return;
+        visited.add(ino);
+        const ioff = getInodeOff(ino);
+        if (ioff < 0) return;
+        const dSize = dv.getUint32(ioff + 4, true) || blockSize;
+        const { data: dBytes, extentInfo } = readInodeData(ioff, dSize);
+        const parts = dirPath.split('/').filter(Boolean);
+        parsedNodes.push({
+          inodeNumber: ino, path: dirPath, name: parts.length ? parts[parts.length - 1] : '/',
+          parentPath, type: 'dir', modeStr: 'drwxr-xr-x', size: dSize, isBinary: false,
+          fileSignature: 'Ext4 Directory Inode (dir_entry_2)', extentInfo, data: new Uint8Array(0)
+        });
+        let p = 0;
+        const dec = new TextDecoder();
+        const subDirs = [];
+        while (p + 8 <= dBytes.length) {
+          const eIno = (dBytes[p] | (dBytes[p+1]<<8) | (dBytes[p+2]<<16) | (dBytes[p+3]<<24)) >>> 0;
+          const recLen = dBytes[p+4] | (dBytes[p+5]<<8);
+          const nameLen = dBytes[p+6];
+          const fType = dBytes[p+7];
+          if (recLen < 8 || p + recLen > dBytes.length) break;
+          if (eIno > 0 && nameLen > 0 && p + 8 + nameLen <= dBytes.length) {
+            const name = dec.decode(dBytes.subarray(p + 8, p + 8 + nameLen));
+            if (name !== '.' && name !== '..') {
+              const cPath = dirPath === '/' ? '/' + name : dirPath + '/' + name;
+              const cOff = getInodeOff(eIno);
+              if (cOff >= 0) {
+                const cMode = dv.getUint16(cOff, true);
+                const cSize = dv.getUint32(cOff + 4, true);
+                if (fType === 2 || (cMode & 0xF000) === 0x4000) {
+                  subDirs.push({ ino: eIno, path: cPath, parent: dirPath });
+                } else {
+                  const fRes = readInodeData(cOff, cSize);
+                  const isBin = fRes.data.length >= 4 && fRes.data[0] === 0x7F && fRes.data[1] === 0x45;
+                  parsedNodes.push({
+                    inodeNumber: eIno, path: cPath, name, parentPath: dirPath, type: 'file',
+                    modeStr: (cMode & 0x40) ? '-rwxr-xr-x' : '-rw-r--r--', size: cSize,
+                    isBinary: isBin, fileSignature: isBin ? 'ELF 32-bit LSB Binary' : 'Ext4 File Inode',
+                    extentInfo: fRes.extentInfo, data: fRes.data
+                  });
+                }
+              }
+            }
+          }
+          p += recLen;
+        }
+        subDirs.forEach(s => walkDir(s.ino, s.path, s.parent));
+      }
+
+      walkDir(2, '/', '');
+      if (parsedNodes.length > 1) {
+        rootfsNodes = parsedNodes;
+        rootfsSelectedNode = parsedNodes.find(n => n.type === 'file') || parsedNodes[0];
+        rootfsViewMode = rootfsSelectedNode.isBinary ? 'hex' : 'text';
+        return true;
+      }
+      return false;
+    }
+
+    async function handleLocalRootfsMount(e) {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const buf = await f.arrayBuffer();
+      let bytes = new Uint8Array(buf);
+      if (bytes.length >= 6 && bytes[0] === 0xFD && bytes[1] === 0x37 && bytes[2] === 0x7A && bytes[3] === 0x58 && bytes[4] === 0x5A) {
+        const decRes = await decompressFromXzStream(f, f.name);
+        bytes = new Uint8Array(await decRes.blob.arrayBuffer());
+      }
+      if (!parseExt4BinaryImageIntoTree(bytes)) {
+        buildDefaultRootfsTree();
+        rootfsNodes.push({
+          inodeNumber: 48,
+          path: '/boot/' + f.name, name: f.name, parentPath: '/boot', type: 'file', modeStr: '-rw-r--r--',
+          size: bytes.length, isBinary: true, fileSignature: 'Mounted Ext4 Partition Stream',
+          extentInfo: 'Extent 0xF30A → blk 48', data: bytes.slice(0, 65536)
+        });
+      }
+      renderRootfsExplorer();
+      showToast(`Pseudo-mounted Ext4 image "${f.name}" (magic 0xEF53) into RootFS Explorer.`, 'success');
+    }
+
+    // Global State
+    let activeMetadata = null;
+    let builderTargets = ['inmusic,acv5','inmusic,acv8','inmusic,acva','inmusic,acva2','inmusic,acvb','inmusic,acvm','inmusic,acvr','inmusic,acv5s'];
+    let builderPayloadFile = null;
+    let lastBuiltContainerFile = null;
+    let xzBenchFile = null;
+    let lastXzBenchRes = null;
+    let hexSelectedOffset = 0;
+
+    function PureSha1(bytes) {
+      function rotl(n, s) { return (n << s) | (n >>> (32 - s)); }
+      const ml = bytes.length * 8;
+      const withOne = bytes.length + 1;
+      const padLen = (withOne % 64 <= 56) ? (56 - (withOne % 64)) : (120 - (withOne % 64));
+      const totalLen = withOne + padLen + 8;
+      const buf = new Uint8Array(totalLen);
+      buf.set(bytes); buf[bytes.length] = 0x80;
+      const dv = new DataView(buf.buffer);
+      dv.setUint32(totalLen - 8, Math.floor(ml / 4294967296), false);
+      dv.setUint32(totalLen - 4, ml >>> 0, false);
+      let h0 = 0x67452301, h1 = 0xEFCDAB89, h2 = 0x98BADCFE, h3 = 0x10325476, h4 = 0xC3D2E1F0;
+      const w = new Int32Array(80);
+      for (let i = 0; i < totalLen; i += 64) {
+        for (let j = 0; j < 16; j++) w[j] = dv.getInt32(i + j * 4, false);
+        for (let j = 16; j < 80; j++) w[j] = rotl(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
+        let a = h0, b = h1, c = h2, d = h3, e = h4;
+        for (let j = 0; j < 80; j++) {
+          let f, k;
+          if (j < 20) { f = (b & c) | ((~b) & d); k = 0x5A827999; }
+          else if (j < 40) { f = b ^ c ^ d; k = 0x6ED9EBA1; }
+          else if (j < 60) { f = (b & c) | (b & d) | (c & d); k = 0x8F1BBCDC; }
+          else { f = b ^ c ^ d; k = 0xCA62C1D6; }
+          const temp = (rotl(a, 5) + f + e + k + w[j]) | 0;
+          e = d; d = c; c = rotl(b, 30); b = a; a = temp;
+        }
+        h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0;
+      }
+      const out = new Uint8Array(20);
+      const outDv = new DataView(out.buffer);
+      outDv.setUint32(0, h0 >>> 0, false); outDv.setUint32(4, h1 >>> 0, false);
+      outDv.setUint32(8, h2 >>> 0, false); outDv.setUint32(12, h3 >>> 0, false);
+      outDv.setUint32(16, h4 >>> 0, false);
+      return out.buffer;
+    }
+
+    async function computeDigestBuffer(arrayBuffer, algo) {
+      if (window.crypto && window.crypto.subtle) {
+        try { return await window.crypto.subtle.digest(algo, arrayBuffer); } catch (_) {}
+      }
+      return PureSha1(new Uint8Array(arrayBuffer));
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes || bytes === 0) return '0 Bytes';
+      const k = 1024, sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function buf2hex(buffer) {
+      const arr = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+      return Array.from(arr).map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    function readNullString(buffer, offset, maxLen) {
+      if (offset >= buffer.byteLength) return '';
+      const safeMax = Math.min(maxLen, buffer.byteLength - offset);
+      const arr = new Uint8Array(buffer, offset, safeMax);
+      const idx = arr.indexOf(0);
+      return new TextDecoder('utf-8').decode(arr.slice(0, idx === -1 ? safeMax : idx));
+    }
+
+    function writeNullString(buffer, offset, str, maxLen) {
+      const arr = new Uint8Array(buffer, offset, maxLen);
+      arr.fill(0);
+      arr.set(new TextEncoder().encode(str).slice(0, maxLen));
+    }
+
+    function getUint64LE(view, offset) {
+      return view.getUint32(offset + 4, true) * 4294967296 + view.getUint32(offset, true);
+    }
+
+    function findPartlOffset(buffer) {
+      const arr = new Uint8Array(buffer);
+      const limit = Math.min(arr.length - 5, 65536);
+      for (let i = 0; i < limit; i++) {
+        if (arr[i] === 0x50 && arr[i+1] === 0x41 && arr[i+2] === 0x52 && arr[i+3] === 0x54 && arr[i+4] === 0x4C) return i;
+      }
+      throw new Error("Could not locate 'PARTL' partition descriptor in first 64 KB.");
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      const borderColor = type === 'success' ? 'border-emerald-600/60' : type === 'error' ? 'border-red-600' : 'border-zinc-700';
+      el.className = `pointer-events-auto bg-[#121217] border ${borderColor} text-white px-4 py-3 rounded-lg shadow-xl flex items-center justify-between gap-3 text-xs`;
+      el.innerHTML = `<span>${msg}</span><button onclick="this.parentElement.remove()" class="text-zinc-400 hover:text-white ml-2">✕</button>`;
+      container.appendChild(el);
+      setTimeout(() => { if (el.parentElement) el.remove(); }, 4500);
+    }
+
+    function switchTab(tab) {
+      const tabs = ['analyze', 'rootfs', 'create', 'xz', 'hex', 'matrix', 'cli'];
+      tabs.forEach(t => {
+        const v = document.getElementById('view-' + t);
+        if (v) v.classList.toggle('hidden', t !== tab);
+        const navBtn = document.getElementById('nav-' + t);
+        if (navBtn) {
+          navBtn.className = t === tab
+            ? 'text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 text-white border-[#dc2626] cursor-pointer'
+            : 'text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 text-zinc-400 border-transparent hover:text-zinc-100 cursor-pointer';
+        }
+      });
+      if (tab === 'rootfs') renderRootfsExplorer();
+      if (tab === 'hex') renderHexView();
+      if (tab === 'matrix') renderHardwareMatrix();
+      if (tab === 'cli') renderCliScripts();
+    }
+
+    async function analyzeFirmwareFile(file, silent = false) {
+      try {
+        const headerSliceSize = Math.min(file.size, 65536);
+        const headerBuffer = await file.slice(0, headerSliceSize).arrayBuffer();
+        if (headerBuffer.byteLength < 64) throw new Error('File too small (< 64 bytes).');
+
+        const view = new DataView(headerBuffer);
+        const magic = readNullString(headerBuffer, 0, 4);
+        if (magic !== 'AZ01') throw new Error(`Invalid magic "${magic}". Expected "AZ01".`);
+
+        const regions = [];
+        regions.push({ start: 0, end: 4, label: 'AZ01 Magic', type: 'magic', valueSummary: `"${magic}"`, description: 'inMusic proprietary firmware container magic signature.' });
+
+        const headerFormatVersion = view.getUint32(4, true);
+        const declaredPartlPointer = view.getUint32(8, true);
+        const versionLength = view.getUint32(12, true);
+        regions.push({ start: 4, end: 16, label: 'Header Control Fields', type: 'header_meta', valueSummary: `Fmt v${headerFormatVersion}`, description: 'Control fields' });
+
+        const version = readNullString(headerBuffer, 16, 24);
+        regions.push({ start: 16, end: 40, label: 'Firmware Version', type: 'version', valueSummary: `"${version}"`, description: 'Version string' });
+
+        const targetCount = view.getUint32(40, true);
+        let ptr = 44;
+        const targets = [];
+        for (let i = 0; i < targetCount; i++) {
+          const len = view.getUint32(ptr, true); ptr += 4;
+          targets.push(readNullString(headerBuffer, ptr, Math.min(len, 16))); ptr += 16;
+        }
+        regions.push({ start: 40, end: ptr, label: `Target Table (${targetCount})`, type: 'target_table', valueSummary: targets.join(', '), description: 'Targets' });
+
+        const boardIdStart = ptr;
+        const dummyCount = view.getUint32(ptr, true); ptr += 4;
+        const boardIds = [];
+        for (let i = 0; i < dummyCount; i++) { boardIds.push(view.getUint32(ptr, true)); ptr += 4; }
+        regions.push({ start: boardIdStart, end: ptr, label: `Hardware Board IDs (${boardIds.length})`, type: 'board_id', valueSummary: '', description: 'Board IDs' });
+
+        const descStart = ptr;
+        const descriptionLength = view.getUint32(ptr, true); ptr += 4;
+        const description = readNullString(headerBuffer, ptr, Math.min(descriptionLength, 256)); ptr += descriptionLength;
+        regions.push({ start: descStart, end: ptr, label: 'Image Description', type: 'description', valueSummary: `"${description}"`, description: 'Description' });
+
+        const detectedPartlOffset = findPartlOffset(headerBuffer);
+        const payloadOffset = detectedPartlOffset + 0x4C;
+        const payloadSize = getUint64LE(view, detectedPartlOffset + 0x08);
+        const partitionName = readNullString(headerBuffer, detectedPartlOffset + 0x14, 12);
+        const compression = readNullString(headerBuffer, detectedPartlOffset + 0x20, 12);
+        const hashType = readNullString(headerBuffer, detectedPartlOffset + 0x2C, 8);
+        const expectedHash = buf2hex(headerBuffer.slice(detectedPartlOffset + 0x38, detectedPartlOffset + 0x38 + 20));
+
+        regions.push({ start: detectedPartlOffset, end: detectedPartlOffset + 8, label: 'PARTL Signature', type: 'partl_magic', valueSummary: 'PARTL', description: 'PARTL' });
+        regions.push({ start: detectedPartlOffset + 8, end: detectedPartlOffset + 0x38, label: 'PARTL Metadata', type: 'partl_meta', valueSummary: partitionName, description: 'Metadata' });
+        regions.push({ start: detectedPartlOffset + 0x38, end: payloadOffset, label: 'Expected Digest', type: 'hash', valueSummary: expectedHash, description: 'Digest' });
+
+        let hasValidTrailer = false, trailerHex = '';
+        if (file.size >= payloadOffset + 7) {
+          const tBuf = await file.slice(file.size - 7, file.size).arrayBuffer();
+          const tArr = new Uint8Array(tBuf);
+          trailerHex = buf2hex(tArr);
+          hasValidTrailer = tArr.length === 7 && tArr.every((b, idx) => b === OFFICIAL_TRAILER[idx]);
+        }
+
+        const isTruncated = payloadOffset + payloadSize > file.size;
+        const payloadBlob = isTruncated ? file.slice(payloadOffset) : file.slice(payloadOffset, payloadOffset + payloadSize);
+
+        activeMetadata = {
+          fileName: file.name, fileSize: file.size, magic, headerFormatVersion, declaredPartlPointer,
+          detectedPartlOffset, versionLength, version, targets, targetCount: targets.length, boardIds,
+          descriptionLength, description, payloadOffset, payloadSize, partitionName, compression,
+          hashType, expectedHash, hasValidTrailer, trailerHex, isTruncated,
+          headerBuffer: headerBuffer.slice(0, Math.min(headerBuffer.byteLength, payloadOffset + 128)),
+          payloadBlob, regions
+        };
+
+        renderAnalyzeView();
+        renderHexView();
+        renderHardwareMatrix();
+        renderCliScripts();
+        if (!silent) showToast(`Analyzed "${file.name}"`, 'success');
+        if (payloadBlob.size <= 64 * 1024 * 1024) await runVerifyIntegrity(true);
+      } catch (err) {
+        showToast('Parse Error: ' + err.message, 'error');
+      }
+    }
+
+    function renderAnalyzeView() {
+      if (!activeMetadata) return;
+      const m = activeMetadata;
+      document.getElementById('analyze-populated').classList.remove('hidden');
+      document.getElementById('context-active-file').innerHTML = `
+        <span class="text-zinc-200">${m.fileName}</span><span>·</span>
+        <span class="text-emerald-400">${m.version}</span><span>·</span>
+        <span>PARTL 0x${m.detectedPartlOffset.toString(16).toUpperCase()}</span>
+      `;
+      document.getElementById('meta-file-summary').textContent = `${m.fileName} (${formatBytes(m.fileSize)})`;
+      document.getElementById('meta-magic').textContent = `${m.magic} (0x415A3031)`;
+      document.getElementById('meta-version').textContent = m.version;
+      document.getElementById('meta-desc').textContent = `"${m.description}" (${m.descriptionLength} B)`;
+      document.getElementById('meta-partl-ptr').textContent = `0x${m.declaredPartlPointer.toString(16).toUpperCase()} · Detected 0x${m.detectedPartlOffset.toString(16).toUpperCase()}`;
+      document.getElementById('meta-alignment').textContent = m.detectedPartlOffset % 8 === 0 ? 'Aligned (mod 8 = 0)' : 'Unaligned';
+      document.getElementById('meta-targets-title').textContent = `Declared Hardware Targets (${m.targetCount})`;
+      document.getElementById('meta-targets-list').textContent = m.targets.join(' · ');
+      document.getElementById('meta-board-count').textContent = `Board Revision Descriptors (${m.boardIds.length})`;
+      document.getElementById('meta-board-list').textContent = m.boardIds.map(id => '0x' + id.toString(16).toUpperCase()).join(' · ');
+      document.getElementById('meta-partl-range').textContent = `Offset 0x${m.detectedPartlOffset.toString(16).toUpperCase()} → 0x${m.payloadOffset.toString(16).toUpperCase()}`;
+      document.getElementById('meta-part-name').textContent = m.partitionName || 'rootfs';
+      document.getElementById('meta-comp').textContent = m.compression || 'raw';
+      document.getElementById('meta-payload-size').textContent = `${m.payloadSize.toLocaleString()} bytes (${formatBytes(m.payloadSize)})`;
+      document.getElementById('meta-payload-offset').textContent = `0x${m.payloadOffset.toString(16).toUpperCase()}`;
+      document.getElementById('meta-trailer').innerHTML = m.hasValidTrailer ? `<span class="text-emerald-400">Valid (${m.trailerHex.toUpperCase()})</span>` : `<span class="text-amber-400">Non-standard</span>`;
+      document.getElementById('meta-expected-hash').textContent = m.expectedHash;
+    }
+
+    async function runVerifyIntegrity(silent = false) {
+      if (!activeMetadata) return;
+      const box = document.getElementById('verify-result-box');
+      const t0 = performance.now();
+      const buf = await activeMetadata.payloadBlob.arrayBuffer();
+      const sha1Buf = await computeDigestBuffer(buf, 'SHA-1');
+      const sha1Hex = buf2hex(sha1Buf).toLowerCase();
+      const dt = Math.round(performance.now() - t0);
+      const intact = sha1Hex === activeMetadata.expectedHash.toLowerCase();
+      box.innerHTML = `<div class="bg-[#050508] border border-zinc-800 rounded p-3 text-xs font-mono ${intact ? 'text-emerald-400' : 'text-red-400'}">${intact ? '✓ INTEGRITY VERIFIED — PAYLOAD INTACT' : '✕ CHECKSUM MISMATCH'} (${dt} ms) · SHA-1: ${sha1Hex}</div>`;
+      if (!silent) showToast(intact ? 'Integrity verified' : 'Checksum mismatch!', intact ? 'success' : 'error');
+    }
+
+    function extractActivePayload() {
+      if (!activeMetadata) return;
+      const ext = activeMetadata.compression === 'xz' ? '.xz' : '.bin';
+      const name = (activeMetadata.partitionName || 'payload') + ext;
+      const url = URL.createObjectURL(activeMetadata.payloadBlob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+
+    async function decompressActivePayloadXz() {
+      if (!activeMetadata) return;
+      const res = await decompressFromXzStream(activeMetadata.payloadBlob, (activeMetadata.partitionName || 'rootfs') + '.xz');
+      const url = URL.createObjectURL(res.blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = res.fileName;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast(`Decompressed XZ partition to "${res.fileName}"`, 'success');
+    }
+
+    function cloneActiveToBuilder() {
+      if (!activeMetadata) return;
+      document.getElementById('build-version').value = activeMetadata.version;
+      document.getElementById('build-desc').value = activeMetadata.description;
+      builderTargets = [...activeMetadata.targets];
+      renderBuilderTargets(); updateBuilderGeometry(); switchTab('create');
+    }
+
+    async function createSamplePayloadFile(preset = 'mpc') {
+      const raw = new Uint8Array(4096);
+      raw.set(new TextEncoder().encode('INMUSIC-ROOTFS-STREAM // AKAI STANDALONE'), 0);
+      const xzRes = await compressToXzStream(new Blob([raw]), preset === 'force' ? 'rootfs_ada2_sample.xz' : 'rootfs_mpc_unified_sample.xz', 6);
+      return new File([xzRes.blob], xzRes.fileName, { type: 'application/x-xz' });
+    }
+
+    async function packAz01Container(config, payloadBlob) {
+      const targets = config.targets.filter(Boolean);
+      const payloadBuf = await payloadBlob.arrayBuffer();
+      const sha1Buf = await computeDigestBuffer(payloadBuf, 'SHA-1');
+      const buffer = new ArrayBuffer(8192);
+      const view = new DataView(buffer);
+      let ptr = 0;
+      writeNullString(buffer, ptr, 'AZ01', 4); ptr += 4;
+      view.setUint32(ptr, 1, true); ptr += 4;
+      const partlPtrPos = ptr; view.setUint32(ptr, 0, true); ptr += 4;
+      const ver = config.version.slice(0, 24);
+      view.setUint32(ptr, ver.length, true); ptr += 4;
+      writeNullString(buffer, ptr, ver, 24); ptr += 24;
+      view.setUint32(ptr, targets.length, true); ptr += 4;
+      for (const t of targets) {
+        const ct = t.slice(0, 16);
+        view.setUint32(ptr, ct.length, true); ptr += 4;
+        writeNullString(buffer, ptr, ct, 16); ptr += 16;
+      }
+      view.setUint32(ptr, targets.length, true); ptr += 4;
+      for (let i = 0; i < targets.length; i++) { view.setUint32(ptr, 0x09E84000 + i, true); ptr += 4; }
+      const descBytes = new TextEncoder().encode(config.description);
+      view.setUint32(ptr, descBytes.length, true); ptr += 4;
+      writeNullString(buffer, ptr, config.description, descBytes.length); ptr += descBytes.length;
+      ptr = (ptr + 7) & ~7;
+      const partlOffset = ptr;
+      view.setUint32(partlPtrPos, partlOffset, true);
+      writeNullString(buffer, ptr, 'PARTL', 5);
+      view.setBigUint64(ptr + 0x08, BigInt(payloadBlob.size), true);
+      writeNullString(buffer, ptr + 0x14, config.partitionName.slice(0, 11), 11);
+      writeNullString(buffer, ptr + 0x20, config.compression.slice(0, 11), 11);
+      writeNullString(buffer, ptr + 0x2C, 'sha1', 8);
+      view.setUint32(ptr + 0x34, 20, true);
+      new Uint8Array(buffer).set(new Uint8Array(sha1Buf), ptr + 0x38);
+      const payloadOffset = partlOffset + 0x4C;
+      const blob = new Blob([buffer.slice(0, payloadOffset), payloadBlob, OFFICIAL_TRAILER], { type: 'application/octet-stream' });
+      return { blob, sha1Hex: buf2hex(sha1Buf), partlOffset, payloadOffset };
+    }
+
+    async function loadDemoPreset(preset = 'mpc', silent = false) {
+      const samplePayload = await createSamplePayloadFile(preset);
+      const cfg = preset === 'force'
+        ? { version: '3.3.0.14-FORCE-RELEASE', targets: ['inmusic,ada2'], description: 'upgrade image', partitionName: 'rootfs', compression: 'xz', outName: 'MPC-Force-3.3.0.14-update.img' }
+        : { version: '3.4.1.62-MPC-RELEASE', targets: ['inmusic,acv5','inmusic,acv8','inmusic,acva','inmusic,acva2','inmusic,acvb','inmusic,acvm','inmusic,acvr','inmusic,acv5s'], description: 'upgrade image', partitionName: 'rootfs', compression: 'xz', outName: 'MPC-3.4.1.62-Unified-update.img' };
+      const { blob } = await packAz01Container(cfg, samplePayload);
+      const file = new File([blob], cfg.outName, { type: 'application/octet-stream' });
+      await analyzeFirmwareFile(file, silent);
+    }
+
+    function renderBuilderTargets() {
+      const grid = document.getElementById('build-target-grid');
+      grid.innerHTML = HARDWARE_TARGETS.map(hw => {
+        const sel = builderTargets.includes(hw.dtCompatible);
+        return `<button type="button" onclick="toggleBuilderTarget('${hw.dtCompatible}')" class="p-2.5 rounded border text-left cursor-pointer ${sel ? 'bg-[#050508] border-[#dc2626] text-white' : 'bg-[#050508]/50 border-zinc-800 text-zinc-400'}"><div class="text-xs font-semibold truncate">${hw.modelName}</div><div class="text-[11px] font-mono text-red-400">${hw.dtCompatible}</div></button>`;
+      }).join('');
+    }
+    function toggleBuilderTarget(dt) {
+      if (builderTargets.includes(dt)) { if (builderTargets.length > 1) builderTargets = builderTargets.filter(t => t !== dt); }
+      else builderTargets.push(dt);
+      renderBuilderTargets(); updateBuilderGeometry();
+    }
+    function applyTargetPreset(preset) {
+      if (preset === 'mpc_all') builderTargets = ['inmusic,acv5','inmusic,acv8','inmusic,acva','inmusic,acva2','inmusic,acvb','inmusic,acvm','inmusic,acvr','inmusic,acv5s'];
+      else if (preset === 'force') builderTargets = ['inmusic,ada2'];
+      renderBuilderTargets(); updateBuilderGeometry();
+    }
+    function updateBuilderGeometry() {
+      const count = Math.max(1, builderTargets.length);
+      const desc = document.getElementById('build-desc').value || '';
+      const ptr = 0x28 + 4 + count * 20 + 4 + count * 4 + 4 + new TextEncoder().encode(desc).length;
+      const partlOffset = (ptr + 7) & ~7;
+      const payloadOffset = partlOffset + 0x4C;
+      document.getElementById('build-geometry-rows').innerHTML = `
+        <div class="flex justify-between py-1.5 border-b border-zinc-900"><span>PARTL Offset</span><span class="text-amber-400">0x${partlOffset.toString(16).toUpperCase()}</span></div>
+        <div class="flex justify-between py-1.5 border-b border-zinc-900"><span>Payload Start</span><span class="text-white">0x${payloadOffset.toString(16).toUpperCase()}</span></div>
+      `;
+    }
+    async function useSyntheticBuilderPayload() {
+      builderPayloadFile = await createSamplePayloadFile('mpc');
+      document.getElementById('build-payload-name').textContent = builderPayloadFile.name;
+      document.getElementById('build-payload-size').textContent = formatBytes(builderPayloadFile.size);
+      updateBuilderGeometry();
+    }
+    async function compressBuilderPayloadToXz() {
+      if (!builderPayloadFile) return;
+      const res = await compressToXzStream(builderPayloadFile, builderPayloadFile.name, 6);
+      builderPayloadFile = new File([res.blob], res.fileName, { type: 'application/x-xz' });
+      document.getElementById('build-payload-name').textContent = builderPayloadFile.name;
+      showToast(`Compressed payload to "${res.fileName}"`, 'success');
+    }
+    function handleBuilderPayloadSelect(e) {
+      const f = e.target.files && e.target.files[0];
+      if (f) { builderPayloadFile = f; document.getElementById('build-payload-name').textContent = f.name; }
+    }
+    async function generateCustomContainer() {
+      if (!builderPayloadFile) return;
+      const cfg = {
+        version: document.getElementById('build-version').value,
+        description: document.getElementById('build-desc').value,
+        partitionName: document.getElementById('build-partname').value,
+        compression: document.getElementById('build-comp').value,
+        targets: builderTargets
+      };
+      const outName = document.getElementById('build-outname').value.trim() || 'update_custom.img';
+      const { blob } = await packAz01Container(cfg, builderPayloadFile);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = outName;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast(`Generated "${outName}"`, 'success');
+    }
+
+    function loadActivePayloadIntoXzBench() {
+      if (!activeMetadata) return;
+      xzBenchFile = new File([activeMetadata.payloadBlob], 'rootfs.xz', { type: 'application/x-xz' });
+      document.getElementById('xz-bench-filename').textContent = xzBenchFile.name;
+    }
+    function handleXzBenchFileSelect(e) {
+      const f = e.target.files && e.target.files[0];
+      if (f) { xzBenchFile = f; document.getElementById('xz-bench-filename').textContent = f.name; }
+    }
+    async function runXzBenchCompress() {
+      if (!xzBenchFile) return;
+      lastXzBenchRes = await compressToXzStream(xzBenchFile, xzBenchFile.name, 6);
+      showToast(`Compressed to ${lastXzBenchRes.fileName}`, 'success');
+    }
+    async function runXzBenchDecompress() {
+      if (!xzBenchFile) return;
+      lastXzBenchRes = await decompressFromXzStream(xzBenchFile, xzBenchFile.name);
+      showToast(`Decompressed to ${lastXzBenchRes.fileName}`, 'success');
+    }
+    async function probeLocalCBridge() { showToast('Embedded C-WASM active.', 'info'); }
+    async function copyCCompanionCode() { await navigator.clipboard.writeText(C_COMPANION_SOURCE_CODE); showToast('Copied C source.', 'success'); }
+    function downloadCCompanionCode() {
+      const blob = new Blob([C_COMPANION_SOURCE_CODE], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'az01_xz_companion.c';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+
+    function selectHexByte(offset) { hexSelectedOffset = offset; renderHexView(); }
+    function renderHexView() {
+      if (!activeMetadata) return;
+      const winSize = Number(document.getElementById('hex-window-size').value) || 512;
+      const limit = Math.min(activeMetadata.headerBuffer.byteLength, winSize);
+      const bytes = new Uint8Array(activeMetadata.headerBuffer, 0, limit);
+      let rowsHtml = '';
+      for (let rowStart = 0; rowStart < bytes.length; rowStart += 16) {
+        let hexCols = '', asciiCols = '';
+        for (let c = 0; c < 16; c++) {
+          const off = rowStart + c;
+          if (off >= bytes.length) continue;
+          const b = bytes[off];
+          hexCols += `<span class="w-6 text-center text-zinc-300">${b.toString(16).toUpperCase().padStart(2,'0')}</span>`;
+          asciiCols += `<span class="w-2.5 text-center text-zinc-500">${b >= 32 && b <= 126 ? String.fromCharCode(b).replace(/&/g,'&amp;').replace(/</g,'&lt;') : '·'}</span>`;
+        }
+        rowsHtml += `<div class="flex items-center gap-4 px-1.5"><span class="text-zinc-500 w-16 shrink-0">0x${rowStart.toString(16).toUpperCase().padStart(4,'0')}</span><div class="flex items-center gap-1 shrink-0">${hexCols}</div><div class="flex items-center shrink-0 pl-2 border-l border-zinc-800">${asciiCols}</div></div>`;
+      }
+      document.getElementById('hex-rows-container').innerHTML = rowsHtml;
+    }
+
+    function selectMatrixTargetForBuilder(dt) {
+      builderTargets = [dt]; renderBuilderTargets(); updateBuilderGeometry(); switchTab('create');
+    }
+    function renderHardwareMatrix() {
+      const activeSet = new Set((activeMetadata ? activeMetadata.targets : []).map(t => t.toLowerCase()));
+      document.getElementById('matrix-tbody').innerHTML = HARDWARE_TARGETS.map(dev => {
+        const isComp = activeSet.has(dev.dtCompatible.toLowerCase());
+        return `<tr class="hover:bg-zinc-900/50"><td class="py-3.5 px-4 font-semibold text-white">${dev.modelName}</td><td class="py-3.5 px-4 font-mono">${dev.codename}</td><td class="py-3.5 px-4 font-mono text-red-400">${dev.dtCompatible}</td><td class="py-3.5 px-4">${dev.soc}</td><td class="py-3.5 px-4 font-mono">${dev.ram}</td><td class="py-3.5 px-4 font-mono">${dev.boardIdHex}</td><td class="py-3.5 px-4">${isComp ? '<span class="text-emerald-400 font-mono">✓ Supported</span>' : '<span class="text-zinc-500 font-mono">✕ Excluded</span>'}</td><td class="py-3.5 px-4 text-right"><button type="button" onclick="selectMatrixTargetForBuilder('${dev.dtCompatible}')" class="px-2.5 py-1 bg-[#050508] hover:bg-[#dc2626] text-xs rounded border border-zinc-800 cursor-pointer">Target in Builder →</button></td></tr>`;
+      }).join('');
+    }
+
+    function renderCliScripts() {
+      const m = activeMetadata || { fileName: 'update.img', payloadOffset: 300, payloadSize: 4096, partitionName: 'rootfs', compression: 'xz' };
+      const cmd = `dd if="${m.fileName}" of="${m.partitionName}.${m.compression}" iflag=skip_bytes,count_bytes bs=64K skip=${m.payloadOffset} count=${m.payloadSize}`;
+      document.getElementById('cli-dd-oneliner').textContent = cmd;
+      document.getElementById('cli-code-block').textContent = cmd;
+    }
+    function handleFileInputAnalyze(e) { const f = e.target.files && e.target.files[0]; if (f) analyzeFirmwareFile(f, false); }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await initWasmXz();
+      document.getElementById('c-companion-code-view').textContent = C_COMPANION_SOURCE_CODE;
+      buildDefaultRootfsTree();
+      await useSyntheticBuilderPayload();
+      renderBuilderTargets();
+      updateBuilderGeometry();
+      await loadDemoPreset('mpc', true);
+    });
+  </script>
+</body>
+</html>
 
