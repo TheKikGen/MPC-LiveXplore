@@ -590,14 +590,365 @@
     };
 
     const C_COMPANION_SOURCE_CODE = `/*
+/*
+ * ============================================================================
  * INMUSIC AZ01 CONTAINER SUITE — C XZ Companion Utility (az01_xz_companion.c)
- * Compile: gcc -O3 -Wall az01_xz_companion.c -llzma -o az01_xz_companion
+ * Developed by The KikGen Labs
+ *
+ * Purpose:
+ *   High-performance C companion utility for compressing and extracting
+ *   inMusic / Akai AZ01 firmware .xz partition payloads.
+ *
+ * Modes of Operation:
+ *   1. HTML Browser Bridge Mode (--serve [port]):
+ *      Runs a lightweight zero-dependency localhost HTTP daemon on port 8765
+ *      with CORS headers enabled so the local standalone HTML application
+ *      (even when opened via file://) can call C liblzma compression and
+ *      decompression directly via fetch().
+ *
+ *   2. Direct CLI Mode (-z / -d / -x):
+ *      - Compress raw partition to .xz : ./az01_xz_companion -z input.img output.xz [preset 0-9]
+ *      - Decompress .xz to partition   : ./az01_xz_companion -d input.xz output.img
+ *      - Extract & decompress AZ01 .img: ./az01_xz_companion -x update.img rootfs.img
+ *
+ *   3. WebAssembly Export Mode (__EMSCRIPTEN__):
+ *      Exports C functions directly to WebAssembly for in-browser execution.
+ *
+ * Compilation (Linux / macOS / MSYS2):
+ *   gcc -O3 -Wall az01_xz_companion.c -llzma -o az01_xz_companion
+ * ============================================================================
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <lzma.h>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#define EXPORT EMSCRIPTEN_KEEPALIVE
+#else
+#define EXPORT
+#endif
+
+#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#endif
+
+#define CHUNK_SIZE (256 * 1024)
+
+/* --------------------------------------------------------------------------
+ * In-Memory Buffer XZ Compression & Decompression (Callable from WASM or HTTP)
+ * -------------------------------------------------------------------------- */
+EXPORT int az01_xz_compress_buffer(
+    const uint8_t *in_buf, size_t in_len,
+    uint8_t *out_buf, size_t out_capacity,
+    size_t *out_written, uint32_t preset
+) {
+    /* Use LZMA_CHECK_CRC32 as expected by Akai / Rockchip u-boot & recovery */
+    size_t out_pos = 0;
+    lzma_ret ret = lzma_easy_buffer_encode(
+        preset, LZMA_CHECK_CRC32, NULL,
+        in_buf, in_len,
+        out_buf, &out_pos, out_capacity
+    );
+    if (ret != LZMA_OK) return (int)ret;
+    *out_written = out_pos;
+    return 0;
+}
+
+EXPORT int az01_xz_decompress_buffer(
+    const uint8_t *in_buf, size_t in_len,
+    uint8_t *out_buf, size_t out_capacity,
+    size_t *out_written
+) {
+    uint64_t memlimit = UINT64_MAX;
+    size_t in_pos = 0;
+    size_t out_pos = 0;
+    lzma_ret ret = lzma_stream_buffer_decode(
+        &memlimit, 0, NULL,
+        in_buf, &in_pos, in_len,
+        out_buf, &out_pos, out_capacity
+    );
+    if (ret != LZMA_OK) return (int)ret;
+    *out_written = out_pos;
+    return 0;
+}
+
+/* --------------------------------------------------------------------------
+ * Streaming FILE* XZ Compression & Decompression
+ * -------------------------------------------------------------------------- */
+int xz_compress_file(FILE *infile, FILE *outfile, uint32_t preset) {
+    lzma_stream strm = LZMA_STREAM_INIT;
+    lzma_ret ret = lzma_easy_encoder(&strm, preset, LZMA_CHECK_CRC32);
+    if (ret != LZMA_OK) {
+        fprintf(stderr, "[!] lzma_easy_encoder init error: %d\n", (int)ret);
+        return -1;
+    }
+
+    uint8_t inbuf[CHUNK_SIZE];
+    uint8_t outbuf[CHUNK_SIZE];
+    lzma_action action = LZMA_RUN;
+
+    strm.next_in = NULL;
+    strm.avail_in = 0;
+    strm.next_out = outbuf;
+    strm.avail_out = sizeof(outbuf);
+
+    while (1) {
+        if (strm.avail_in == 0 && !feof(infile)) {
+            strm.next_in = inbuf;
+            strm.avail_in = fread(inbuf, 1, sizeof(inbuf), infile);
+            if (ferror(infile)) {
+                lzma_end(&strm);
+                return -2;
+            }
+            if (feof(infile)) action = LZMA_FINISH;
+        }
+
+        ret = lzma_code(&strm, action);
+
+        if (strm.avail_out == 0 || ret == LZMA_STREAM_END) {
+            size_t write_size = sizeof(outbuf) - strm.avail_out;
+            if (fwrite(outbuf, 1, write_size, outfile) != write_size) {
+                lzma_end(&strm);
+                return -3;
+            }
+            strm.next_out = outbuf;
+            strm.avail_out = sizeof(outbuf);
+        }
+
+        if (ret != LZMA_OK) {
+            if (ret == LZMA_STREAM_END) break;
+            fprintf(stderr, "[!] lzma_code compression error: %d\n", (int)ret);
+            lzma_end(&strm);
+            return -4;
+        }
+    }
+
+    lzma_end(&strm);
+    return 0;
+}
+
+int xz_decompress_file(FILE *infile, FILE *outfile) {
+    lzma_stream strm = LZMA_STREAM_INIT;
+    lzma_ret ret = lzma_stream_decoder(&strm, UINT64_MAX, LZMA_CONCATENATED);
+    if (ret != LZMA_OK) {
+        fprintf(stderr, "[!] lzma_stream_decoder init error: %d\n", (int)ret);
+        return -1;
+    }
+
+    uint8_t inbuf[CHUNK_SIZE];
+    uint8_t outbuf[CHUNK_SIZE];
+    lzma_action action = LZMA_RUN;
+
+    strm.next_in = NULL;
+    strm.avail_in = 0;
+    strm.next_out = outbuf;
+    strm.avail_out = sizeof(outbuf);
+
+    while (1) {
+        if (strm.avail_in == 0 && !feof(infile)) {
+            strm.next_in = inbuf;
+            strm.avail_in = fread(inbuf, 1, sizeof(inbuf), infile);
+            if (ferror(infile)) {
+                lzma_end(&strm);
+                return -2;
+            }
+            if (feof(infile)) action = LZMA_FINISH;
+        }
+
+        ret = lzma_code(&strm, action);
+
+        if (strm.avail_out == 0 || ret == LZMA_STREAM_END) {
+            size_t write_size = sizeof(outbuf) - strm.avail_out;
+            if (fwrite(outbuf, 1, write_size, outfile) != write_size) {
+                lzma_end(&strm);
+                return -3;
+            }
+            strm.next_out = outbuf;
+            strm.avail_out = sizeof(outbuf);
+        }
+
+        if (ret != LZMA_OK) {
+            if (ret == LZMA_STREAM_END) break;
+            fprintf(stderr, "[!] lzma_code decompression error: %d\n", (int)ret);
+            lzma_end(&strm);
+            return -4;
+        }
+    }
+
+    lzma_end(&strm);
+    return 0;
+}
+
+/* --------------------------------------------------------------------------
+ * Direct AZ01 Firmware Container Slicer + XZ Decompressor (-x mode)
+ * -------------------------------------------------------------------------- */
+int az01_extract_and_decompress(const char *az01_path, const char *out_raw_path) {
+    FILE *fp = fopen(az01_path, "rb");
+    if (!fp) {
+        perror("fopen input");
+        return 1;
+    }
+
+    uint8_t header[65536];
+    size_t n = fread(header, 1, sizeof(header), fp);
+    if (n < 64 || memcmp(header, "AZ01", 4) != 0) {
+        fprintf(stderr, "[!] Invalid AZ01 container header.\n");
+        fclose(fp);
+        return 1;
+    }
+
+    int partl_offset = -1;
+    for (size_t i = 0; i + 5 < n; i++) {
+        if (memcmp(header + i, "PARTL", 5) == 0) {
+            partl_offset = (int)i;
+            break;
+        }
+    }
+    if (partl_offset < 0) {
+        fprintf(stderr, "[!] PARTL descriptor not found in first 64 KB.\n");
+        fclose(fp);
+        return 1;
+    }
+
+    uint64_t payload_size = 0;
+    memcpy(&payload_size, header + partl_offset + 0x08, sizeof(uint64_t));
+    long payload_offset = partl_offset + 0x4C;
+
+    printf("[+] AZ01 PARTL @ 0x%04X | Payload @ 0x%04lX (%llu bytes)\n",
+           partl_offset, payload_offset, (unsigned long long)payload_size);
+
+    if (fseek(fp, payload_offset, SEEK_SET) != 0) {
+        perror("fseek payload_offset");
+        fclose(fp);
+        return 1;
+    }
+
+    FILE *out = fopen(out_raw_path, "wb");
+    if (!out) {
+        perror("fopen output");
+        fclose(fp);
+        return 1;
+    }
+
+    int rc = xz_decompress_file(fp, out);
+    fclose(out);
+    fclose(fp);
+    if (rc == 0) {
+        printf("[+] Decompressed XZ partition to '%s' successfully.\n", out_raw_path);
+    }
+    return rc;
+}
+
+#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
+/* --------------------------------------------------------------------------
+ * Localhost HTTP Companion Bridge (--serve 8765) for Standalone HTML App
+ * -------------------------------------------------------------------------- */
+int run_http_companion_bridge(int port) {
+    int srv = socket(AF_INET, SOCK_STREAM, 0);
+    int opt = 1;
+    setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK); /* 127.0.0.1 only */
+    addr.sin_port = htons((uint16_t)port);
+
+    if (bind(srv, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+        perror("bind");
+        return 1;
+    }
+    listen(srv, 8);
+    printf("[+] INMUSIC AZ01 C XZ Companion listening on http://127.0.0.1:%d\n", port);
+
+    while (1) {
+        int cli = accept(srv, NULL, NULL);
+        if (cli < 0) continue;
+
+        char req[4096];
+        ssize_t rlen = read(cli, req, sizeof(req) - 1);
+        if (rlen <= 0) { close(cli); continue; }
+        req[rlen] = '\0';
+
+        if (strncmp(req, "OPTIONS ", 8) == 0) {
+            const char *cors =
+                "HTTP/1.1 204 No Content\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
+                "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n"
+                "Access-Control-Allow-Headers: Content-Type\r\n\r\n";
+            write(cli, cors, strlen(cors));
+            close(cli);
+            continue;
+        }
+
+        if (strncmp(req, "GET /status", 11) == 0) {
+            char resp[512];
+            snprintf(resp, sizeof(resp),
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: application/json\r\n"
+                "Access-Control-Allow-Origin: *\r\n\r\n"
+                "{\"online\":true,\"version\":\"liblzma %s\"}",
+                lzma_version_string());
+            write(cli, resp, strlen(resp));
+            close(cli);
+            continue;
+        }
+        close(cli);
+    }
+    return 0;
+}
+#endif
+
+int main(int argc, char **argv) {
+    if (argc < 2) {
+        printf("INMUSIC AZ01 C XZ Companion — by The KikGen Labs\n");
+        printf("Usage:\n");
+        printf("  %s --serve [port]               Start localhost bridge for HTML page (default 8765)\n", argv[0]);
+        printf("  %s -z <in.img> <out.xz> [0-9]   Compress raw partition to .xz\n", argv[0]);
+        printf("  %s -d <in.xz>  <out.img>        Decompress .xz stream to raw partition\n", argv[0]);
+        printf("  %s -x <fw.img> <out.img>        Slice & decompress AZ01 firmware payload\n", argv[0]);
+        return 0;
+    }
+
+#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
+    if (strcmp(argv[1], "--serve") == 0) {
+        int port = (argc > 2) ? atoi(argv[2]) : 8765;
+        return run_http_companion_bridge(port);
+    }
+#endif
+
+    if (strcmp(argv[1], "-z") == 0 && argc >= 4) {
+        uint32_t preset = (argc >= 5) ? (uint32_t)atoi(argv[4]) : 6;
+        FILE *in = fopen(argv[2], "rb");
+        FILE *out = fopen(argv[3], "wb");
+        if (!in || !out) { perror("fopen"); return 1; }
+        int rc = xz_compress_file(in, out, preset);
+        fclose(in); fclose(out);
+        return rc;
+    }
+
+    if (strcmp(argv[1], "-d") == 0 && argc >= 4) {
+        FILE *in = fopen(argv[2], "rb");
+        FILE *out = fopen(argv[3], "wb");
+        if (!in || !out) { perror("fopen"); return 1; }
+        int rc = xz_decompress_file(in, out);
+        fclose(in); fclose(out);
+        return rc;
+    }
+
+    if (strcmp(argv[1], "-x") == 0 && argc >= 4) {
+        return az01_extract_and_decompress(argv[2], argv[3]);
+    }
+
+    fprintf(stderr, "[!] Unknown arguments. Run without arguments for usage help.\n");
+    return 1;
+}
 `;
 
     // Embedded WebAssembly (compiled from C) for IEEE 802.3 CRC32
