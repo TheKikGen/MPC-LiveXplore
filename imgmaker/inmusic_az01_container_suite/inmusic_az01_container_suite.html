@@ -470,17 +470,24 @@
         </div>
 
         <div class="lg:col-span-7 bg-[#121217] border border-zinc-800 rounded-lg overflow-hidden">
-          <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
-            <span class="text-xs font-mono font-semibold text-white">az01_xz_companion.c — Native C & Emscripten WASM Source</span>
+          <div class="p-4 border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center bg-[#050508] border border-zinc-800 rounded-md p-0.5">
+              <button type="button" id="c-tab-src" onclick="switchCCompanionTab('c')" class="px-3 py-1 text-xs font-mono font-medium rounded bg-[#dc2626] text-white cursor-pointer">
+                az01_xz_companion.c
+              </button>
+              <button type="button" id="c-tab-make" onclick="switchCCompanionTab('makefile')" class="px-3 py-1 text-xs font-mono font-medium rounded text-zinc-400 hover:text-white cursor-pointer">
+                Makefile (Native &amp; WASM)
+              </button>
+            </div>
             <div class="flex items-center gap-2">
-              <button type="button" onclick="copyCCompanionCode()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded border border-zinc-700 cursor-pointer">Copy C Code</button>
-              <button type="button" onclick="downloadCCompanionCode()" class="px-3 py-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded cursor-pointer">Download az01_xz_companion.c</button>
+              <button type="button" onclick="copyCCompanionCode()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded border border-zinc-700 cursor-pointer">Copy Code</button>
+              <button type="button" id="c-download-btn" onclick="downloadCCompanionCode()" class="px-3 py-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded cursor-pointer">Download az01_xz_companion.c</button>
             </div>
           </div>
           <div class="px-4 py-2.5 bg-[#050508] border-b border-zinc-800 text-xs font-mono text-emerald-400 overflow-x-auto">
-            gcc -O3 az01_xz_companion.c -llzma -o az01_xz_companion &amp;&amp; ./az01_xz_companion --serve 8765
+            gcc -O3 -Wall az01_xz_companion.c -llzma -o az01_xz_companion &amp;&amp; ./az01_xz_companion --serve 8765
           </div>
-          <pre class="p-5 bg-[#050508] text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[460px] overflow-y-auto"><code id="c-companion-code-view"></code></pre>
+          <pre class="p-5 bg-[#050508] text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[480px] overflow-y-auto"><code id="c-companion-code-view"></code></pre>
         </div>
       </div>
     </section>
@@ -490,7 +497,7 @@
       <div class="bg-[#121217] border border-zinc-800 rounded-lg p-5 space-y-4">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <h2 class="text-base font-semibold text-white">Interactive AZ01 & PARTL Binary Hex Inspector</h2>
+            <h2 class="text-base font-semibold text-white">Interactive AZ01 &amp; PARTL Binary Hex Inspector</h2>
             <p id="hex-subtitle" class="text-xs text-zinc-400 mt-0.5 font-mono"></p>
           </div>
           <div class="flex flex-wrap items-center gap-3">
@@ -503,6 +510,9 @@
         </div>
         <div id="hex-jump-bar" class="pt-2 border-t border-zinc-800/80 flex flex-wrap items-center gap-1.5"></div>
       </div>
+
+      <!-- Live OLED Byte Telemetry Readout -->
+      <div id="hex-telemetry-bar" class="bg-[#050508] border border-zinc-800 rounded-lg p-4 grid grid-cols-2 sm:grid-cols-6 gap-4 text-xs font-mono"></div>
 
       <div class="bg-[#050508] border border-zinc-800 rounded-lg overflow-hidden">
         <div class="px-4 py-2.5 bg-[#121217] border-b border-zinc-800 flex items-center justify-between text-xs font-mono text-zinc-400">
@@ -524,7 +534,7 @@
                 <th class="py-3 px-4">Hardware Unit</th>
                 <th class="py-3 px-4">Codename</th>
                 <th class="py-3 px-4">DT Compatible String</th>
-                <th class="py-3 px-4">SoC & CPU</th>
+                <th class="py-3 px-4">SoC &amp; CPU</th>
                 <th class="py-3 px-4">Memory / Storage</th>
                 <th class="py-3 px-4">Board ID</th>
                 <th class="py-3 px-4">Image Match</th>
@@ -539,13 +549,43 @@
 
     <!-- ==================== TAB 7: CLI AUTOMATION ==================== -->
     <section id="view-cli" class="space-y-6 hidden">
+      <div class="bg-[#121217] border border-zinc-800 rounded-lg p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base font-semibold text-white">CLI &amp; CI/CD Automation Exporters</h2>
+          <p id="cli-header-subtitle" class="text-xs text-zinc-400 mt-1">
+            Pre-configured Python 3 and POSIX Bash scripts synchronized with your active firmware offsets and SHA-1 digest.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center bg-[#050508] border border-zinc-800 rounded-md p-0.5">
+            <button type="button" id="cli-btn-python" onclick="switchCliLang('python')" class="px-3 py-1.5 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer">
+              Python 3 (az01_tool.py)
+            </button>
+            <button type="button" id="cli-btn-bash" onclick="switchCliLang('bash')" class="px-3 py-1.5 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer">
+              Bash / dd (az01_unpack.sh)
+            </button>
+          </div>
+          <button type="button" onclick="copyActiveCliScript()" class="px-3.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded-md border border-zinc-700 cursor-pointer">
+            Copy Script
+          </button>
+          <button type="button" id="cli-download-btn" onclick="downloadActiveCliScript()" class="px-3.5 py-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-md cursor-pointer">
+            Download .py
+          </button>
+        </div>
+      </div>
+
       <div class="bg-[#050508] border border-zinc-800 rounded-lg p-4">
         <div class="flex items-center gap-2.5 text-xs font-mono text-zinc-300 overflow-x-auto">
           <span class="text-zinc-500">Quick dd Slice:</span>
           <code id="cli-dd-oneliner" class="text-emerald-400 whitespace-nowrap"></code>
         </div>
       </div>
+
       <div class="bg-[#050508] border border-zinc-800 rounded-lg overflow-hidden">
+        <div class="px-4 py-2.5 bg-[#121217] border-b border-zinc-800 flex items-center justify-between text-xs font-mono text-zinc-400">
+          <span id="cli-file-banner">az01_tool.py — Full Unpack, Verify &amp; 8-Byte Aligned Container Builder</span>
+          <span>UTF-8 · LF</span>
+        </div>
         <pre class="p-5 text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[540px] overflow-y-auto"><code id="cli-code-block"></code></pre>
       </div>
     </section>
@@ -555,7 +595,7 @@
   <footer class="border-t border-zinc-800/80 bg-[#09090b] mt-12">
     <div class="max-w-[1440px] mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500">
       <div>INMUSIC AZ01 CONTAINER SUITE — Developed by The KikGen Labs for standalone hardware research.</div>
-      <div class="font-mono">Standalone Local HTML · RootFS Pseudo-Mount · Embedded C-WASM XZ</div>
+      <div class="font-mono">Standalone Local HTML · Ext4 RootFS Pseudo-Mount · Embedded C-WASM XZ</div>
     </div>
   </footer>
 
@@ -589,367 +629,402 @@
       payload:     { text: 'text-zinc-300', bg: 'bg-zinc-800/40', label: 'Payload Stream' }
     };
 
-    const C_COMPANION_SOURCE_CODE = `
-/*
- * ============================================================================
- * INMUSIC AZ01 CONTAINER SUITE — C XZ Companion Utility (az01_xz_companion.c)
- * Developed by The KikGen Labs
- *
- * Purpose:
- *   High-performance C companion utility for compressing and extracting
- *   inMusic / Akai AZ01 firmware .xz partition payloads.
- *
- * Modes of Operation:
- *   1. HTML Browser Bridge Mode (--serve [port]):
- *      Runs a lightweight zero-dependency localhost HTTP daemon on port 8765
- *      with CORS headers enabled so the local standalone HTML application
- *      (even when opened via file://) can call C liblzma compression and
- *      decompression directly via fetch().
- *
- *   2. Direct CLI Mode (-z / -d / -x):
- *      - Compress raw partition to .xz : ./az01_xz_companion -z input.img output.xz [preset 0-9]
- *      - Decompress .xz to partition   : ./az01_xz_companion -d input.xz output.img
- *      - Extract & decompress AZ01 .img: ./az01_xz_companion -x update.img rootfs.img
- *
- *   3. WebAssembly Export Mode (__EMSCRIPTEN__):
- *      Exports C functions directly to WebAssembly for in-browser execution.
- *
- * Compilation (Linux / macOS / MSYS2):
- *   gcc -O3 -Wall az01_xz_companion.c -llzma -o az01_xz_companion
- * ============================================================================
- */
+    // Full C Companion Source Code — strictly escaped for JavaScript variables (\", \\, \n, \r)
+    const C_COMPANION_SOURCE_CODE = [
+      "/*",
+      " * ============================================================================",
+      " * INMUSIC AZ01 CONTAINER SUITE — C XZ Companion Utility (az01_xz_companion.c)",
+      " * Developed by The KikGen Labs",
+      " *",
+      " * Purpose:",
+      " *   High-performance C companion utility for compressing and extracting",
+      " *   inMusic / Akai AZ01 firmware .xz (Ext4 rootfs) partition payloads.",
+      " *",
+      " * Modes of Operation:",
+      " *   1. HTML Browser Bridge Mode (--serve [port]):",
+      " *      Runs a lightweight zero-dependency localhost HTTP daemon on port 8765",
+      " *      with CORS headers enabled so the local standalone HTML application",
+      " *      (even when opened via file://) can call C liblzma compression and",
+      " *      decompression directly via fetch().",
+      " *",
+      " *   2. Direct CLI Mode (-z / -d / -x):",
+      " *      - Compress Ext4 partition to .xz: ./az01_xz_companion -z rootfs.ext4 rootfs.xz [0-9]",
+      " *      - Decompress .xz to Ext4        : ./az01_xz_companion -d rootfs.xz rootfs.ext4",
+      " *      - Extract & decompress AZ01 .img: ./az01_xz_companion -x update.img rootfs.ext4",
+      " *",
+      " *   3. WebAssembly Export Mode (__EMSCRIPTEN__):",
+      " *      Exports C functions directly to WebAssembly for in-browser execution.",
+      " *",
+      " * Compilation (Linux / macOS / MSYS2):",
+      " *   gcc -O3 -Wall az01_xz_companion.c -llzma -o az01_xz_companion",
+      " * ============================================================================",
+      " */",
+      "",
+      "#include <stdio.h>",
+      "#include <stdlib.h>",
+      "#include <stdint.h>",
+      "#include <string.h>",
+      "#include <lzma.h>",
+      "",
+      "#ifdef __EMSCRIPTEN__",
+      "#include <emscripten/emscripten.h>",
+      "#define EXPORT EMSCRIPTEN_KEEPALIVE",
+      "#else",
+      "#define EXPORT",
+      "#endif",
+      "",
+      "#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)",
+      "#include <unistd.h>",
+      "#include <sys/socket.h>",
+      "#include <netinet/in.h>",
+      "#endif",
+      "",
+      "#define CHUNK_SIZE (256 * 1024)",
+      "",
+      "/* --------------------------------------------------------------------------",
+      " * In-Memory Buffer XZ Compression & Decompression (Callable from WASM or HTTP)",
+      " * -------------------------------------------------------------------------- */",
+      "EXPORT int az01_xz_compress_buffer(",
+      "    const uint8_t *in_buf, size_t in_len,",
+      "    uint8_t *out_buf, size_t out_capacity,",
+      "    size_t *out_written, uint32_t preset",
+      ") {",
+      "    /* Use LZMA_CHECK_CRC32 as expected by Akai / Rockchip u-boot & recovery */",
+      "    size_t out_pos = 0;",
+      "    lzma_ret ret = lzma_easy_buffer_encode(",
+      "        preset, LZMA_CHECK_CRC32, NULL,",
+      "        in_buf, in_len,",
+      "        out_buf, &out_pos, out_capacity",
+      "    );",
+      "    if (ret != LZMA_OK) return (int)ret;",
+      "    *out_written = out_pos;",
+      "    return 0;",
+      "}",
+      "",
+      "EXPORT int az01_xz_decompress_buffer(",
+      "    const uint8_t *in_buf, size_t in_len,",
+      "    uint8_t *out_buf, size_t out_capacity,",
+      "    size_t *out_written",
+      ") {",
+      "    uint64_t memlimit = UINT64_MAX;",
+      "    size_t in_pos = 0;",
+      "    size_t out_pos = 0;",
+      "    lzma_ret ret = lzma_stream_buffer_decode(",
+      "        &memlimit, 0, NULL,",
+      "        in_buf, &in_pos, in_len,",
+      "        out_buf, &out_pos, out_capacity",
+      "    );",
+      "    if (ret != LZMA_OK) return (int)ret;",
+      "    *out_written = out_pos;",
+      "    return 0;",
+      "}",
+      "",
+      "/* --------------------------------------------------------------------------",
+      " * Streaming FILE* XZ Compression & Decompression",
+      " * -------------------------------------------------------------------------- */",
+      "int xz_compress_file(FILE *infile, FILE *outfile, uint32_t preset) {",
+      "    lzma_stream strm = LZMA_STREAM_INIT;",
+      "    lzma_ret ret = lzma_easy_encoder(&strm, preset, LZMA_CHECK_CRC32);",
+      "    if (ret != LZMA_OK) {",
+      "        fprintf(stderr, \"[!] lzma_easy_encoder init error: %d\\n\", (int)ret);",
+      "        return -1;",
+      "    }",
+      "",
+      "    uint8_t inbuf[CHUNK_SIZE];",
+      "    uint8_t outbuf[CHUNK_SIZE];",
+      "    lzma_action action = LZMA_RUN;",
+      "",
+      "    strm.next_in = NULL;",
+      "    strm.avail_in = 0;",
+      "    strm.next_out = outbuf;",
+      "    strm.avail_out = sizeof(outbuf);",
+      "",
+      "    while (1) {",
+      "        if (strm.avail_in == 0 && !feof(infile)) {",
+      "            strm.next_in = inbuf;",
+      "            strm.avail_in = fread(inbuf, 1, sizeof(inbuf), infile);",
+      "            if (ferror(infile)) {",
+      "                lzma_end(&strm);",
+      "                return -2;",
+      "            }",
+      "            if (feof(infile)) action = LZMA_FINISH;",
+      "        }",
+      "",
+      "        ret = lzma_code(&strm, action);",
+      "",
+      "        if (strm.avail_out == 0 || ret == LZMA_STREAM_END) {",
+      "            size_t write_size = sizeof(outbuf) - strm.avail_out;",
+      "            if (fwrite(outbuf, 1, write_size, outfile) != write_size) {",
+      "                lzma_end(&strm);",
+      "                return -3;",
+      "            }",
+      "            strm.next_out = outbuf;",
+      "            strm.avail_out = sizeof(outbuf);",
+      "        }",
+      "",
+      "        if (ret != LZMA_OK) {",
+      "            if (ret == LZMA_STREAM_END) break;",
+      "            fprintf(stderr, \"[!] lzma_code compression error: %d\\n\", (int)ret);",
+      "            lzma_end(&strm);",
+      "            return -4;",
+      "        }",
+      "    }",
+      "",
+      "    lzma_end(&strm);",
+      "    return 0;",
+      "}",
+      "",
+      "int xz_decompress_file(FILE *infile, FILE *outfile) {",
+      "    lzma_stream strm = LZMA_STREAM_INIT;",
+      "    lzma_ret ret = lzma_stream_decoder(&strm, UINT64_MAX, LZMA_CONCATENATED);",
+      "    if (ret != LZMA_OK) {",
+      "        fprintf(stderr, \"[!] lzma_stream_decoder init error: %d\\n\", (int)ret);",
+      "        return -1;",
+      "    }",
+      "",
+      "    uint8_t inbuf[CHUNK_SIZE];",
+      "    uint8_t outbuf[CHUNK_SIZE];",
+      "    lzma_action action = LZMA_RUN;",
+      "",
+      "    strm.next_in = NULL;",
+      "    strm.avail_in = 0;",
+      "    strm.next_out = outbuf;",
+      "    strm.avail_out = sizeof(outbuf);",
+      "",
+      "    while (1) {",
+      "        if (strm.avail_in == 0 && !feof(infile)) {",
+      "            strm.next_in = inbuf;",
+      "            strm.avail_in = fread(inbuf, 1, sizeof(inbuf), infile);",
+      "            if (ferror(infile)) {",
+      "                lzma_end(&strm);",
+      "                return -2;",
+      "            }",
+      "            if (feof(infile)) action = LZMA_FINISH;",
+      "        }",
+      "",
+      "        ret = lzma_code(&strm, action);",
+      "",
+      "        if (strm.avail_out == 0 || ret == LZMA_STREAM_END) {",
+      "            size_t write_size = sizeof(outbuf) - strm.avail_out;",
+      "            if (fwrite(outbuf, 1, write_size, outfile) != write_size) {",
+      "                lzma_end(&strm);",
+      "                return -3;",
+      "            }",
+      "            strm.next_out = outbuf;",
+      "            strm.avail_out = sizeof(outbuf);",
+      "        }",
+      "",
+      "        if (ret != LZMA_OK) {",
+      "            if (ret == LZMA_STREAM_END) break;",
+      "            fprintf(stderr, \"[!] lzma_code decompression error: %d\\n\", (int)ret);",
+      "            lzma_end(&strm);",
+      "            return -4;",
+      "        }",
+      "    }",
+      "",
+      "    lzma_end(&strm);",
+      "    return 0;",
+      "}",
+      "",
+      "/* --------------------------------------------------------------------------",
+      " * Direct AZ01 Firmware Container Slicer + XZ Decompressor (-x mode)",
+      " * -------------------------------------------------------------------------- */",
+      "int az01_extract_and_decompress(const char *az01_path, const char *out_ext4_path) {",
+      "    FILE *fp = fopen(az01_path, \"rb\");",
+      "    if (!fp) {",
+      "        perror(\"fopen input\");",
+      "        return 1;",
+      "    }",
+      "",
+      "    uint8_t header[65536];",
+      "    size_t n = fread(header, 1, sizeof(header), fp);",
+      "    if (n < 64 || memcmp(header, \"AZ01\", 4) != 0) {",
+      "        fprintf(stderr, \"[!] Invalid AZ01 container header.\\n\");",
+      "        fclose(fp);",
+      "        return 1;",
+      "    }",
+      "",
+      "    int partl_offset = -1;",
+      "    for (size_t i = 0; i + 5 < n; i++) {",
+      "        if (memcmp(header + i, \"PARTL\", 5) == 0) {",
+      "            partl_offset = (int)i;",
+      "            break;",
+      "        }",
+      "    }",
+      "    if (partl_offset < 0) {",
+      "        fprintf(stderr, \"[!] PARTL descriptor not found in first 64 KB.\\n\");",
+      "        fclose(fp);",
+      "        return 1;",
+      "    }",
+      "",
+      "    uint64_t payload_size = 0;",
+      "    memcpy(&payload_size, header + partl_offset + 0x08, sizeof(uint64_t));",
+      "    long payload_offset = partl_offset + 0x4C;",
+      "",
+      "    printf(\"[+] AZ01 PARTL @ 0x%04X | Payload @ 0x%04lX (%llu bytes)\\n\",",
+      "           partl_offset, payload_offset, (unsigned long long)payload_size);",
+      "",
+      "    if (fseek(fp, payload_offset, SEEK_SET) != 0) {",
+      "        perror(\"fseek payload_offset\");",
+      "        fclose(fp);",
+      "        return 1;",
+      "    }",
+      "",
+      "    FILE *out = fopen(out_ext4_path, \"wb\");",
+      "    if (!out) {",
+      "        perror(\"fopen output\");",
+      "        fclose(fp);",
+      "        return 1;",
+      "    }",
+      "",
+      "    int rc = xz_decompress_file(fp, out);",
+      "    fclose(out);",
+      "    fclose(fp);",
+      "    if (rc == 0) {",
+      "        printf(\"[+] Decompressed XZ partition to Ext4 image '%s' successfully.\\n\", out_ext4_path);",
+      "    }",
+      "    return rc;",
+      "}",
+      "",
+      "#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)",
+      "/* --------------------------------------------------------------------------",
+      " * Localhost HTTP Companion Bridge (--serve 8765) for Standalone HTML App",
+      " * -------------------------------------------------------------------------- */",
+      "int run_http_companion_bridge(int port) {",
+      "    int srv = socket(AF_INET, SOCK_STREAM, 0);",
+      "    int opt = 1;",
+      "    setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));",
+      "",
+      "    struct sockaddr_in addr;",
+      "    memset(&addr, 0, sizeof(addr));",
+      "    addr.sin_family = AF_INET;",
+      "    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK); /* 127.0.0.1 only */",
+      "    addr.sin_port = htons((uint16_t)port);",
+      "",
+      "    if (bind(srv, (struct sockaddr *)&addr, sizeof(addr)) < 0) {",
+      "        perror(\"bind\");",
+      "        return 1;",
+      "    }",
+      "    listen(srv, 8);",
+      "    printf(\"[+] INMUSIC AZ01 C XZ Companion listening on http://127.0.0.1:%d\\n\", port);",
+      "",
+      "    while (1) {",
+      "        int cli = accept(srv, NULL, NULL);",
+      "        if (cli < 0) continue;",
+      "",
+      "        char req[4096];",
+      "        ssize_t rlen = read(cli, req, sizeof(req) - 1);",
+      "        if (rlen <= 0) { close(cli); continue; }",
+      "        req[rlen] = '\\0';",
+      "",
+      "        if (strncmp(req, \"OPTIONS \", 8) == 0) {",
+      "            const char *cors =",
+      "                \"HTTP/1.1 204 No Content\\r\\n\"",
+      "                \"Access-Control-Allow-Origin: *\\r\\n\"",
+      "                \"Access-Control-Allow-Methods: GET, POST, OPTIONS\\r\\n\"",
+      "                \"Access-Control-Allow-Headers: Content-Type\\r\\n\\r\\n\";",
+      "            write(cli, cors, strlen(cors));",
+      "            close(cli);",
+      "            continue;",
+      "        }",
+      "",
+      "        if (strncmp(req, \"GET /status\", 11) == 0) {",
+      "            char resp[512];",
+      "            snprintf(resp, sizeof(resp),",
+      "                \"HTTP/1.1 200 OK\\r\\n\"",
+      "                \"Content-Type: application/json\\r\\n\"",
+      "                \"Access-Control-Allow-Origin: *\\r\\n\\r\\n\"",
+      "                \"{\\\"online\\\":true,\\\"version\\\":\\\"liblzma %s\\\"}\",",
+      "                lzma_version_string());",
+      "            write(cli, resp, strlen(resp));",
+      "            close(cli);",
+      "            continue;",
+      "        }",
+      "        close(cli);",
+      "    }",
+      "    return 0;",
+      "}",
+      "#endif",
+      "",
+      "int main(int argc, char **argv) {",
+      "    if (argc < 2) {",
+      "        printf(\"INMUSIC AZ01 C XZ Companion — by The KikGen Labs\\n\");",
+      "        printf(\"Usage:\\n\");",
+      "        printf(\"  %s --serve [port]                 Start localhost bridge for HTML page (default 8765)\\n\", argv[0]);",
+      "        printf(\"  %s -z <in.ext4> <out.xz> [0-9]    Compress Ext4 partition to .xz\\n\", argv[0]);",
+      "        printf(\"  %s -d <in.xz>   <out.ext4>        Decompress .xz stream to Ext4 partition\\n\", argv[0]);",
+      "        printf(\"  %s -x <fw.img>  <out.ext4>        Slice & decompress AZ01 firmware payload\\n\", argv[0]);",
+      "        return 0;",
+      "    }",
+      "",
+      "#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)",
+      "    if (strcmp(argv[1], \"--serve\") == 0) {",
+      "        int port = (argc > 2) ? atoi(argv[2]) : 8765;",
+      "        return run_http_companion_bridge(port);",
+      "    }",
+      "#endif",
+      "",
+      "    if (strcmp(argv[1], \"-z\") == 0 && argc >= 4) {",
+      "        uint32_t preset = (argc >= 5) ? (uint32_t)atoi(argv[4]) : 6;",
+      "        FILE *in = fopen(argv[2], \"rb\");",
+      "        FILE *out = fopen(argv[3], \"wb\");",
+      "        if (!in || !out) { perror(\"fopen\"); return 1; }",
+      "        int rc = xz_compress_file(in, out, preset);",
+      "        fclose(in); fclose(out);",
+      "        return rc;",
+      "    }",
+      "",
+      "    if (strcmp(argv[1], \"-d\") == 0 && argc >= 4) {",
+      "        FILE *in = fopen(argv[2], \"rb\");",
+      "        FILE *out = fopen(argv[3], \"wb\");",
+      "        if (!in || !out) { perror(\"fopen\"); return 1; }",
+      "        int rc = xz_decompress_file(in, out);",
+      "        fclose(in); fclose(out);",
+      "        return rc;",
+      "    }",
+      "",
+      "    if (strcmp(argv[1], \"-x\") == 0 && argc >= 4) {",
+      "        return az01_extract_and_decompress(argv[2], argv[3]);",
+      "    }",
+      "",
+      "    fprintf(stderr, \"[!] Unknown arguments. Run without arguments for usage help.\\n\");",
+      "    return 1;",
+      "}"
+    ].join("\n");
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
-#include <lzma.h>
-
-#ifdef __EMSCRIPTEN__
-#include <emscripten/emscripten.h>
-#define EXPORT EMSCRIPTEN_KEEPALIVE
-#else
-#define EXPORT
-#endif
-
-#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#endif
-
-#define CHUNK_SIZE (256 * 1024)
-
-/* --------------------------------------------------------------------------
- * In-Memory Buffer XZ Compression & Decompression (Callable from WASM or HTTP)
- * -------------------------------------------------------------------------- */
-EXPORT int az01_xz_compress_buffer(
-    const uint8_t *in_buf, size_t in_len,
-    uint8_t *out_buf, size_t out_capacity,
-    size_t *out_written, uint32_t preset
-) {
-    /* Use LZMA_CHECK_CRC32 as expected by Akai / Rockchip u-boot & recovery */
-    size_t out_pos = 0;
-    lzma_ret ret = lzma_easy_buffer_encode(
-        preset, LZMA_CHECK_CRC32, NULL,
-        in_buf, in_len,
-        out_buf, &out_pos, out_capacity
-    );
-    if (ret != LZMA_OK) return (int)ret;
-    *out_written = out_pos;
-    return 0;
-}
-
-EXPORT int az01_xz_decompress_buffer(
-    const uint8_t *in_buf, size_t in_len,
-    uint8_t *out_buf, size_t out_capacity,
-    size_t *out_written
-) {
-    uint64_t memlimit = UINT64_MAX;
-    size_t in_pos = 0;
-    size_t out_pos = 0;
-    lzma_ret ret = lzma_stream_buffer_decode(
-        &memlimit, 0, NULL,
-        in_buf, &in_pos, in_len,
-        out_buf, &out_pos, out_capacity
-    );
-    if (ret != LZMA_OK) return (int)ret;
-    *out_written = out_pos;
-    return 0;
-}
-
-/* --------------------------------------------------------------------------
- * Streaming FILE* XZ Compression & Decompression
- * -------------------------------------------------------------------------- */
-int xz_compress_file(FILE *infile, FILE *outfile, uint32_t preset) {
-    lzma_stream strm = LZMA_STREAM_INIT;
-    lzma_ret ret = lzma_easy_encoder(&strm, preset, LZMA_CHECK_CRC32);
-    if (ret != LZMA_OK) {
-        fprintf(stderr, "[!] lzma_easy_encoder init error: %d\\n", (int)ret);
-        return -1;
-    }
-
-    uint8_t inbuf[CHUNK_SIZE];
-    uint8_t outbuf[CHUNK_SIZE];
-    lzma_action action = LZMA_RUN;
-
-    strm.next_in = NULL;
-    strm.avail_in = 0;
-    strm.next_out = outbuf;
-    strm.avail_out = sizeof(outbuf);
-
-    while (1) {
-        if (strm.avail_in == 0 && !feof(infile)) {
-            strm.next_in = inbuf;
-            strm.avail_in = fread(inbuf, 1, sizeof(inbuf), infile);
-            if (ferror(infile)) {
-                lzma_end(&strm);
-                return -2;
-            }
-            if (feof(infile)) action = LZMA_FINISH;
-        }
-
-        ret = lzma_code(&strm, action);
-
-        if (strm.avail_out == 0 || ret == LZMA_STREAM_END) {
-            size_t write_size = sizeof(outbuf) - strm.avail_out;
-            if (fwrite(outbuf, 1, write_size, outfile) != write_size) {
-                lzma_end(&strm);
-                return -3;
-            }
-            strm.next_out = outbuf;
-            strm.avail_out = sizeof(outbuf);
-        }
-
-        if (ret != LZMA_OK) {
-            if (ret == LZMA_STREAM_END) break;
-            fprintf(stderr, "[!] lzma_code compression error: %d\\n", (int)ret);
-            lzma_end(&strm);
-            return -4;
-        }
-    }
-
-    lzma_end(&strm);
-    return 0;
-}
-
-int xz_decompress_file(FILE *infile, FILE *outfile) {
-    lzma_stream strm = LZMA_STREAM_INIT;
-    lzma_ret ret = lzma_stream_decoder(&strm, UINT64_MAX, LZMA_CONCATENATED);
-    if (ret != LZMA_OK) {
-        fprintf(stderr, "[!] lzma_stream_decoder init error: %d\\n", (int)ret);
-        return -1;
-    }
-
-    uint8_t inbuf[CHUNK_SIZE];
-    uint8_t outbuf[CHUNK_SIZE];
-    lzma_action action = LZMA_RUN;
-
-    strm.next_in = NULL;
-    strm.avail_in = 0;
-    strm.next_out = outbuf;
-    strm.avail_out = sizeof(outbuf);
-
-    while (1) {
-        if (strm.avail_in == 0 && !feof(infile)) {
-            strm.next_in = inbuf;
-            strm.avail_in = fread(inbuf, 1, sizeof(inbuf), infile);
-            if (ferror(infile)) {
-                lzma_end(&strm);
-                return -2;
-            }
-            if (feof(infile)) action = LZMA_FINISH;
-        }
-
-        ret = lzma_code(&strm, action);
-
-        if (strm.avail_out == 0 || ret == LZMA_STREAM_END) {
-            size_t write_size = sizeof(outbuf) - strm.avail_out;
-            if (fwrite(outbuf, 1, write_size, outfile) != write_size) {
-                lzma_end(&strm);
-                return -3;
-            }
-            strm.next_out = outbuf;
-            strm.avail_out = sizeof(outbuf);
-        }
-
-        if (ret != LZMA_OK) {
-            if (ret == LZMA_STREAM_END) break;
-            fprintf(stderr, "[!] lzma_code decompression error: %d\\n", (int)ret);
-            lzma_end(&strm);
-            return -4;
-        }
-    }
-
-    lzma_end(&strm);
-    return 0;
-}
-
-/* --------------------------------------------------------------------------
- * Direct AZ01 Firmware Container Slicer + XZ Decompressor (-x mode)
- * -------------------------------------------------------------------------- */
-int az01_extract_and_decompress(const char *az01_path, const char *out_raw_path) {
-    FILE *fp = fopen(az01_path, "rb");
-    if (!fp) {
-        perror("fopen input");
-        return 1;
-    }
-
-    uint8_t header[65536];
-    size_t n = fread(header, 1, sizeof(header), fp);
-    if (n < 64 || memcmp(header, "AZ01", 4) != 0) {
-        fprintf(stderr, "[!] Invalid AZ01 container header.\\n");
-        fclose(fp);
-        return 1;
-    }
-
-    int partl_offset = -1;
-    for (size_t i = 0; i + 5 < n; i++) {
-        if (memcmp(header + i, "PARTL", 5) == 0) {
-            partl_offset = (int)i;
-            break;
-        }
-    }
-    if (partl_offset < 0) {
-        fprintf(stderr, "[!] PARTL descriptor not found in first 64 KB.\\n");
-        fclose(fp);
-        return 1;
-    }
-
-    uint64_t payload_size = 0;
-    memcpy(&payload_size, header + partl_offset + 0x08, sizeof(uint64_t));
-    long payload_offset = partl_offset + 0x4C;
-
-    printf("[+] AZ01 PARTL @ 0x%04X | Payload @ 0x%04lX (%llu bytes)\\n",
-           partl_offset, payload_offset, (unsigned long long)payload_size);
-
-    if (fseek(fp, payload_offset, SEEK_SET) != 0) {
-        perror("fseek payload_offset");
-        fclose(fp);
-        return 1;
-    }
-
-    FILE *out = fopen(out_raw_path, "wb");
-    if (!out) {
-        perror("fopen output");
-        fclose(fp);
-        return 1;
-    }
-
-    int rc = xz_decompress_file(fp, out);
-    fclose(out);
-    fclose(fp);
-    if (rc == 0) {
-        printf("[+] Decompressed XZ partition to '%s' successfully.\\n", out_raw_path);
-    }
-    return rc;
-}
-
-#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
-/* --------------------------------------------------------------------------
- * Localhost HTTP Companion Bridge (--serve 8765) for Standalone HTML App
- * -------------------------------------------------------------------------- */
-int run_http_companion_bridge(int port) {
-    int srv = socket(AF_INET, SOCK_STREAM, 0);
-    int opt = 1;
-    setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK); /* 127.0.0.1 only */
-    addr.sin_port = htons((uint16_t)port);
-
-    if (bind(srv, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-        perror("bind");
-        return 1;
-    }
-    listen(srv, 8);
-    printf("[+] INMUSIC AZ01 C XZ Companion listening on http://127.0.0.1:%d\\n", port);
-
-    while (1) {
-        int cli = accept(srv, NULL, NULL);
-        if (cli < 0) continue;
-
-        char req[4096];
-        ssize_t rlen = read(cli, req, sizeof(req) - 1);
-        if (rlen <= 0) { close(cli); continue; }
-        req[rlen] = '\0';
-
-        if (strncmp(req, "OPTIONS ", 8) == 0) {
-            const char *cors =
-                "HTTP/1.1 204 No Content\\r\\n"
-                "Access-Control-Allow-Origin: *\\r\\n"
-                "Access-Control-Allow-Methods: GET, POST, OPTIONS\\r\\n"
-                "Access-Control-Allow-Headers: Content-Type\\r\n\\r\\n";
-            write(cli, cors, strlen(cors));
-            close(cli);
-            continue;
-        }
-
-        if (strncmp(req, "GET /status", 11) == 0) {
-            char resp[512];
-            snprintf(resp, sizeof(resp),
-                "HTTP/1.1 200 OK\\r\\n"
-                "Content-Type: application/json\\r\\n"
-                "Access-Control-Allow-Origin: *\\r\n\\r\\n"
-                "{\"online\":true,\"version\":\"liblzma %s\"}",
-                lzma_version_string());
-            write(cli, resp, strlen(resp));
-            close(cli);
-            continue;
-        }
-        close(cli);
-    }
-    return 0;
-}
-#endif
-
-int main(int argc, char **argv) {
-    if (argc < 2) {
-        printf("INMUSIC AZ01 C XZ Companion — by The KikGen Labs\\n");
-        printf("Usage:\\n");
-        printf("  %s --serve [port]               Start localhost bridge for HTML page (default 8765)\\n", argv[0]);
-        printf("  %s -z <in.img> <out.xz> [0-9]   Compress raw partition to .xz\\n", argv[0]);
-        printf("  %s -d <in.xz>  <out.img>        Decompress .xz stream to raw partition\\n", argv[0]);
-        printf("  %s -x <fw.img> <out.img>        Slice & decompress AZ01 firmware payload\\n", argv[0]);
-        return 0;
-    }
-
-#if !defined(_WIN32) && !defined(__EMSCRIPTEN__)
-    if (strcmp(argv[1], "--serve") == 0) {
-        int port = (argc > 2) ? atoi(argv[2]) : 8765;
-        return run_http_companion_bridge(port);
-    }
-#endif
-
-    if (strcmp(argv[1], "-z") == 0 && argc >= 4) {
-        uint32_t preset = (argc >= 5) ? (uint32_t)atoi(argv[4]) : 6;
-        FILE *in = fopen(argv[2], "rb");
-        FILE *out = fopen(argv[3], "wb");
-        if (!in || !out) { perror("fopen"); return 1; }
-        int rc = xz_compress_file(in, out, preset);
-        fclose(in); fclose(out);
-        return rc;
-    }
-
-    if (strcmp(argv[1], "-d") == 0 && argc >= 4) {
-        FILE *in = fopen(argv[2], "rb");
-        FILE *out = fopen(argv[3], "wb");
-        if (!in || !out) { perror("fopen"); return 1; }
-        int rc = xz_decompress_file(in, out);
-        fclose(in); fclose(out);
-        return rc;
-    }
-
-    if (strcmp(argv[1], "-x") == 0 && argc >= 4) {
-        return az01_extract_and_decompress(argv[2], argv[3]);
-    }
-
-    fprintf(stderr, "[!] Unknown arguments. Run without arguments for usage help.\\n");
-    return 1;
-}
-`;
+    const C_COMPANION_MAKEFILE = [
+      "# ==============================================================================",
+      "# INMUSIC AZ01 CONTAINER SUITE — C XZ Companion Makefile",
+      "# ==============================================================================",
+      "CC      = gcc",
+      "EMCC    = emcc",
+      "CFLAGS  = -O3 -Wall -Wextra",
+      "LDFLAGS = -llzma",
+      "",
+      "TARGET_NATIVE = az01_xz_companion",
+      "TARGET_WASM   = az01_xz_wasm.js",
+      "",
+      ".PHONY: all native wasm clean",
+      "",
+      "all: native",
+      "",
+      "# 1. Build Native C Companion Binary (CLI + HTTP Localhost Bridge for HTML App)",
+      "native: az01_xz_companion.c",
+      "\t$(CC) $(CFLAGS) az01_xz_companion.c -o $(TARGET_NATIVE) $(LDFLAGS)",
+      "\t@echo \"[✓] Built native C companion: ./$(TARGET_NATIVE)\"",
+      "\t@echo \"    Run './$(TARGET_NATIVE) --serve 8765' to connect with the HTML app.\"",
+      "",
+      "# 2. Build WebAssembly Companion Module (In-Browser WASM via Emscripten)",
+      "wasm: az01_xz_companion.c",
+      "\t$(EMCC) -O3 az01_xz_companion.c -s USE_ZLIB=0 \\",
+      "\t  -s EXPORTED_FUNCTIONS='[\"_az01_xz_compress_buffer\",\"_az01_xz_decompress_buffer\",\"_malloc\",\"_free\"]' \\",
+      "\t  -s EXPORTED_RUNTIME_METHODS='[\"ccall\",\"cwrap\",\"HEAPU8\"]' \\",
+      "\t  -s SINGLE_FILE=1 -o $(TARGET_WASM)",
+      "\t@echo \"[✓] Built single-file WebAssembly companion: $(TARGET_WASM)\"",
+      "",
+      "clean:",
+      "\trm -f $(TARGET_NATIVE) $(TARGET_WASM)"
+    ].join("\n");
 
     // Embedded WebAssembly (compiled from C) for IEEE 802.3 CRC32
     const EMBEDDED_XZ_WASM_BYTES = new Uint8Array([
@@ -1145,15 +1220,15 @@ int main(int argc, char **argv) {
       });
 
       const files = [
-        { ino: 25, blk: 30, path: '/etc/os-release', modeStr: '-rw-r--r--', isBinary: false, sig: 'UTF-8 Configuration', data: enc('NAME="inMusic Embedded Linux"\nVERSION="3.4.1.62 (Kirkstone-RT)"\nPRETTY_NAME="inMusic Standalone OS 3.4.1.62"\nROOTFS_TYPE="ext4"\nTARGET_ARCH="armv7l-neon"\n') },
-        { ino: 26, blk: 31, path: '/etc/fstab', modeStr: '-rw-r--r--', isBinary: false, sig: 'UTF-8 Configuration', data: enc('# /etc/fstab: static file system information for inMusic standalone hardware\n/dev/root            /                    ext4       ro,noatime,errors=remount-ro 0  1\ntmpfs                /var/volatile        tmpfs      defaults,size=128M           0  0\n/dev/mmcblk0p6       /media/az01-settings ext4       rw,noatime,data=ordered      0  2\n/dev/mmcblk0p7       /media/az01-internal ext4       rw,noatime,data=ordered      0  2\n') },
-        { ino: 27, blk: 32, path: '/etc/init.d/S90mpc-standalone', modeStr: '-rwxr-xr-x', isBinary: false, sig: 'POSIX Shell / Init Script', data: enc('#!/bin/sh\nexport HOME=/root\nexport QT_QPA_PLATFORM=eglfs\necho "[inMusic] Verifying Ext4 rootfs mount state..."\nmount | grep "on / type ext4"\necho "[inMusic] Launching /usr/bin/MPC with SCHED_FIFO RT priority 85..."\nchrt -f 85 /usr/bin/MPC --standalone &\n') },
-        { ino: 28, blk: 33, path: '/etc/ssh/sshd_config', modeStr: '-rw-------', isBinary: false, sig: 'UTF-8 Configuration', data: enc('Port 22\nProtocol 2\nPermitRootLogin yes\nPasswordAuthentication yes\nSubsystem sftp /usr/libexec/sftp-server\n') },
-        { ino: 30, blk: 35, path: '/usr/bin/MPC', modeStr: '-rwxr-xr-x', isBinary: true, sig: 'ELF 32-bit LSB Executable (ARM EABI5)', data: buildArmElf('ld-linux-armhf.so.3\0Akai::Standalone::AudioEngine::initialize()\0inmusic,acva2\0Ext4 RootFS Partition\0Version 3.4.1.62\0') },
-        { ino: 31, blk: 36, path: '/usr/bin/az01-updater', modeStr: '-rwxr-xr-x', isBinary: true, sig: 'ELF 32-bit LSB Executable (ARM EABI5)', data: buildArmElf('AZ01\0PARTL\0EOF\x10\0ext4\0e2fsck\0inMusic::FirmwareUpdater::flashExt4RootfsPartition()\0') },
-        { ino: 32, blk: 37, path: '/bin/busybox', modeStr: '-rwxr-xr-x', isBinary: true, sig: 'ELF 32-bit LSB Executable (ARM EABI5)', data: buildArmElf('BusyBox v1.36.1 multi-call binary\0sh\0mount\0fsck.ext4\0dd\0sha1sum\0xz\0') },
-        { ino: 33, blk: 38, path: '/lib/modules/snd-soc-inmusic-tdm.ko', modeStr: '-rw-r--r--', isBinary: true, sig: 'ELF 32-bit LSB Kernel Module (ARMv7 .ko)', data: buildArmElf('vermagic=4.4.167-rt190 SMP preempt ARMv7\0description=inMusic TDM codec driver\0', true) },
-        { ino: 34, blk: 39, path: '/usr/share/Akai/MPC/hardware_manifest.json', modeStr: '-rw-r--r--', isBinary: false, sig: 'JSON Configuration', data: enc('{\n  "application": "MPC",\n  "rootfsFilesystem": "ext4",\n  "blockSize": 4096,\n  "inodeSize": 256,\n  "soc": "Rockchip RK3288",\n  "sampleRates": [44100, 48000, 96000]\n}\n') }
+        { ino: 25, blk: 30, path: "/etc/os-release", modeStr: "-rw-r--r--", isBinary: false, sig: "UTF-8 Configuration", data: enc("NAME=\"inMusic Embedded Linux\"\nVERSION=\"3.4.1.62 (Kirkstone-RT)\"\nPRETTY_NAME=\"inMusic Standalone OS 3.4.1.62\"\nROOTFS_TYPE=\"ext4\"\nTARGET_ARCH=\"armv7l-neon\"\n") },
+        { ino: 26, blk: 31, path: "/etc/fstab", modeStr: "-rw-r--r--", isBinary: false, sig: "UTF-8 Configuration", data: enc("# /etc/fstab: static file system information for inMusic standalone hardware\n/dev/root            /                    ext4       ro,noatime,errors=remount-ro 0  1\ntmpfs                /var/volatile        tmpfs      defaults,size=128M           0  0\n/dev/mmcblk0p6       /media/az01-settings ext4       rw,noatime,data=ordered      0  2\n/dev/mmcblk0p7       /media/az01-internal ext4       rw,noatime,data=ordered      0  2\n") },
+        { ino: 27, blk: 32, path: "/etc/init.d/S90mpc-standalone", modeStr: "-rwxr-xr-x", isBinary: false, sig: "POSIX Shell / Init Script", data: enc("#!/bin/sh\nexport HOME=/root\nexport QT_QPA_PLATFORM=eglfs\necho \"[inMusic] Verifying Ext4 rootfs mount state...\"\nmount | grep \"on / type ext4\"\necho \"[inMusic] Launching /usr/bin/MPC with SCHED_FIFO RT priority 85...\"\nchrt -f 85 /usr/bin/MPC --standalone &\n") },
+        { ino: 28, blk: 33, path: "/etc/ssh/sshd_config", modeStr: "-rw-------", isBinary: false, sig: "UTF-8 Configuration", data: enc("Port 22\nProtocol 2\nPermitRootLogin yes\nPasswordAuthentication yes\nSubsystem sftp /usr/libexec/sftp-server\n") },
+        { ino: 30, blk: 35, path: "/usr/bin/MPC", modeStr: "-rwxr-xr-x", isBinary: true, sig: "ELF 32-bit LSB Executable (ARM EABI5)", data: buildArmElf("ld-linux-armhf.so.3\x00Akai::Standalone::AudioEngine::initialize()\x00inmusic,acva2\x00Ext4 RootFS Partition\x00Version 3.4.1.62\x00") },
+        { ino: 31, blk: 36, path: "/usr/bin/az01-updater", modeStr: "-rwxr-xr-x", isBinary: true, sig: "ELF 32-bit LSB Executable (ARM EABI5)", data: buildArmElf("AZ01\x00PARTL\x00EOF\x10\x00ext4\x00e2fsck\x00inMusic::FirmwareUpdater::flashExt4RootfsPartition()\x00") },
+        { ino: 32, blk: 37, path: "/bin/busybox", modeStr: "-rwxr-xr-x", isBinary: true, sig: "ELF 32-bit LSB Executable (ARM EABI5)", data: buildArmElf("BusyBox v1.36.1 multi-call binary\x00sh\x00mount\x00fsck.ext4\x00dd\x00sha1sum\x00xz\x00") },
+        { ino: 33, blk: 38, path: "/lib/modules/snd-soc-inmusic-tdm.ko", modeStr: "-rw-r--r--", isBinary: true, sig: "ELF 32-bit LSB Kernel Module (ARMv7 .ko)", data: buildArmElf("vermagic=4.4.167-rt190 SMP preempt ARMv7\x00description=inMusic TDM codec driver\x00", true) },
+        { ino: 34, blk: 39, path: "/usr/share/Akai/MPC/hardware_manifest.json", modeStr: "-rw-r--r--", isBinary: false, sig: "JSON Configuration", data: enc("{\n  \"application\": \"MPC\",\n  \"rootfsFilesystem\": \"ext4\",\n  \"blockSize\": 4096,\n  \"inodeSize\": 256,\n  \"soc\": \"Rockchip RK3288\",\n  \"sampleRates\": [44100, 48000, 96000]\n}\n") }
       ];
 
       files.forEach(f => {
@@ -1842,101 +1917,604 @@ int main(int argc, char **argv) {
       if (f) { builderPayloadFile = f; document.getElementById('build-payload-name').textContent = f.name; }
     }
     async function generateCustomContainer() {
-      if (!builderPayloadFile) return;
+      if (!builderPayloadFile) {
+        showToast("Please select or synthesize a payload file first.", "error");
+        return;
+      }
       const cfg = {
-        version: document.getElementById('build-version').value,
-        description: document.getElementById('build-desc').value,
-        partitionName: document.getElementById('build-partname').value,
-        compression: document.getElementById('build-comp').value,
+        version: document.getElementById("build-version").value,
+        description: document.getElementById("build-desc").value,
+        partitionName: document.getElementById("build-partname").value,
+        compression: document.getElementById("build-comp").value,
         targets: builderTargets
       };
-      const outName = document.getElementById('build-outname').value.trim() || 'update_custom.img';
-      const { blob } = await packAz01Container(cfg, builderPayloadFile);
+      const outName = document.getElementById("build-outname").value.trim() || "update_custom.img";
+      const { blob, sha1Hex, partlOffset, payloadOffset } = await packAz01Container(cfg, builderPayloadFile);
+      lastBuiltContainerFile = new File([blob], outName, { type: "application/octet-stream" });
+
+      const rtCard = document.getElementById("build-roundtrip-card");
+      const rtInfo = document.getElementById("build-roundtrip-info");
+      if (rtCard && rtInfo) {
+        rtCard.classList.remove("hidden");
+        rtInfo.innerHTML = [
+          "<div>File: <strong class=\"text-white\">" + outName + "</strong> (" + formatBytes(blob.size) + ")</div>",
+          "<div>PARTL: <strong class=\"text-amber-400\">0x" + partlOffset.toString(16).toUpperCase() + "</strong> · Payload: <strong class=\"text-emerald-400\">0x" + payloadOffset.toString(16).toUpperCase() + "</strong></div>",
+          "<div>SHA-1: <strong class=\"text-zinc-200\">" + sha1Hex + "</strong></div>"
+        ].join("");
+      }
+
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = outName;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      showToast(`Generated "${outName}"`, 'success');
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = outName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Generated \"" + outName + "\" (" + formatBytes(blob.size) + ")", "success");
+    }
+
+    async function inspectLastBuiltContainer() {
+      if (!lastBuiltContainerFile) {
+        showToast("Build a container image first.", "error");
+        return;
+      }
+      switchTab("analyze");
+      await analyzeFirmwareFile(lastBuiltContainerFile, false);
     }
 
     function loadActivePayloadIntoXzBench() {
       if (!activeMetadata) return;
-      xzBenchFile = new File([activeMetadata.payloadBlob], 'rootfs.xz', { type: 'application/x-xz' });
-      document.getElementById('xz-bench-filename').textContent = xzBenchFile.name;
+      const ext = activeMetadata.compression === "none" ? "ext4" : activeMetadata.compression;
+      xzBenchFile = new File([activeMetadata.payloadBlob], activeMetadata.partitionName + "." + ext, { type: "application/octet-stream" });
+      document.getElementById("xz-bench-filename").textContent = xzBenchFile.name;
+      document.getElementById("xz-bench-filesize").textContent = formatBytes(xzBenchFile.size) + " · Loaded from active AZ01 container";
+      showToast("Loaded active partition payload (" + xzBenchFile.name + ") into XZ Workbench.", "info");
     }
     function handleXzBenchFileSelect(e) {
       const f = e.target.files && e.target.files[0];
-      if (f) { xzBenchFile = f; document.getElementById('xz-bench-filename').textContent = f.name; }
+      if (f) {
+        xzBenchFile = f;
+        document.getElementById("xz-bench-filename").textContent = f.name;
+        document.getElementById("xz-bench-filesize").textContent = formatBytes(f.size);
+      }
+    }
+    function renderXzBenchResult(modeLabel, res) {
+      const box = document.getElementById("xz-bench-result");
+      if (!box) return;
+      box.classList.remove("hidden");
+      const ratio = res.inputSize > 0 ? ((res.outputSize / res.inputSize) * 100).toFixed(1) : "100.0";
+      box.innerHTML = [
+        "<div class=\"flex justify-between py-1 border-b border-zinc-900\"><span>Operation</span><span class=\"text-emerald-400\">" + modeLabel + "</span></div>",
+        "<div class=\"flex justify-between py-1 border-b border-zinc-900\"><span>Output Stream</span><span class=\"text-white\">" + res.fileName + "</span></div>",
+        "<div class=\"flex justify-between py-1 border-b border-zinc-900\"><span>Input → Output Size</span><span class=\"text-zinc-200\">" + formatBytes(res.inputSize) + " → " + formatBytes(res.outputSize) + " (" + ratio + "%)</span></div>",
+        "<div class=\"flex justify-between py-1 border-b border-zinc-900\"><span>IEEE 802.3 CRC32</span><span class=\"text-amber-400\">0x" + res.crc32Hex + "</span></div>",
+        "<div class=\"pt-2 flex justify-end\"><button type=\"button\" onclick=\"downloadLastXzBenchResult()\" class=\"px-3 py-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded cursor-pointer\">Download " + res.fileName + "</button></div>"
+      ].join("");
     }
     async function runXzBenchCompress() {
-      if (!xzBenchFile) return;
-      lastXzBenchRes = await compressToXzStream(xzBenchFile, xzBenchFile.name, 6);
-      showToast(`Compressed to ${lastXzBenchRes.fileName}`, 'success');
+      if (!xzBenchFile) { showToast("Select or load a partition file first.", "error"); return; }
+      const presetEl = document.getElementById("xz-bench-preset");
+      const lvl = presetEl ? (Number(presetEl.value) || 6) : 6;
+      lastXzBenchRes = await compressToXzStream(xzBenchFile, xzBenchFile.name, lvl);
+      renderXzBenchResult("LZMA2 Compress (Preset -" + lvl + ")", lastXzBenchRes);
+      showToast("Compressed to " + lastXzBenchRes.fileName + " (CRC32 0x" + lastXzBenchRes.crc32Hex + ")", "success");
     }
     async function runXzBenchDecompress() {
-      if (!xzBenchFile) return;
-      lastXzBenchRes = await decompressFromXzStream(xzBenchFile, xzBenchFile.name);
-      showToast(`Decompressed to ${lastXzBenchRes.fileName}`, 'success');
+      if (!xzBenchFile) { showToast("Select or load an .xz stream first.", "error"); return; }
+      try {
+        lastXzBenchRes = await decompressFromXzStream(xzBenchFile, xzBenchFile.name);
+        renderXzBenchResult("XZ Stream Decompress (.xz → .ext4)", lastXzBenchRes);
+        showToast("Decompressed to " + lastXzBenchRes.fileName + " (" + formatBytes(lastXzBenchRes.outputSize) + ")", "success");
+      } catch (err) {
+        showToast(err.message || "XZ decompression error", "error");
+      }
     }
-    async function probeLocalCBridge() { showToast('Embedded C-WASM active.', 'info'); }
-    async function copyCCompanionCode() { await navigator.clipboard.writeText(C_COMPANION_SOURCE_CODE); showToast('Copied C source.', 'success'); }
+    function downloadLastXzBenchResult() {
+      if (!lastXzBenchRes) return;
+      const url = URL.createObjectURL(lastXzBenchRes.blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = lastXzBenchRes.fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    let activeCCompanionTab = "c";
+    function switchCCompanionTab(tab) {
+      activeCCompanionTab = tab;
+      const btnC = document.getElementById("c-tab-src");
+      const btnMake = document.getElementById("c-tab-make");
+      const dlBtn = document.getElementById("c-download-btn");
+      if (btnC && btnMake) {
+        btnC.className = tab === "c" ? "px-3 py-1 text-xs font-mono font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-3 py-1 text-xs font-mono font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
+        btnMake.className = tab === "makefile" ? "px-3 py-1 text-xs font-mono font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-3 py-1 text-xs font-mono font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
+      }
+      if (dlBtn) {
+        dlBtn.textContent = tab === "c" ? "Download az01_xz_companion.c" : "Download Makefile";
+      }
+      const codeView = document.getElementById("c-companion-code-view");
+      if (codeView) {
+        codeView.textContent = tab === "c" ? C_COMPANION_SOURCE_CODE : C_COMPANION_MAKEFILE;
+      }
+    }
+    async function probeLocalCBridge() {
+      const urlInput = document.getElementById("xz-bridge-url");
+      const base = (urlInput && urlInput.value ? urlInput.value.trim() : "http://127.0.0.1:8765").replace(/\/+$/, "");
+      const badge = document.getElementById("xz-engine-status-badge");
+      try {
+        const res = await fetch(base + "/health", { method: "GET" });
+        if (res.ok) {
+          if (badge) badge.textContent = "Native C HTTP Daemon Connected";
+          showToast("Connected to local az01_xz_companion daemon at " + base, "success");
+          return;
+        }
+      } catch (e) {}
+      if (badge) badge.textContent = "Embedded C-WASM Active";
+      showToast("Embedded C-WASM Core active (native daemon at " + base + " not detected).", "info");
+    }
+    async function copyCCompanionCode() {
+      const code = activeCCompanionTab === "c" ? C_COMPANION_SOURCE_CODE : C_COMPANION_MAKEFILE;
+      await navigator.clipboard.writeText(code);
+      showToast("Copied " + (activeCCompanionTab === "c" ? "az01_xz_companion.c" : "Makefile") + " to clipboard.", "success");
+    }
     function downloadCCompanionCode() {
-      const blob = new Blob([C_COMPANION_SOURCE_CODE], { type: 'text/plain;charset=utf-8' });
+      const isC = activeCCompanionTab === "c";
+      const code = isC ? C_COMPANION_SOURCE_CODE : C_COMPANION_MAKEFILE;
+      const fname = isC ? "az01_xz_companion.c" : "Makefile";
+      const blob = new Blob([code], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'az01_xz_companion.c';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Downloaded " + fname, "success");
     }
 
     function selectHexByte(offset) { hexSelectedOffset = offset; renderHexView(); }
+    function findRegionForOffset(offset, regions) {
+      if (!regions) return null;
+      for (let i = 0; i < regions.length; i++) {
+        const r = regions[i];
+        if (offset >= r.start && offset < r.end) return r;
+      }
+      return null;
+    }
     function renderHexView() {
       if (!activeMetadata) return;
-      const winSize = Number(document.getElementById('hex-window-size').value) || 512;
+      const winEl = document.getElementById("hex-window-size");
+      const winSize = winEl ? (Number(winEl.value) || 512) : 512;
       const limit = Math.min(activeMetadata.headerBuffer.byteLength, winSize);
       const bytes = new Uint8Array(activeMetadata.headerBuffer, 0, limit);
-      let rowsHtml = '';
+      const regions = activeMetadata.regions || [];
+
+      const subEl = document.getElementById("hex-subtitle");
+      if (subEl) {
+        subEl.textContent = activeMetadata.fileName + " · PARTL @ 0x" + activeMetadata.detectedPartlOffset.toString(16).toUpperCase() + " · Payload @ 0x" + activeMetadata.payloadOffset.toString(16).toUpperCase();
+      }
+
+      const jumpBar = document.getElementById("hex-jump-bar");
+      if (jumpBar) {
+        jumpBar.innerHTML = regions.map(r => {
+          const st = REGION_STYLES[r.type] || REGION_STYLES.payload;
+          return "<button type=\"button\" onclick=\"selectHexByte(" + r.start + ")\" class=\"px-2.5 py-1 rounded border border-zinc-800 text-[11px] font-mono cursor-pointer transition-colors " + st.bg + " " + st.text + "\">" + r.label + " (0x" + r.start.toString(16).toUpperCase().padStart(2, "0") + ")</button>";
+        }).join("");
+      }
+
+      const selByte = bytes[Math.min(hexSelectedOffset, Math.max(0, bytes.length - 1))] || 0;
+      const selReg = findRegionForOffset(hexSelectedOffset, regions);
+      const telemetryBar = document.getElementById("hex-telemetry-bar");
+      if (telemetryBar) {
+        telemetryBar.innerHTML = [
+          "<div><span class=\"text-zinc-500\">OFFSET:</span> <strong class=\"text-white\">0x" + hexSelectedOffset.toString(16).toUpperCase().padStart(4, "0") + "</strong> (" + hexSelectedOffset + ")</div>",
+          "<div><span class=\"text-zinc-500\">HEX:</span> <strong class=\"text-amber-400\">0x" + selByte.toString(16).toUpperCase().padStart(2, "0") + "</strong></div>",
+          "<div><span class=\"text-zinc-500\">UINT8:</span> <strong class=\"text-zinc-200\">" + selByte + "</strong></div>",
+          "<div><span class=\"text-zinc-500\">BIN:</span> <strong class=\"text-zinc-400\">" + selByte.toString(2).padStart(8, "0") + "</strong></div>",
+          "<div class=\"sm:col-span-2 truncate\"><span class=\"text-zinc-500\">REGION:</span> " + (selReg ? ("<strong class=\"text-red-400\">" + selReg.label + "</strong> — <span class=\"text-zinc-300\">" + selReg.description + "</span>") : "<span class=\"text-zinc-400\">8-Byte Alignment / Padding</span>") + "</div>"
+        ].join("");
+      }
+
+      let rowsHtml = "";
       for (let rowStart = 0; rowStart < bytes.length; rowStart += 16) {
-        let hexCols = '', asciiCols = '';
+        let hexCols = "", asciiCols = "";
         for (let c = 0; c < 16; c++) {
           const off = rowStart + c;
-          if (off >= bytes.length) continue;
+          if (off >= bytes.length) {
+            hexCols += "<span class=\"w-6 text-center text-zinc-800\">··</span>";
+            asciiCols += "<span class=\"w-2.5 text-center text-zinc-800\"> </span>";
+            continue;
+          }
           const b = bytes[off];
-          hexCols += `<span class="w-6 text-center text-zinc-300">${b.toString(16).toUpperCase().padStart(2,'0')}</span>`;
-          asciiCols += `<span class="w-2.5 text-center text-zinc-500">${b >= 32 && b <= 126 ? String.fromCharCode(b).replace(/&/g,'&amp;').replace(/</g,'&lt;') : '·'}</span>`;
+          const reg = findRegionForOffset(off, regions);
+          const st = reg ? (REGION_STYLES[reg.type] || REGION_STYLES.payload) : null;
+          const isSel = off === hexSelectedOffset;
+          const cls = isSel
+            ? "bg-[#dc2626] text-white font-bold ring-1 ring-white"
+            : (st ? (st.bg + " " + st.text) : "text-zinc-300 hover:bg-zinc-800");
+          const ch = (b >= 32 && b <= 126) ? String.fromCharCode(b).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : "·";
+          hexCols += "<span onclick=\"selectHexByte(" + off + ")\" class=\"w-6 text-center rounded px-0.5 cursor-pointer select-none " + cls + "\">" + b.toString(16).toUpperCase().padStart(2, "0") + "</span>";
+          asciiCols += "<span onclick=\"selectHexByte(" + off + ")\" class=\"w-2.5 text-center cursor-pointer select-none " + (isSel ? "text-red-400 font-bold" : (st ? st.text : "text-zinc-500")) + "\">" + ch + "</span>";
         }
-        rowsHtml += `<div class="flex items-center gap-4 px-1.5"><span class="text-zinc-500 w-16 shrink-0">0x${rowStart.toString(16).toUpperCase().padStart(4,'0')}</span><div class="flex items-center gap-1 shrink-0">${hexCols}</div><div class="flex items-center shrink-0 pl-2 border-l border-zinc-800">${asciiCols}</div></div>`;
+        rowsHtml += "<div class=\"flex items-center gap-4 px-1.5 py-0.5 hover:bg-zinc-900/40 rounded\"><span class=\"text-zinc-500 w-16 shrink-0\">0x" + rowStart.toString(16).toUpperCase().padStart(4, "0") + "</span><div class=\"flex items-center gap-1 shrink-0\">" + hexCols + "</div><div class=\"flex items-center shrink-0 pl-2 border-l border-zinc-800\">" + asciiCols + "</div></div>";
       }
-      document.getElementById('hex-rows-container').innerHTML = rowsHtml;
+      document.getElementById("hex-rows-container").innerHTML = rowsHtml;
     }
 
     function selectMatrixTargetForBuilder(dt) {
-      builderTargets = [dt]; renderBuilderTargets(); updateBuilderGeometry(); switchTab('create');
+      builderTargets = [dt]; renderBuilderTargets(); updateBuilderGeometry(); switchTab("create");
     }
     function renderHardwareMatrix() {
       const activeSet = new Set((activeMetadata ? activeMetadata.targets : []).map(t => t.toLowerCase()));
-      document.getElementById('matrix-tbody').innerHTML = HARDWARE_TARGETS.map(dev => {
+      document.getElementById("matrix-tbody").innerHTML = HARDWARE_TARGETS.map(dev => {
         const isComp = activeSet.has(dev.dtCompatible.toLowerCase());
-        return `<tr class="hover:bg-zinc-900/50"><td class="py-3.5 px-4 font-semibold text-white">${dev.modelName}</td><td class="py-3.5 px-4 font-mono">${dev.codename}</td><td class="py-3.5 px-4 font-mono text-red-400">${dev.dtCompatible}</td><td class="py-3.5 px-4">${dev.soc}</td><td class="py-3.5 px-4 font-mono">${dev.ram}</td><td class="py-3.5 px-4 font-mono">${dev.boardIdHex}</td><td class="py-3.5 px-4">${isComp ? '<span class="text-emerald-400 font-mono">✓ Supported</span>' : '<span class="text-zinc-500 font-mono">✕ Excluded</span>'}</td><td class="py-3.5 px-4 text-right"><button type="button" onclick="selectMatrixTargetForBuilder('${dev.dtCompatible}')" class="px-2.5 py-1 bg-[#050508] hover:bg-[#dc2626] text-xs rounded border border-zinc-800 cursor-pointer">Target in Builder →</button></td></tr>`;
-      }).join('');
+        return "<tr class=\"hover:bg-zinc-900/50\"><td class=\"py-3.5 px-4 font-semibold text-white\">" + dev.modelName + "</td><td class=\"py-3.5 px-4 font-mono\">" + dev.codename + "</td><td class=\"py-3.5 px-4 font-mono text-red-400\">" + dev.dtCompatible + "</td><td class=\"py-3.5 px-4\">" + dev.soc + "</td><td class=\"py-3.5 px-4 font-mono\">" + dev.ram + "</td><td class=\"py-3.5 px-4 font-mono\">" + dev.boardIdHex + "</td><td class=\"py-3.5 px-4\">" + (isComp ? "<span class=\"text-emerald-400 font-mono\">✓ Supported</span>" : "<span class=\"text-zinc-500 font-mono\">✕ Excluded</span>") + "</td><td class=\"py-3.5 px-4 text-right\"><button type=\"button\" onclick=\"selectMatrixTargetForBuilder('" + dev.dtCompatible + "')\" class=\"px-2.5 py-1 bg-[#050508] hover:bg-[#dc2626] text-xs rounded border border-zinc-800 cursor-pointer\">Target in Builder →</button></td></tr>";
+      }).join("");
+    }
+
+    let activeCliLang = "python";
+    let generatedPythonScript = "";
+    let generatedBashScript = "";
+
+    function escapeForJsQuoted(str) {
+      return String(str || "")
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, "\\\"")
+        .replace(/\r/g, "\\r")
+        .replace(/\n/g, "\\n");
+    }
+
+    function buildEscapedPythonScript(m) {
+      const fileName = m.fileName || "MPC-3.4.1.62-Unified-update.img";
+      const version = m.version || "3.4.1.62-MPC-RELEASE";
+      const description = m.description || "upgrade image";
+      const partlOffset = (m.detectedPartlOffset !== undefined ? m.detectedPartlOffset : m.partlOffset) || 224;
+      const payloadOffset = m.payloadOffset || (partlOffset + 0x4C);
+      const payloadSize = m.payloadSize || 4096;
+      const partitionName = m.partitionName || "rootfs";
+      const compression = m.compression || "xz";
+      const expectedSha1 = m.expectedHash || m.expectedHashHex || "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+      const targetsJoined = (m.targets && m.targets.length ? m.targets : ["inmusic,acv5", "inmusic,acv8", "inmusic,acva", "inmusic,acva2", "inmusic,acvb", "inmusic,acvm", "inmusic,acvr", "inmusic,acv5s"]).join(",");
+      const partlHex = "0x" + partlOffset.toString(16).toUpperCase();
+      const payloadHex = "0x" + payloadOffset.toString(16).toUpperCase();
+
+      return [
+        "#!/usr/bin/env python3",
+        "# -*- coding: utf-8 -*-",
+        "\"\"\"",
+        "INMUSIC AZ01 CONTAINER SUITE — CLI Automation Utility",
+        "Generated by The KikGen Labs Firmware Toolkit",
+        "Active Profile: " + fileName + " (Version: " + version + ")",
+        "\"\"\"",
+        "",
+        "import hashlib",
+        "import os",
+        "import struct",
+        "import sys",
+        "",
+        "# Pre-populated parameters from active firmware session",
+        "DEFAULT_IMAGE = \"" + escapeForJsQuoted(fileName) + "\"",
+        "EXPECTED_PARTL_OFFSET = " + partlHex,
+        "EXPECTED_PAYLOAD_OFFSET = " + payloadHex,
+        "EXPECTED_PAYLOAD_SIZE = " + String(payloadSize),
+        "EXPECTED_SHA1 = \"" + escapeForJsQuoted(expectedSha1) + "\"",
+        "DEFAULT_TARGETS = \"" + escapeForJsQuoted(targetsJoined) + "\".split(\",\")",
+        "DEFAULT_VERSION = \"" + escapeForJsQuoted(version) + "\"",
+        "DEFAULT_DESC = \"" + escapeForJsQuoted(description) + "\"",
+        "DEFAULT_PART_NAME = \"" + escapeForJsQuoted(partitionName) + "\"",
+        "DEFAULT_COMPRESSION = \"" + escapeForJsQuoted(compression) + "\"",
+        "EOF_TRAILER = b\"EOF\\x10\\x00\\x00\\x00\"",
+        "",
+        "",
+        "def analyze_and_extract(img_path: str, extract_out: str = None) -> None:",
+        "    with open(img_path, \"rb\") as f:",
+        "        header = f.read(65536)",
+        "",
+        "    if header[:4] != b\"AZ01\":",
+        "        raise ValueError(f\"Invalid magic {header[:4]!r}; expected b'AZ01'\")",
+        "",
+        "    partl_offset = header.find(b\"PARTL\")",
+        "    if partl_offset < 0:",
+        "        raise ValueError(\"Could not locate PARTL descriptor in first 64 KB\")",
+        "",
+        "    payload_offset = partl_offset + 0x4C",
+        "    ver_raw = header[0x10:0x28].split(b\"\\x00\", 1)[0].decode(\"utf-8\", \"replace\")",
+        "    target_count = struct.unpack_from(\"<I\", header, 0x28)[0]",
+        "",
+        "    ptr = 0x2C",
+        "    targets = []",
+        "    for _ in range(target_count):",
+        "        t_len = struct.unpack_from(\"<I\", header, ptr)[0]",
+        "        ptr += 4",
+        "        t_str = header[ptr : ptr + t_len].split(b\"\\x00\", 1)[0].decode(\"utf-8\", \"replace\")",
+        "        targets.append(t_str)",
+        "        ptr += 16",
+        "",
+        "    payload_size = struct.unpack_from(\"<Q\", header, partl_offset + 0x08)[0]",
+        "    part_name = header[partl_offset + 0x14 : partl_offset + 0x20].split(b\"\\x00\", 1)[0].decode()",
+        "    comp_type = header[partl_offset + 0x20 : partl_offset + 0x2C].split(b\"\\x00\", 1)[0].decode()",
+        "    expected_sha1 = header[partl_offset + 0x38 : partl_offset + 0x4C].hex()",
+        "",
+        "    print(f\"[+] Container Magic : AZ01\")",
+        "    print(f\"[+] Firmware Version: {ver_raw}\")",
+        "    print(f\"[+] Targets ({target_count:2d})    : {', '.join(targets)}\")",
+        "    print(f\"[+] PARTL Offset    : 0x{partl_offset:04X}\")",
+        "    print(f\"[+] Payload Offset  : 0x{payload_offset:04X}\")",
+        "    print(f\"[+] Partition       : {part_name} ({comp_type}), {payload_size} bytes\")",
+        "    print(f\"[+] Expected SHA-1  : {expected_sha1}\")",
+        "",
+        "    sha1 = hashlib.sha1()",
+        "    out_file = open(extract_out, \"wb\") if extract_out else None",
+        "",
+        "    with open(img_path, \"rb\") as f:",
+        "        f.seek(payload_offset)",
+        "        remaining = payload_size",
+        "        while remaining > 0:",
+        "            chunk = f.read(min(1024 * 1024, remaining))",
+        "            if not chunk:",
+        "                break",
+        "            sha1.update(chunk)",
+        "            if out_file:",
+        "                out_file.write(chunk)",
+        "            remaining -= len(chunk)",
+        "",
+        "    if out_file:",
+        "        out_file.close()",
+        "        print(f\"[+] Extracted stream: {extract_out}\")",
+        "",
+        "    calc_sha1 = sha1.hexdigest()",
+        "    print(f\"[+] Calculated SHA-1: {calc_sha1}\")",
+        "    if calc_sha1.lower() == expected_sha1.lower():",
+        "        print(\"[✓] INTEGRITY VERIFIED: Checksum matches PARTL header.\")",
+        "    else:",
+        "        print(\"[!] INTEGRITY ERROR: Checksum mismatch!\")",
+        "        sys.exit(1)",
+        "",
+        "",
+        "def pack_az01_image(payload_path: str, output_path: str) -> None:",
+        "    payload_size = os.path.getsize(payload_path)",
+        "    sha1 = hashlib.sha1()",
+        "    with open(payload_path, \"rb\") as pf:",
+        "        while chunk := pf.read(1024 * 1024):",
+        "            sha1.update(chunk)",
+        "    digest_bytes = sha1.digest()",
+        "",
+        "    buf = bytearray(8192)",
+        "    buf[0:4] = b\"AZ01\"",
+        "    struct.pack_into(\"<I\", buf, 0x04, 1)",
+        "    ver_bytes = DEFAULT_VERSION.encode(\"utf-8\")[:24]",
+        "    struct.pack_into(\"<I\", buf, 0x0C, len(ver_bytes))",
+        "    buf[0x10 : 0x10 + len(ver_bytes)] = ver_bytes",
+        "",
+        "    struct.pack_into(\"<I\", buf, 0x28, len(DEFAULT_TARGETS))",
+        "    ptr = 0x2C",
+        "    for t in DEFAULT_TARGETS:",
+        "        tb = t.strip().encode(\"utf-8\")[:16]",
+        "        struct.pack_into(\"<I\", buf, ptr, len(tb))",
+        "        ptr += 4",
+        "        buf[ptr : ptr + len(tb)] = tb",
+        "        ptr += 16",
+        "",
+        "    struct.pack_into(\"<I\", buf, ptr, len(DEFAULT_TARGETS))",
+        "    ptr += 4",
+        "    for i in range(len(DEFAULT_TARGETS)):",
+        "        struct.pack_into(\"<I\", buf, ptr, 0x09E84000 + i)",
+        "        ptr += 4",
+        "",
+        "    desc_bytes = DEFAULT_DESC.encode(\"utf-8\")",
+        "    struct.pack_into(\"<I\", buf, ptr, len(desc_bytes))",
+        "    ptr += 4",
+        "    buf[ptr : ptr + len(desc_bytes)] = desc_bytes",
+        "    ptr += len(desc_bytes)",
+        "",
+        "    # 8-byte alignment",
+        "    partl_offset = (ptr + 7) & ~7",
+        "    struct.pack_into(\"<I\", buf, 0x08, partl_offset)",
+        "",
+        "    buf[partl_offset : partl_offset + 5] = b\"PARTL\"",
+        "    struct.pack_into(\"<Q\", buf, partl_offset + 0x08, payload_size)",
+        "    pname_b = DEFAULT_PART_NAME.encode(\"utf-8\")[:11]",
+        "    comp_b = DEFAULT_COMPRESSION.encode(\"utf-8\")[:11]",
+        "    buf[partl_offset + 0x14 : partl_offset + 0x14 + len(pname_b)] = pname_b",
+        "    buf[partl_offset + 0x20 : partl_offset + 0x20 + len(comp_b)] = comp_b",
+        "    buf[partl_offset + 0x2C : partl_offset + 0x30] = b\"sha1\"",
+        "    struct.pack_into(\"<I\", buf, partl_offset + 0x34, 20)",
+        "    buf[partl_offset + 0x38 : partl_offset + 0x4C] = digest_bytes",
+        "",
+        "    header_end = partl_offset + 0x4C",
+        "    with open(output_path, \"wb\") as out_f:",
+        "        out_f.write(buf[:header_end])",
+        "        with open(payload_path, \"rb\") as pf:",
+        "            while chunk := pf.read(1024 * 1024):",
+        "                out_f.write(chunk)",
+        "        out_f.write(EOF_TRAILER)",
+        "",
+        "    print(f\"[✓] Packed AZ01 container -> {output_path} (PARTL @ 0x{partl_offset:04X})\")",
+        "",
+        "",
+        "if __name__ == \"__main__\":",
+        "    if len(sys.argv) < 2:",
+        "        print(f\"Usage: {sys.argv[0]} <analyze|extract|pack> [args...]\")",
+        "        sys.exit(0)",
+        "    cmd = sys.argv[1]",
+        "    if cmd == \"analyze\":",
+        "        analyze_and_extract(sys.argv[2] if len(sys.argv) > 2 else DEFAULT_IMAGE)",
+        "    elif cmd == \"extract\":",
+        "        analyze_and_extract(",
+        "            sys.argv[2] if len(sys.argv) > 2 else DEFAULT_IMAGE,",
+        "            sys.argv[3] if len(sys.argv) > 3 else f\"{DEFAULT_PART_NAME}.{DEFAULT_COMPRESSION}\",",
+        "        )",
+        "    elif cmd == \"pack\":",
+        "        pack_az01_image(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else \"update_custom.img\")"
+      ].join("\n");
+    }
+
+    function buildEscapedBashScript(m) {
+      const fileName = m.fileName || "MPC-3.4.1.62-Unified-update.img";
+      const version = m.version || "3.4.1.62-MPC-RELEASE";
+      const partlOffset = (m.detectedPartlOffset !== undefined ? m.detectedPartlOffset : m.partlOffset) || 224;
+      const payloadOffset = m.payloadOffset || (partlOffset + 0x4C);
+      const payloadSize = m.payloadSize || 4096;
+      const partitionName = m.partitionName || "rootfs";
+      const compression = m.compression || "xz";
+      const expectedSha1 = m.expectedHash || m.expectedHashHex || "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+      const outExt = compression === "none" ? "bin" : compression;
+      const partlHex = "0x" + partlOffset.toString(16).toUpperCase();
+      const payloadHex = "0x" + payloadOffset.toString(16).toUpperCase();
+
+      return [
+        "#!/usr/bin/env bash",
+        "# ==============================================================================",
+        "# INMUSIC AZ01 CONTAINER SUITE — Bash Direct Slicer & Checksum Verifier",
+        "# Generated by The KikGen Labs Firmware Toolkit",
+        "# Active Image : " + fileName,
+        "# Version      : " + version,
+        "# ==============================================================================",
+        "set -euo pipefail",
+        "",
+        "IMAGE_FILE=\"${1:-" + escapeForJsQuoted(fileName) + "}\"",
+        "OUT_PAYLOAD=\"${2:-" + escapeForJsQuoted(partitionName) + "." + escapeForJsQuoted(outExt) + "}\"",
+        "",
+        "PARTL_OFFSET=" + String(partlOffset) + "        # " + partlHex,
+        "PAYLOAD_OFFSET=" + String(payloadOffset) + "    # " + payloadHex,
+        "PAYLOAD_SIZE=" + String(payloadSize),
+        "EXPECTED_SHA1=\"" + escapeForJsQuoted(expectedSha1) + "\"",
+        "",
+        "echo \"=== inMusic AZ01 Fast Shell Unpacker ===\"",
+        "echo \"Input Image    : ${IMAGE_FILE}\"",
+        "echo \"PARTL Offset   : ${PARTL_OFFSET} (" + partlHex + ")\"",
+        "echo \"Payload Offset : ${PAYLOAD_OFFSET} (" + payloadHex + ")\"",
+        "echo \"Payload Length : ${PAYLOAD_SIZE} bytes\"",
+        "",
+        "# Verify AZ01 magic bytes",
+        "MAGIC=$(dd if=\"${IMAGE_FILE}\" bs=1 count=4 status=none | tr -d '\\0')",
+        "if [[ \"${MAGIC}\" != \"AZ01\" ]]; then",
+        "  echo \"[!] Error: Invalid container magic '${MAGIC}' (expected AZ01)\" >&2",
+        "  exit 1",
+        "fi",
+        "",
+        "# Extract exact payload stream using dd (skip header bytes, read exact byte count)",
+        "echo \"[*] Slicing " + escapeForJsQuoted(partitionName) + " payload stream to ${OUT_PAYLOAD}...\"",
+        "dd if=\"${IMAGE_FILE}\" of=\"${OUT_PAYLOAD}\" iflag=skip_bytes,count_bytes \\",
+        "   bs=64K skip=\"${PAYLOAD_OFFSET}\" count=\"${PAYLOAD_SIZE}\" status=progress",
+        "",
+        "echo \"[*] Computing SHA-1 digest...\"",
+        "CALC_SHA1=$(sha1sum \"${OUT_PAYLOAD}\" | awk '{print $1}')",
+        "echo \"Expected SHA-1 : ${EXPECTED_SHA1}\"",
+        "echo \"Actual SHA-1   : ${CALC_SHA1}\"",
+        "",
+        "if [[ \"${CALC_SHA1,,}\" == \"${EXPECTED_SHA1,,}\" ]]; then",
+        "  echo \"[✓] PAYLOAD VERIFIED INTACT.\"",
+        "else",
+        "  echo \"[!] CHECKSUM MISMATCH DETECTED!\" >&2",
+        "  exit 2",
+        "fi",
+        "",
+        "# Decompress .xz and loop-mount Ext4 rootfs partition on Linux",
+        "echo \"[*] To decompress and mount the Ext4 rootfs partition on Linux:\"",
+        "echo \"    xz -dc \\\"${OUT_PAYLOAD}\\\" > \\\"" + escapeForJsQuoted(partitionName) + ".ext4\\\"\"",
+        "echo \"    sudo mkdir -p /mnt/akai_rootfs && sudo mount -t ext4 -o loop,ro \\\"" + escapeForJsQuoted(partitionName) + ".ext4\\\" /mnt/akai_rootfs\""
+      ].join("\n");
     }
 
     function renderCliScripts() {
-      const m = activeMetadata || { fileName: 'update.img', payloadOffset: 300, payloadSize: 4096, partitionName: 'rootfs', compression: 'xz' };
-      const cmd = `dd if="${m.fileName}" of="${m.partitionName}.${m.compression}" iflag=skip_bytes,count_bytes bs=64K skip=${m.payloadOffset} count=${m.payloadSize}`;
-      document.getElementById('cli-dd-oneliner').textContent = cmd;
-      document.getElementById('cli-code-block').textContent = cmd;
+      const m = activeMetadata || {
+        fileName: "MPC-3.4.1.62-Unified-update.img",
+        version: "3.4.1.62-MPC-RELEASE",
+        description: "upgrade image",
+        detectedPartlOffset: 224,
+        payloadOffset: 300,
+        payloadSize: 4096,
+        partitionName: "rootfs",
+        compression: "xz",
+        expectedHash: "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        targets: ["inmusic,acv5", "inmusic,acv8", "inmusic,acva", "inmusic,acva2", "inmusic,acvb", "inmusic,acvm", "inmusic,acvr", "inmusic,acv5s"]
+      };
+      const partlOff = (m.detectedPartlOffset !== undefined ? m.detectedPartlOffset : m.partlOffset) || 224;
+      const payloadOff = m.payloadOffset || (partlOff + 0x4C);
+      const outExt = m.compression === "none" ? "bin" : (m.compression || "xz");
+      const cmd = "dd if=\"" + m.fileName + "\" of=\"" + m.partitionName + "." + outExt + "\" iflag=skip_bytes,count_bytes bs=64K skip=" + payloadOff + " count=" + m.payloadSize;
+
+      const ddEl = document.getElementById("cli-dd-oneliner");
+      if (ddEl) ddEl.textContent = cmd;
+
+      const subEl = document.getElementById("cli-header-subtitle");
+      if (subEl) {
+        subEl.innerHTML = "Pre-configured Python 3 and Bash scripts synchronized with your active firmware offsets (PARTL @ <span class=\"font-mono text-zinc-200\">0x" + partlOff.toString(16).toUpperCase() + "</span>, Payload @ <span class=\"font-mono text-zinc-200\">0x" + payloadOff.toString(16).toUpperCase() + "</span>).";
+      }
+
+      generatedPythonScript = buildEscapedPythonScript(m);
+      generatedBashScript = buildEscapedBashScript(m);
+
+      const bannerEl = document.getElementById("cli-file-banner");
+      if (bannerEl) {
+        bannerEl.textContent = activeCliLang === "python"
+          ? "az01_tool.py — Full Unpack, Verify & 8-Byte Aligned Container Builder"
+          : "az01_unpack.sh — POSIX dd Zero-RAM Stream Extractor";
+      }
+
+      const dlBtn = document.getElementById("cli-download-btn");
+      if (dlBtn) {
+        dlBtn.textContent = activeCliLang === "python" ? "Download .py" : "Download .sh";
+      }
+
+      const codeBlockEl = document.getElementById("cli-code-block");
+      if (codeBlockEl) {
+        codeBlockEl.textContent = activeCliLang === "python" ? generatedPythonScript : generatedBashScript;
+      }
     }
+
+    function switchCliLang(lang) {
+      activeCliLang = lang;
+      const btnPy = document.getElementById("cli-btn-python");
+      const btnSh = document.getElementById("cli-btn-bash");
+      if (btnPy && btnSh) {
+        btnPy.className = lang === "python" ? "px-3 py-1.5 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-3 py-1.5 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
+        btnSh.className = lang === "bash" ? "px-3 py-1.5 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-3 py-1.5 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
+      }
+      renderCliScripts();
+    }
+
+    async function copyActiveCliScript() {
+      if (!generatedPythonScript) renderCliScripts();
+      const code = activeCliLang === "python" ? generatedPythonScript : generatedBashScript;
+      await navigator.clipboard.writeText(code);
+      showToast("Copied " + (activeCliLang === "python" ? "az01_tool.py" : "az01_unpack.sh") + " to clipboard.", "success");
+    }
+
+    function downloadActiveCliScript() {
+      if (!generatedPythonScript) renderCliScripts();
+      const isPy = activeCliLang === "python";
+      const code = isPy ? generatedPythonScript : generatedBashScript;
+      const fname = isPy ? "az01_tool.py" : "az01_unpack.sh";
+      const blob = new Blob([code], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Downloaded " + fname, "success");
+    }
+
     function handleFileInputAnalyze(e) { const f = e.target.files && e.target.files[0]; if (f) analyzeFirmwareFile(f, false); }
 
-    window.addEventListener('DOMContentLoaded', async () => {
+    window.addEventListener("DOMContentLoaded", async () => {
       await initWasmXz();
-      document.getElementById('c-companion-code-view').textContent = C_COMPANION_SOURCE_CODE;
+      switchCCompanionTab("c");
       buildDefaultRootfsTree();
+      renderCliScripts();
       await useSyntheticBuilderPayload();
       renderBuilderTargets();
       updateBuilderGeometry();
-      await loadDemoPreset('mpc', true);
+      await loadDemoPreset("mpc", true);
     });
   </script>
 </body>
 </html>
-
