@@ -71,8 +71,8 @@
       </nav>
 
       <div class="flex items-center shrink-0">
-        <button type="button" onclick="loadDemoPreset('mpc', false)" class="px-4 py-2 text-xs font-semibold text-white bg-[#dc2626] hover:bg-[#b91c1c] rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
-          Load Sample Image
+        <button type="button" onclick="switchTab('analyze'); document.getElementById('file-input-analyze').click();" class="px-4 py-2 text-xs font-semibold text-white bg-[#dc2626] hover:bg-[#b91c1c] rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+          Open Firmware (.img)
         </button>
       </div>
     </div>
@@ -103,34 +103,39 @@
 
     <!-- ==================== TAB 1: ANALYZE VIEW ==================== -->
     <section id="view-analyze" class="space-y-6">
-      <div id="dropzone-analyze" class="bg-[#121217] border border-zinc-800 rounded-lg p-6 transition-colors">
+      <div id="dropzone-analyze" class="bg-[#121217] border border-zinc-800 rounded-lg p-6 transition-colors space-y-4">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div class="space-y-1.5">
-            <h2 class="text-base font-semibold text-white">Memory-Safe AZ01 & PARTL Firmware Image Analyzer</h2>
+            <h2 class="text-base font-semibold text-white">Memory-Safe AZ01 &amp; PARTL Firmware Image Analyzer</h2>
             <p class="text-xs text-zinc-400 max-w-2xl">
-              Slices only the first 64 KB header and 7-byte EOF trailer without loading multi-gigabyte images into RAM. Drop an official or custom <span class="font-mono text-zinc-300">.img</span> / <span class="font-mono text-zinc-300">.bin</span> container or load a reference sample below.
+              Slices only the first 64 KB header via <span class="font-mono text-zinc-300">FileReader.readAsArrayBuffer(file.slice(0, 65536))</span> without loading multi-gigabyte images into RAM. Select or drag-and-drop an official or custom <span class="font-mono text-zinc-300">.img</span> / <span class="font-mono text-zinc-300">.bin</span> firmware update container below.
             </p>
           </div>
-          <div class="flex flex-wrap items-center gap-3 shrink-0">
-            <input type="file" id="file-input-analyze" accept=".img,.bin,*" class="hidden" onchange="handleFileInputAnalyze(event)" />
-            <button type="button" onclick="document.getElementById('file-input-analyze').click()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
-              Select Firmware File (.img / .bin)
-            </button>
-            <button type="button" onclick="loadDemoPreset('mpc', false)" class="px-3.5 py-2.5 bg-[#050508] hover:bg-zinc-900 text-zinc-200 border border-zinc-800 hover:border-zinc-700 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
-              Sample: MPC Unified (8 Targets)
-            </button>
-            <button type="button" onclick="loadDemoPreset('force', false)" class="px-3.5 py-2.5 bg-[#050508] hover:bg-zinc-900 text-zinc-200 border border-zinc-800 hover:border-zinc-700 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
-              Sample: Akai Force (ADA2)
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <input type="file" id="file-input-analyze" accept=".img,.bin,.ext4,*" onchange="handleFileInputAnalyze(event)" class="block text-xs text-zinc-300 bg-[#050508] border border-zinc-700 rounded-md px-2.5 py-1.5 cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-[#dc2626] file:text-white hover:file:bg-[#b91c1c] file:cursor-pointer" />
+            <button type="button" id="btn-force-analyze" onclick="triggerForceAnalyze()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Analyze
             </button>
           </div>
         </div>
+        <div id="analyze-error-banner" class="hidden bg-red-950/30 border border-red-700/60 rounded-md p-4 text-xs text-red-200 font-mono"></div>
+      </div>
+
+      <div id="analyze-empty-state" class="bg-[#121217] border border-zinc-800 rounded-lg p-12 text-center space-y-3">
+        <div class="w-12 h-12 mx-auto rounded-lg bg-[#050508] border border-zinc-800 flex items-center justify-center text-[#dc2626] font-mono font-bold">
+          AZ01
+        </div>
+        <h3 class="text-base font-semibold text-white">No Firmware Image Loaded</h3>
+        <p class="text-xs text-zinc-400 max-w-lg mx-auto leading-relaxed">
+          Select an official or custom inMusic / Akai <span class="font-mono text-zinc-300">.img</span> / <span class="font-mono text-zinc-300">.bin</span> firmware container above to inspect AZ01 &amp; PARTL headers, verify SHA-1/SHA-256 digests, and extract the compressed partition stream.
+        </p>
       </div>
 
       <div id="analyze-populated" class="space-y-6 hidden">
         <div class="bg-[#121217] border border-zinc-800 rounded-lg p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div class="flex flex-wrap items-center gap-3">
             <button type="button" onclick="runVerifyIntegrity()" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
-              Verify Integrity (SHA-1 & SHA-256)
+              Verify Integrity (SHA-1 &amp; SHA-256)
             </button>
             <button type="button" onclick="extractActivePayload()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer">
               <span id="extract-btn-label">Extract Compressed Payload</span>
@@ -200,7 +205,7 @@
           <div class="bg-[#121217] border border-zinc-800 rounded-lg p-6 flex flex-col justify-between space-y-5">
             <div class="space-y-4">
               <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
-                <h3 class="text-sm font-semibold text-white">02. PARTL Partition & Cryptographic Digest</h3>
+                <h3 class="text-sm font-semibold text-white">02. PARTL Partition &amp; Cryptographic Digest</h3>
                 <span id="meta-partl-range" class="font-mono text-xs text-zinc-400"></span>
               </div>
               <div class="bg-[#050508] border border-zinc-800/90 rounded-md p-4 space-y-3 text-xs">
@@ -241,42 +246,75 @@
 
     <!-- ==================== TAB 2: EXT4 ROOTFS EXPLORER ==================== -->
     <section id="view-rootfs" class="space-y-6 hidden">
-      <div class="bg-[#121217] border border-zinc-800 rounded-lg p-6 space-y-4">
+      <div id="dropzone-rootfs" class="bg-[#121217] border border-zinc-800 rounded-lg p-6 space-y-4">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div class="space-y-1">
-            <h2 class="text-base font-semibold text-white">Ext4 RootFS Pseudo-Mount & Interactive Filesystem Explorer</h2>
+            <h2 class="text-base font-semibold text-white">Ext4 RootFS Pseudo-Mount &amp; Interactive Filesystem Explorer</h2>
             <p class="text-xs text-zinc-400 max-w-3xl">
-              Parses and pseudo-mounts <span class="font-mono text-zinc-200">Linux Ext4</span> (<span class="font-mono text-amber-400">s_magic = 0xEF53</span> at offset <span class="font-mono text-zinc-300">0x438</span>) and <span class="font-mono text-zinc-200">.ext4.xz</span> firmware partitions directly in-browser. Walks the Ext4 Group Descriptor Table, 256-byte Inode Table, <span class="font-mono text-zinc-300">0xF30A</span> Extent Trees, and <span class="font-mono text-zinc-300">ext4_dir_entry_2</span> directory blocks.
+              Requires an <span class="text-white font-semibold">XZ-deflated raw Linux Ext4 partition</span> (<span class="font-mono text-amber-400">s_magic = 0xEF53</span> at offset <span class="font-mono text-zinc-300">0x438</span>). You cannot navigate inside an Ext4 filesystem while the partition is still XZ-compressed (<span class="font-mono text-zinc-300">rootfs.xz</span>) — deflate it first, then load the resulting <span class="font-mono text-emerald-400">rootfs.ext4</span> / <span class="font-mono text-emerald-400">rootfs.img</span> here.
             </p>
           </div>
-          <div class="flex flex-wrap items-center gap-3 shrink-0">
-            <button type="button" onclick="remountActiveFirmwareRootfs()" class="px-3.5 py-2 bg-[#050508] hover:bg-zinc-900 text-zinc-200 border border-zinc-800 rounded-md text-xs font-medium cursor-pointer">
-              Re-Mount Firmware Ext4 Payload
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <input type="file" id="rootfs-file-input" accept=".ext4,.img,.bin,*" onchange="handleLocalRootfsMount(event)" class="block text-xs text-zinc-300 bg-[#050508] border border-zinc-700 rounded-md px-2.5 py-1.5 cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-[#dc2626] file:text-white hover:file:bg-[#b91c1c] file:cursor-pointer" />
+            <button type="button" onclick="triggerForceRootfsMount()" class="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white rounded-md text-xs font-semibold cursor-pointer">
+              Mount Ext4
             </button>
-            <input type="file" id="rootfs-file-input" accept=".ext4,.img,.xz,.tar,.bin,*" class="hidden" onchange="handleLocalRootfsMount(event)" />
-            <button type="button" onclick="document.getElementById('rootfs-file-input').click()" class="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 rounded-md text-xs font-medium cursor-pointer">
-              Mount Local Ext4 (.ext4 / .img / .xz)
-            </button>
-            <button type="button" onclick="extractAllRootfsNodes()" class="px-4 py-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white rounded-md text-xs font-semibold cursor-pointer">
-              Extract Full Ext4 RootFS to Local Dir
+            <button type="button" id="rfs-mount-active-btn" onclick="remountActiveFirmwareRootfs()" class="hidden px-3.5 py-2 bg-[#050508] hover:bg-zinc-900 text-emerald-400 border border-emerald-500/40 rounded-md text-xs font-semibold cursor-pointer">
+              Mount Uncompressed Analyzer Payload
             </button>
           </div>
         </div>
-        <div id="rootfs-superblock-strip" class="pt-3 border-t border-zinc-800/80 space-y-2 text-xs font-mono text-zinc-400"></div>
+        <div id="rootfs-xz-warning" class="hidden bg-amber-950/25 border border-amber-500/40 rounded-md p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+          <div class="space-y-1 text-zinc-300">
+            <div class="font-semibold text-amber-300">Active Firmware Payload is Still XZ-Compressed (Magic 0xFD377A585A00)</div>
+            <div>You cannot navigate Ext4 inodes or directories while the partition is compressed. Deflate <span id="rootfs-xz-filename" class="font-mono text-white">rootfs.xz</span> using <span class="font-mono text-emerald-400">xz -d</span> or the C XZ Companion, then load the deflated <span class="font-mono text-emerald-400">.ext4</span> image above.</div>
+          </div>
+          <button type="button" onclick="switchTab('xz')" class="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-500/40 rounded text-xs font-semibold whitespace-nowrap shrink-0 cursor-pointer">
+            Open XZ Companion →
+          </button>
+        </div>
+        <div id="rootfs-error-banner" class="hidden bg-red-950/30 border border-red-700/60 rounded-md p-4 text-xs text-red-200 space-y-1">
+          <div class="font-semibold text-white">Ext4 Mount Rejected</div>
+          <div id="rootfs-error-text" class="font-mono leading-relaxed"></div>
+        </div>
+        <div id="rootfs-superblock-strip" class="hidden pt-3 border-t border-zinc-800/80 space-y-2 text-xs font-mono text-zinc-400"></div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div id="rootfs-empty-state" class="bg-[#121217] border border-zinc-800 rounded-lg p-12 text-center space-y-4">
+        <div class="w-12 h-12 mx-auto rounded-lg bg-[#050508] border border-zinc-800 flex items-center justify-center text-[#dc2626] font-mono font-bold">
+          EXT4
+        </div>
+        <div class="space-y-1.5 max-w-xl mx-auto">
+          <h3 class="text-base font-semibold text-white">No Deflated Ext4 Partition Mounted</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Load an <span class="text-zinc-200 font-semibold">XZ-deflated</span> <span class="font-mono text-emerald-400">.ext4</span> or <span class="font-mono text-emerald-400">.img</span> rootfs partition (<span class="font-mono text-amber-400">s_magic == 0xEF53</span> at offset <span class="font-mono text-zinc-300">0x438</span>) to walk real Ext4 inodes, <span class="font-mono text-zinc-300">0xF30A</span> extent trees, and directory entries using memory-safe <span class="font-mono text-zinc-300">Blob.slice()</span> random access.
+          </p>
+        </div>
+        <div class="pt-1">
+          <button type="button" onclick="document.getElementById('rootfs-file-input').click()" class="px-5 py-2.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white rounded-md text-xs font-semibold cursor-pointer">
+            Select Deflated .ext4 / .img File
+          </button>
+        </div>
+        <div class="max-w-xl mx-auto bg-[#050508] border border-zinc-800 rounded-md p-3.5 text-left font-mono text-[11px] text-zinc-400 space-y-1">
+          <div class="text-zinc-500"># How to deflate an extracted AZ01 rootfs.xz partition before mounting:</div>
+          <div class="text-emerald-400">$ ./az01_xz_companion -d rootfs.xz rootfs.ext4</div>
+          <div class="text-zinc-500"># Or using standard xz utils on Linux / macOS / WSL:</div>
+          <div class="text-emerald-400">$ xz -dc rootfs.xz &gt; rootfs.ext4</div>
+        </div>
+      </div>
+
+      <div id="rootfs-explorer-grid" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <!-- Left 5 Cols: Tree List -->
         <div class="lg:col-span-5 bg-[#121217] border border-zinc-800 rounded-lg overflow-hidden">
           <div class="p-4 border-b border-zinc-800 space-y-3">
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center bg-[#050508] border border-zinc-800 rounded-md p-0.5">
-                <button type="button" id="rfs-mode-all" onclick="setRootfsTreeMode('all_files')" class="px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer">Full Tree View</button>
-                <button type="button" id="rfs-mode-folder" onclick="setRootfsTreeMode('folder')" class="px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer">Folder Browser</button>
+                <button type="button" id="rfs-mode-folder" onclick="setRootfsTreeMode('folder')" class="px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer">Folder Browser</button>
+                <button type="button" id="rfs-mode-all" onclick="setRootfsTreeMode('all_files')" class="px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer">Loaded Tree</button>
               </div>
-              <input type="text" id="rfs-search" oninput="renderRootfsExplorer()" placeholder="Filter path (e.g. MPC, sshd, .dtb)..." class="bg-[#050508] border border-zinc-800 rounded-md px-3 py-1 text-xs font-mono text-white w-48" />
+              <input type="text" id="rfs-search" oninput="renderRootfsExplorer()" placeholder="Filter loaded nodes..." class="bg-[#050508] border border-zinc-800 rounded-md px-3 py-1 text-xs font-mono text-white w-48" />
             </div>
-            <div id="rfs-breadcrumb-bar" class="hidden flex items-center justify-between gap-2 bg-[#050508] border border-zinc-800/80 rounded px-2.5 py-1.5 text-xs font-mono"></div>
+            <div id="rfs-breadcrumb-bar" class="flex items-center justify-between gap-2 bg-[#050508] border border-zinc-800/80 rounded px-2.5 py-1.5 text-xs font-mono"></div>
           </div>
           <div id="rfs-node-list" class="divide-y divide-zinc-800/70 max-h-[560px] overflow-y-auto"></div>
         </div>
@@ -285,7 +323,7 @@
         <div class="lg:col-span-7 bg-[#121217] border border-zinc-800 rounded-lg overflow-hidden">
           <div class="p-4 border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="min-w-0">
-              <div id="rfs-selected-path" class="font-mono text-sm font-bold text-white truncate">/etc/init.d/S90mpc-standalone</div>
+              <div id="rfs-selected-path" class="font-mono text-sm font-bold text-white truncate">Select a file from the Ext4 directory tree</div>
               <div id="rfs-selected-meta" class="text-xs font-mono text-zinc-400 mt-0.5"></div>
             </div>
             <div class="flex flex-wrap items-center gap-2 shrink-0">
@@ -308,7 +346,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <div class="lg:col-span-7 bg-[#121217] border border-zinc-800 rounded-lg p-6 space-y-6">
           <div class="border-b border-zinc-800 pb-3">
-            <h2 class="text-base font-semibold text-white">AZ01 & PARTL Firmware Container Builder</h2>
+            <h2 class="text-base font-semibold text-white">AZ01 &amp; PARTL Firmware Container Builder</h2>
             <p class="text-xs text-zinc-400 mt-0.5">
               Packs custom rootfs, kernel, or resource streams with 8-byte boundary alignment and official <span class="font-mono text-zinc-300">EOF\x10\x00\x00\x00</span> trailer.
             </p>
@@ -354,20 +392,17 @@
 
           <div class="space-y-3 pt-2 border-t border-zinc-800/80">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <label class="text-xs font-medium text-zinc-300">Partition Payload Stream (.xz, .gz, .squashfs, .img)</label>
+              <label class="text-xs font-medium text-zinc-300">Partition Payload Stream (.xz, .gz, .ext4, .img)</label>
               <div class="flex flex-wrap items-center gap-2">
                 <button type="button" onclick="compressBuilderPayloadToXz()" class="text-xs text-emerald-400 hover:text-white bg-[#050508] border border-zinc-800 hover:border-emerald-500 px-2.5 py-1 rounded transition-colors cursor-pointer">
                   Compress Payload to .XZ (C Companion)
-                </button>
-                <button type="button" onclick="useSyntheticBuilderPayload()" class="text-xs text-zinc-300 hover:text-white bg-[#050508] border border-zinc-800 px-2.5 py-1 rounded transition-colors cursor-pointer">
-                  Generate Sample Payload
                 </button>
               </div>
             </div>
             <div class="bg-[#050508] border border-zinc-800 rounded-md p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div class="min-w-0">
-                <div id="build-payload-name" class="text-xs font-mono font-semibold text-emerald-400 truncate"></div>
-                <div id="build-payload-size" class="text-xs text-zinc-400 font-mono mt-0.5"></div>
+                <div id="build-payload-name" class="text-xs font-mono font-semibold text-zinc-400 truncate">No payload file selected</div>
+                <div id="build-payload-size" class="text-xs text-zinc-500 font-mono mt-0.5">Select a local .xz or .ext4 partition stream</div>
               </div>
               <input type="file" id="build-payload-input" class="hidden" onchange="handleBuilderPayloadSelect(event)" />
               <button type="button" onclick="document.getElementById('build-payload-input').click()" class="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 cursor-pointer">
@@ -1161,386 +1196,708 @@
       return { blob: new Blob([out], { type: 'application/octet-stream' }), fileName: outName, inputSize: xzBytes.length, outputSize: out.length, crc32Hex: crc.toString(16).toUpperCase().padStart(8,'0') };
     }
 
-    // Ext4 RootFS Pseudo-Mount Builder & Binary Superblock/Inode/Extent Parser
+    // =========================================================================
+    // Memory-Safe Random-Access Ext4 RootFS Pseudo-Mount & Explorer (Blob.slice)
+    // Starts completely empty. Requires an XZ-deflated .ext4 image (0xEF53).
+    // =========================================================================
+    let mountedExt4 = null; // { blob, gdtBytes, sb }
     let rootfsNodes = [];
     let rootfsSelectedNode = null;
-    let rootfsViewMode = 'text';
-    let rootfsTreeMode = 'all_files';
-    let rootfsCurrentDir = '/';
-    let rootfsSuperblockMeta = {
-      label: 'akai-mpc-rootfs',
-      uuid: 'a4c13288-0001-4a5a-9031-696e6d757369',
-      blockSize: 4096,
-      inodeSize: 256,
-      totalBlocks: 64,
-      freeBlocks: 16,
-      features: 'EXTENTS | FILETYPE | HAS_JOURNAL | DIR_INDEX'
-    };
+    let rootfsViewMode = "text";
+    let rootfsTreeMode = "folder";
+    let rootfsCurrentDir = "/";
+    let rootfsExpandedDirs = new Set();
 
-    function buildArmElf(symText, isKo = false) {
-      const sym = new TextEncoder().encode(symText);
-      const buf = new Uint8Array(Math.max(256, 128 + sym.length));
-      const dv = new DataView(buf.buffer);
-      buf.set([0x7F, 0x45, 0x4C, 0x46, 0x01, 0x01, 0x01, 0x00], 0);
-      dv.setUint16(16, isKo ? 1 : 2, true);
-      dv.setUint16(18, 0x28, true);
-      dv.setUint32(20, 1, true);
-      dv.setUint32(24, 0x000104BC, true);
-      buf.set([0xF0, 0x4F, 0x2D, 0xE9, 0x24, 0xD0, 0x4D, 0xE2], 64);
-      buf.set(sym, 96);
-      return buf;
+    async function readBlobSlice(blob, offset, length) {
+      if (!blob || offset < 0 || offset >= blob.size || length <= 0) return new Uint8Array(0);
+      const safeStart = Math.max(0, Math.min(offset, blob.size));
+      const safeEnd = Math.max(safeStart, Math.min(blob.size, safeStart + length));
+      if (safeEnd <= safeStart) return new Uint8Array(0);
+      const slice = blob.slice(safeStart, safeEnd);
+      return await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve(reader.result instanceof ArrayBuffer ? new Uint8Array(reader.result) : new Uint8Array(0));
+        };
+        reader.onerror = async () => {
+          if (typeof slice.arrayBuffer === "function") {
+            try {
+              const ab = await slice.arrayBuffer();
+              resolve(new Uint8Array(ab));
+              return;
+            } catch (_) {}
+          }
+          resolve(new Uint8Array(0));
+        };
+        reader.readAsArrayBuffer(slice);
+      });
     }
 
-    function buildDefaultRootfsTree() {
-      const enc = s => new TextEncoder().encode(s);
-      const dirs = [
-        { p: '/', ino: 2 },
-        { p: '/lost+found', ino: 11 },
-        { p: '/bin', ino: 12 },
-        { p: '/boot', ino: 13 },
-        { p: '/etc', ino: 14 },
-        { p: '/etc/init.d', ino: 15 },
-        { p: '/etc/ssh', ino: 16 },
-        { p: '/lib', ino: 17 },
-        { p: '/lib/modules', ino: 18 },
-        { p: '/usr', ino: 20 },
-        { p: '/usr/bin', ino: 21 },
-        { p: '/usr/share/Akai/MPC', ino: 24 }
-      ];
-      const list = dirs.map((d, idx) => {
-        const parts = d.p.split('/').filter(Boolean);
-        return {
-          inodeNumber: d.ino,
-          path: d.p,
-          name: parts.length ? parts[parts.length - 1] : '/',
-          parentPath: parts.length <= 1 ? (d.p === '/' ? '' : '/') : '/' + parts.slice(0, -1).join('/'),
-          type: 'dir', modeStr: d.p === '/lost+found' ? 'drwx------' : 'drwxr-xr-x', size: 4096, isBinary: false,
-          fileSignature: 'Ext4 Directory Inode (dir_entry_2)', extentInfo: `Extent 0xF30A → blk ${10 + idx}`, data: new Uint8Array(0)
-        };
+    async function isBlobXzStream(blob) {
+      if (!blob || blob.size < 6) return false;
+      const hdr = await readBlobSlice(blob, 0, 6);
+      return hdr.byteLength >= 6 && hdr[0] === 0xFD && hdr[1] === 0x37 && hdr[2] === 0x7A && hdr[3] === 0x58 && hdr[4] === 0x5A && hdr[5] === 0x00;
+    }
+
+    async function hasExt4MagicAt(blob, partitionOffset) {
+      if (!blob || partitionOffset < 0 || partitionOffset + 0x43A > blob.size) return false;
+      const magicBytes = await readBlobSlice(blob, partitionOffset + 0x438, 2);
+      if (magicBytes.byteLength < 2) return false;
+      return (magicBytes[0] | (magicBytes[1] << 8)) === 0xEF53;
+    }
+
+    async function findExt4OffsetInBlob(blob) {
+      if (!blob || blob.size < 2048) return -1;
+      // 1. Direct Ext4 partition at offset 0
+      if (await hasExt4MagicAt(blob, 0)) return 0;
+
+      const head = await readBlobSlice(blob, 0, Math.min(blob.size, 65536));
+      if (head.byteLength >= 64) {
+        // 2. Check if AZ01 container with an uncompressed Ext4 payload inside PARTL
+        if (head[0] === 0x41 && head[1] === 0x5A && head[2] === 0x30 && head[3] === 0x31) {
+          for (let i = 0; i + 5 < head.byteLength; i++) {
+            if (head[i] === 0x50 && head[i+1] === 0x41 && head[i+2] === 0x52 && head[i+3] === 0x54 && head[i+4] === 0x4C) {
+              const payloadOff = i + 0x4C;
+              if (await hasExt4MagicAt(blob, payloadOff)) return payloadOff;
+              break;
+            }
+          }
+        }
+
+        // 3. Check MBR partition table (0x1FE == 0x55AA)
+        if (head.byteLength >= 512 && head[0x1FE] === 0x55 && head[0x1FF] === 0xAA) {
+          const dv = new DataView(head.buffer, head.byteOffset, head.byteLength);
+          for (let p = 0; p < 4; p++) {
+            const entryOff = 0x1BE + p * 16;
+            const lbaStart = dv.getUint32(entryOff + 8, true);
+            if (lbaStart > 0) {
+              const partOff = lbaStart * 512;
+              if (await hasExt4MagicAt(blob, partOff)) return partOff;
+            }
+          }
+        }
+
+        // 4. Check GPT partition table ("EFI PART" at 0x200)
+        if (
+          head.byteLength >= 4096 &&
+          head[0x200] === 0x45 && head[0x201] === 0x46 && head[0x202] === 0x49 && head[0x203] === 0x20 &&
+          head[0x204] === 0x50 && head[0x205] === 0x41 && head[0x206] === 0x52 && head[0x207] === 0x54
+        ) {
+          const dv = new DataView(head.buffer, head.byteOffset, head.byteLength);
+          const partEntryLba = dv.getUint32(0x248, true);
+          const numEntries = Math.min(dv.getUint32(0x250, true), 64);
+          const entrySize = dv.getUint32(0x254, true) || 128;
+          const entriesOffset = partEntryLba * 512;
+          for (let idx = 0; idx < numEntries; idx++) {
+            const eOff = entriesOffset + idx * entrySize;
+            if (eOff + 48 > head.byteLength) break;
+            const firstLbaLo = dv.getUint32(eOff + 32, true);
+            const firstLbaHi = dv.getUint32(eOff + 36, true);
+            const firstLba = firstLbaHi * 4294967296 + firstLbaLo;
+            if (firstLba > 0) {
+              const partOff = firstLba * 512;
+              if (await hasExt4MagicAt(blob, partOff)) return partOff;
+            }
+          }
+        }
+      }
+      return -1;
+    }
+
+    function formatExt4Mode(mode, fileType) {
+      const prefix = (fileType === 2 || (mode & 0xF000) === 0x4000) ? "d" : (fileType === 7 || (mode & 0xF000) === 0xA000) ? "l" : "-";
+      const chars = ["r", "w", "x", "r", "w", "x", "r", "w", "x"];
+      let out = prefix;
+      for (let i = 0; i < 9; i++) {
+        out += (mode & (1 << (8 - i))) ? chars[i] : "-";
+      }
+      return out;
+    }
+
+    function detectExt4BinaryAndSig(bytes, fileType, mode) {
+      if (fileType === 2 || (mode & 0xF000) === 0x4000) return { isBinary: false, sig: "Ext4 Directory Inode (dir_entry_2)" };
+      if (fileType === 7 || (mode & 0xF000) === 0xA000) return { isBinary: false, sig: "Ext4 Symbolic Link" };
+      if (bytes.length >= 4 && bytes[0] === 0x7F && bytes[1] === 0x45 && bytes[2] === 0x4C && bytes[3] === 0x46) {
+        return { isBinary: true, sig: "ELF 32/64-bit LSB Binary (ARM/Linux)" };
+      }
+      if (bytes.length >= 4 && bytes[0] === 0xD0 && bytes[1] === 0x0D && bytes[2] === 0xFE && bytes[3] === 0xED) {
+        return { isBinary: true, sig: "Flattened Device Tree Blob (DTB)" };
+      }
+      let nonPrint = 0;
+      const checkLen = Math.min(bytes.length, 512);
+      for (let i = 0; i < checkLen; i++) {
+        const b = bytes[i];
+        if (b === 0) return { isBinary: true, sig: "Binary Data Stream" };
+        if (b < 9 || (b > 13 && b < 32)) nonPrint++;
+      }
+      if (checkLen > 0 && nonPrint / checkLen > 0.15) return { isBinary: true, sig: "Binary Data Stream" };
+      return { isBinary: false, sig: "UTF-8 / ASCII Text File" };
+    }
+
+    function getExt4InodeDiskOffset(ext4, ino) {
+      if (ino < 1) return -1;
+      const sb = ext4.sb;
+      const bg = Math.floor((ino - 1) / sb.inodesPerGroup);
+      const idx = (ino - 1) % sb.inodesPerGroup;
+      const gdOff = bg * sb.descSize;
+      if (gdOff + 12 > ext4.gdtBytes.byteLength) return -1;
+      const dv = new DataView(ext4.gdtBytes.buffer, ext4.gdtBytes.byteOffset, ext4.gdtBytes.byteLength);
+      let itBlk = dv.getUint32(gdOff + 0x08, true);
+      if (sb.is64Bit && sb.descSize >= 64 && gdOff + 0x2C <= ext4.gdtBytes.byteLength) {
+        const hi = dv.getUint32(gdOff + 0x28, true);
+        if (hi > 0) itBlk += hi * 4294967296;
+      }
+      const off = itBlk * sb.blockSize + idx * sb.inodeSize;
+      return (off >= 0 && off + 128 <= ext4.blob.size) ? off : -1;
+    }
+
+    async function readCachedInodeStruct(ext4, ino) {
+      const off = getExt4InodeDiskOffset(ext4, ino);
+      if (off < 0) return null;
+      const CHUNK_SIZE = 65536;
+      const chunkIndex = Math.floor(off / CHUNK_SIZE);
+      const chunkStart = chunkIndex * CHUNK_SIZE;
+      const relOff = off - chunkStart;
+      if (relOff + 128 <= CHUNK_SIZE) {
+        if (!ext4.inodeChunkCache) ext4.inodeChunkCache = new Map();
+        let chunk = ext4.inodeChunkCache.get(chunkIndex);
+        if (!chunk) {
+          if (ext4.inodeChunkCache.size > 64) ext4.inodeChunkCache.clear();
+          chunk = await readBlobSlice(ext4.blob, chunkStart, CHUNK_SIZE);
+          ext4.inodeChunkCache.set(chunkIndex, chunk);
+        }
+        if (relOff + 128 <= chunk.byteLength) {
+          return chunk.subarray(relOff, relOff + Math.min(ext4.sb.inodeSize, chunk.byteLength - relOff));
+        }
+      }
+      const raw = await readBlobSlice(ext4.blob, off, ext4.sb.inodeSize);
+      return raw.byteLength >= 128 ? raw : null;
+    }
+
+    async function collectExt4ExtentRuns(ext4, hdrBytes, depthGuard, runsOut) {
+      if (depthGuard > 5 || hdrBytes.byteLength < 12) return;
+      const dv = new DataView(hdrBytes.buffer, hdrBytes.byteOffset, hdrBytes.byteLength);
+      if (dv.getUint16(0, true) !== 0xF30A) return;
+      const entries = dv.getUint16(2, true);
+      const depth = dv.getUint16(6, true);
+      const maxEntries = Math.min(entries, Math.floor((hdrBytes.byteLength - 12) / 12));
+      if (depth === 0) {
+        for (let i = 0; i < maxEntries; i++) {
+          const pos = 12 + i * 12;
+          const lblock = dv.getUint32(pos, true);
+          const rawLen = dv.getUint16(pos + 4, true);
+          const uninit = rawLen > 32768;
+          const len = uninit ? (rawLen - 32768) : rawLen;
+          const startHi = dv.getUint16(pos + 6, true);
+          const startLo = dv.getUint32(pos + 8, true);
+          const pblock = startHi * 4294967296 + startLo;
+          if (len > 0 && pblock > 0) runsOut.push({ lblock, len, pblock, uninit });
+        }
+      } else {
+        for (let i = 0; i < maxEntries; i++) {
+          const pos = 12 + i * 12;
+          const leafLo = dv.getUint32(pos + 4, true);
+          const leafHi = dv.getUint16(pos + 8, true);
+          const childBlk = leafHi * 4294967296 + leafLo;
+          if (childBlk > 0) {
+            const childBytes = await readBlobSlice(ext4.blob, childBlk * ext4.sb.blockSize, ext4.sb.blockSize);
+            await collectExt4ExtentRuns(ext4, childBytes, depthGuard + 1, runsOut);
+          }
+        }
+      }
+    }
+
+    async function readExt4InodeData(ext4, ino, maxBytes) {
+      const inodeBytes = await readCachedInodeStruct(ext4, ino);
+      if (!inodeBytes || inodeBytes.byteLength < 128) return { data: new Uint8Array(0), mode: 0, size: 0, flags: 0, extentInfo: "Invalid Inode" };
+      const dv = new DataView(inodeBytes.buffer, inodeBytes.byteOffset, inodeBytes.byteLength);
+      const mode = dv.getUint16(0x00, true);
+      const sizeLo = dv.getUint32(0x04, true);
+      const sizeHi = (mode & 0xF000) === 0x8000 ? dv.getUint32(0x6C, true) : 0;
+      const size = sizeHi * 4294967296 + sizeLo;
+      const flags = dv.getUint32(0x20, true);
+      const isDir = (mode & 0xF000) === 0x4000;
+      const effectiveSize = (isDir && size === 0) ? ext4.sb.blockSize : size;
+      const targetLen = Math.min(effectiveSize, maxBytes);
+      const iBlock = inodeBytes.subarray(0x28, 0x28 + 60);
+
+      // Fast symlink stored inline in i_block
+      if ((mode & 0xF000) === 0xA000 && size < 60 && dv.getUint16(0x28, true) !== 0xF30A) {
+        return { data: new Uint8Array(iBlock.subarray(0, targetLen)), mode, size, flags, extentInfo: "Inline Fast Symlink" };
+      }
+
+      const out = new Uint8Array(targetLen);
+      const ibDv = new DataView(iBlock.buffer, iBlock.byteOffset, iBlock.byteLength);
+      const usesExtents = (flags & 0x80000) !== 0 || ibDv.getUint16(0, true) === 0xF30A;
+
+      if (usesExtents && ibDv.getUint16(0, true) === 0xF30A) {
+        const runs = [];
+        await collectExt4ExtentRuns(ext4, iBlock, 0, runs);
+        runs.sort((a, b) => a.lblock - b.lblock);
+        for (const r of runs) {
+          const byteStart = r.lblock * ext4.sb.blockSize;
+          if (byteStart >= targetLen) break;
+          const byteLen = Math.min(r.len * ext4.sb.blockSize, targetLen - byteStart);
+          if (!r.uninit && byteLen > 0) {
+            const chunk = await readBlobSlice(ext4.blob, r.pblock * ext4.sb.blockSize, byteLen);
+            out.set(chunk.subarray(0, Math.min(chunk.byteLength, targetLen - byteStart)), byteStart);
+          }
+        }
+        const firstBlk = runs.length > 0 ? runs[0].pblock : 0;
+        return { data: out, mode, size: effectiveSize, flags, extentInfo: "Extent 0xF30A → blk " + firstBlk + " (" + runs.length + " extent" + (runs.length === 1 ? "" : "s") + ")" };
+      }
+
+      // Direct blocks fallback
+      let written = 0, firstDirect = 0;
+      for (let i = 0; i < 12 && written < targetLen; i++) {
+        const blk = ibDv.getUint32(i * 4, true);
+        if (blk === 0) { written += ext4.sb.blockSize; continue; }
+        if (!firstDirect) firstDirect = blk;
+        const toRead = Math.min(ext4.sb.blockSize, targetLen - written);
+        const chunk = await readBlobSlice(ext4.blob, blk * ext4.sb.blockSize, toRead);
+        out.set(chunk.subarray(0, Math.min(chunk.byteLength, toRead)), written);
+        written += toRead;
+      }
+      return { data: out, mode, size: effectiveSize, flags, extentInfo: "Direct Blocks → blk " + firstDirect };
+    }
+
+    async function readExt4Directory(ext4, dirIno, dirPath) {
+      const dRes = await readExt4InodeData(ext4, dirIno, 256 * 1024);
+      const dBytes = dRes.data;
+      const entries = [];
+      const dec = new TextDecoder("utf-8", { fatal: false });
+      const seen = new Set();
+      let ptr = 0;
+      while (ptr + 8 <= dBytes.byteLength) {
+        const eIno = (dBytes[ptr] | (dBytes[ptr+1]<<8) | (dBytes[ptr+2]<<16) | (dBytes[ptr+3]<<24)) >>> 0;
+        const recLen = dBytes[ptr+4] | (dBytes[ptr+5]<<8);
+        const nameLen = dBytes[ptr+6];
+        const fType = dBytes[ptr+7];
+        if (recLen < 8 || ptr + recLen > dBytes.byteLength) break;
+        if (eIno > 0 && nameLen > 0 && ptr + 8 + nameLen <= dBytes.byteLength) {
+          const name = dec.decode(dBytes.subarray(ptr + 8, ptr + 8 + nameLen)).replace(/\0/g, "");
+          if (name && name !== "." && name !== ".." && !seen.has(name)) {
+            seen.add(name);
+            const cPath = dirPath === "/" ? ("/" + name) : (dirPath + "/" + name);
+            let cMode = fType === 2 ? 0x41ED : fType === 7 ? 0xA1FF : 0x81A4;
+            let cSize = fType === 2 ? ext4.sb.blockSize : 0;
+            let firstBlk = 0;
+
+            const ib = await readCachedInodeStruct(ext4, eIno);
+            if (ib && ib.byteLength >= 64) {
+              const dv = new DataView(ib.buffer, ib.byteOffset, ib.byteLength);
+              cMode = dv.getUint16(0, true) || cMode;
+              const sizeLo = dv.getUint32(4, true);
+              const sizeHi = ((cMode & 0xF000) === 0x8000 && ib.byteLength >= 0x70) ? dv.getUint32(0x6C, true) : 0;
+              cSize = sizeHi * 4294967296 + sizeLo;
+              if (dv.getUint16(0x28, true) === 0xF30A && dv.getUint16(0x28 + 2, true) > 0) {
+                firstBlk = dv.getUint32(0x28 + 12 + 8, true);
+              } else {
+                firstBlk = dv.getUint32(0x28, true);
+              }
+            }
+
+            const isDir = fType === 2 || (cMode & 0xF000) === 0x4000;
+            const isSym = fType === 7 || (cMode & 0xF000) === 0xA000;
+            const nodeType = isDir ? "dir" : isSym ? "symlink" : "file";
+            entries.push({
+              inodeNumber: eIno,
+              path: cPath,
+              name,
+              parentPath: dirPath,
+              type: nodeType,
+              modeStr: formatExt4Mode(cMode, fType),
+              size: cSize,
+              isBinary: false,
+              fileSignature: isDir ? "Ext4 Directory Inode (dir_entry_2)" : isSym ? "Ext4 Symbolic Link" : "Ext4 Regular File Inode",
+              extentInfo: firstBlk > 0 ? ("Extent 0xF30A → blk " + firstBlk) : "Inode Metadata",
+              data: new Uint8Array(0),
+              contentLoaded: false
+            });
+            if (entries.length >= 500) break;
+          }
+        }
+        ptr += recLen;
+      }
+      entries.sort((a, b) => {
+        if (a.type === "dir" && b.type !== "dir") return -1;
+        if (a.type !== "dir" && b.type === "dir") return 1;
+        return a.name.localeCompare(b.name);
       });
+      return entries;
+    }
 
-      const files = [
-        { ino: 25, blk: 30, path: "/etc/os-release", modeStr: "-rw-r--r--", isBinary: false, sig: "UTF-8 Configuration", data: enc("NAME=\"inMusic Embedded Linux\"\nVERSION=\"3.4.1.62 (Kirkstone-RT)\"\nPRETTY_NAME=\"inMusic Standalone OS 3.4.1.62\"\nROOTFS_TYPE=\"ext4\"\nTARGET_ARCH=\"armv7l-neon\"\n") },
-        { ino: 26, blk: 31, path: "/etc/fstab", modeStr: "-rw-r--r--", isBinary: false, sig: "UTF-8 Configuration", data: enc("# /etc/fstab: static file system information for inMusic standalone hardware\n/dev/root            /                    ext4       ro,noatime,errors=remount-ro 0  1\ntmpfs                /var/volatile        tmpfs      defaults,size=128M           0  0\n/dev/mmcblk0p6       /media/az01-settings ext4       rw,noatime,data=ordered      0  2\n/dev/mmcblk0p7       /media/az01-internal ext4       rw,noatime,data=ordered      0  2\n") },
-        { ino: 27, blk: 32, path: "/etc/init.d/S90mpc-standalone", modeStr: "-rwxr-xr-x", isBinary: false, sig: "POSIX Shell / Init Script", data: enc("#!/bin/sh\nexport HOME=/root\nexport QT_QPA_PLATFORM=eglfs\necho \"[inMusic] Verifying Ext4 rootfs mount state...\"\nmount | grep \"on / type ext4\"\necho \"[inMusic] Launching /usr/bin/MPC with SCHED_FIFO RT priority 85...\"\nchrt -f 85 /usr/bin/MPC --standalone &\n") },
-        { ino: 28, blk: 33, path: "/etc/ssh/sshd_config", modeStr: "-rw-------", isBinary: false, sig: "UTF-8 Configuration", data: enc("Port 22\nProtocol 2\nPermitRootLogin yes\nPasswordAuthentication yes\nSubsystem sftp /usr/libexec/sftp-server\n") },
-        { ino: 30, blk: 35, path: "/usr/bin/MPC", modeStr: "-rwxr-xr-x", isBinary: true, sig: "ELF 32-bit LSB Executable (ARM EABI5)", data: buildArmElf("ld-linux-armhf.so.3\x00Akai::Standalone::AudioEngine::initialize()\x00inmusic,acva2\x00Ext4 RootFS Partition\x00Version 3.4.1.62\x00") },
-        { ino: 31, blk: 36, path: "/usr/bin/az01-updater", modeStr: "-rwxr-xr-x", isBinary: true, sig: "ELF 32-bit LSB Executable (ARM EABI5)", data: buildArmElf("AZ01\x00PARTL\x00EOF\x10\x00ext4\x00e2fsck\x00inMusic::FirmwareUpdater::flashExt4RootfsPartition()\x00") },
-        { ino: 32, blk: 37, path: "/bin/busybox", modeStr: "-rwxr-xr-x", isBinary: true, sig: "ELF 32-bit LSB Executable (ARM EABI5)", data: buildArmElf("BusyBox v1.36.1 multi-call binary\x00sh\x00mount\x00fsck.ext4\x00dd\x00sha1sum\x00xz\x00") },
-        { ino: 33, blk: 38, path: "/lib/modules/snd-soc-inmusic-tdm.ko", modeStr: "-rw-r--r--", isBinary: true, sig: "ELF 32-bit LSB Kernel Module (ARMv7 .ko)", data: buildArmElf("vermagic=4.4.167-rt190 SMP preempt ARMv7\x00description=inMusic TDM codec driver\x00", true) },
-        { ino: 34, blk: 39, path: "/usr/share/Akai/MPC/hardware_manifest.json", modeStr: "-rw-r--r--", isBinary: false, sig: "JSON Configuration", data: enc("{\n  \"application\": \"MPC\",\n  \"rootfsFilesystem\": \"ext4\",\n  \"blockSize\": 4096,\n  \"inodeSize\": 256,\n  \"soc\": \"Rockchip RK3288\",\n  \"sampleRates\": [44100, 48000, 96000]\n}\n") }
-      ];
+    async function pseudoMountExt4Blob(rawBlob, sourceName) {
+      if (!rawBlob || rawBlob.size < 2048) {
+        throw new Error("File is too small (< 2 KB) to contain a valid Linux Ext4 superblock at offset 0x400.");
+      }
+      const head = await readBlobSlice(rawBlob, 0, 16);
+      if (head.byteLength >= 6 && head[0] === 0xFD && head[1] === 0x37 && head[2] === 0x7A && head[3] === 0x58 && head[4] === 0x5A && head[5] === 0x00) {
+        throw new Error("\"" + sourceName + "\" is still XZ-compressed (magic 0xFD377A585A00). You cannot navigate inside an Ext4 filesystem while it is compressed — deflate it to .ext4 first.");
+      }
 
-      files.forEach(f => {
-        const parts = f.path.split('/').filter(Boolean);
-        list.push({
-          inodeNumber: f.ino,
-          path: f.path,
-          name: parts[parts.length - 1],
-          parentPath: parts.length <= 1 ? '/' : '/' + parts.slice(0, -1).join('/'),
-          type: 'file', modeStr: f.modeStr, size: f.data.byteLength, isBinary: f.isBinary,
-          fileSignature: f.sig, extentInfo: `Extent 0xF30A → blk ${f.blk} (1 blk)`, data: f.data
-        });
-      });
+      const ext4Offset = await findExt4OffsetInBlob(rawBlob);
+      if (ext4Offset < 0) {
+        if (head.byteLength >= 4 && head[0] === 0x41 && head[1] === 0x5A && head[2] === 0x30 && head[3] === 0x31) {
+          throw new Error("\"" + sourceName + "\" is an AZ01 firmware container whose payload is still XZ-compressed. Extract and XZ-deflate its rootfs partition to .ext4 first.");
+        }
+        const checkBytes = await readBlobSlice(rawBlob, 0x438, 2);
+        const foundMagic = checkBytes.byteLength >= 2 ? (checkBytes[0] | (checkBytes[1] << 8)) : 0;
+        throw new Error("\"" + sourceName + "\" is not a valid uncompressed Linux Ext4 partition (expected Superblock magic 0xEF53 at offset 0x438, found 0x" + foundMagic.toString(16).toUpperCase().padStart(4, "0") + "). Make sure the partition is XZ-deflated.");
+      }
 
-      rootfsNodes = list;
-      rootfsSelectedNode = list.find(n => n.path === '/etc/fstab') || list[list.length - 1];
-      rootfsViewMode = rootfsSelectedNode.isBinary ? 'hex' : 'text';
+      const blob = ext4Offset > 0 ? rawBlob.slice(ext4Offset) : rawBlob;
+      const sbBytes = await readBlobSlice(blob, 0x400, 1024);
+      const sbDv = new DataView(sbBytes.buffer, sbBytes.byteOffset, sbBytes.byteLength);
+      const magic = sbDv.getUint16(0x38, true);
+      if (magic !== 0xEF53) {
+        throw new Error("\"" + sourceName + "\" is not a valid uncompressed Linux Ext4 partition (expected Superblock magic 0xEF53 at offset 0x438).");
+      }
+
+      const inodesCount = sbDv.getUint32(0x00, true);
+      const totalBlocks = sbDv.getUint32(0x04, true);
+      const freeBlocks = sbDv.getUint32(0x0C, true);
+      const logBlk = sbDv.getUint32(0x18, true);
+      const blockSize = 1024 << Math.min(logBlk, 6);
+      const blocksPerGroup = sbDv.getUint32(0x20, true) || (blockSize * 8);
+      const inodesPerGroup = sbDv.getUint32(0x28, true) || 8192;
+      const revLevel = sbDv.getUint32(0x4C, true);
+      const inodeSize = revLevel >= 1 ? (sbDv.getUint16(0x58, true) || 256) : 128;
+      const featIncompat = sbDv.getUint32(0x60, true);
+      const is64Bit = (featIncompat & 0x80) !== 0;
+      const rawDescSize = sbDv.getUint16(0xFE, true);
+      const descSize = (is64Bit && rawDescSize >= 64) ? rawDescSize : 32;
+
+      const u = Array.from(sbBytes.subarray(0x68, 0x78)).map(b => b.toString(16).padStart(2, "0")).join("");
+      const uuid = u.slice(0,8) + "-" + u.slice(8,12) + "-" + u.slice(12,16) + "-" + u.slice(16,20) + "-" + u.slice(20,32);
+      const labelRaw = sbBytes.subarray(0x78, 0x88);
+      const zIdx = labelRaw.indexOf(0);
+      const label = new TextDecoder().decode(zIdx === -1 ? labelRaw : labelRaw.subarray(0, zIdx)).trim() || "akai-ext4-rootfs";
+
+      const gdtOffset = blockSize === 1024 ? 2048 : blockSize;
+      const numGroups = Math.max(1, Math.ceil(totalBlocks / blocksPerGroup), Math.ceil(inodesCount / inodesPerGroup));
+      const gdtBytes = await readBlobSlice(blob, gdtOffset, Math.min(Math.max(numGroups * descSize, 4096), 65536));
+
+      const ext4 = {
+        blob,
+        gdtBytes,
+        inodeChunkCache: new Map(),
+        sb: {
+          sourceName,
+          label,
+          uuid,
+          blockSize,
+          inodeSize,
+          inodesCount,
+          totalBlocks,
+          freeBlocks,
+          blocksPerGroup,
+          inodesPerGroup,
+          descSize,
+          is64Bit,
+          features: "EXTENTS (0xF30A) | FILETYPE | HAS_JOURNAL" + (is64Bit ? " | 64BIT" : "")
+        }
+      };
+
+      const nodes = [{
+        inodeNumber: 2,
+        path: "/",
+        name: "/",
+        parentPath: "",
+        type: "dir",
+        modeStr: "drwxr-xr-x",
+        size: blockSize,
+        isBinary: false,
+        fileSignature: "Ext4 Root Directory Inode (#2)",
+        extentInfo: "Root Inode #2",
+        data: new Uint8Array(0),
+        contentLoaded: true
+      }];
+
+      // Only mount Root Inode #2 (/) initially so multi-GB Ext4 images mount in < 5ms.
+      // Subdirectories are expanded on-demand when clicked.
+      const rootEntries = await readExt4Directory(ext4, 2, "/");
+      nodes.push(...rootEntries);
+      rootfsExpandedDirs = new Set(["/"]);
+
+      mountedExt4 = ext4;
+      rootfsNodes = nodes;
+      rootfsCurrentDir = "/";
+      const errBanner = document.getElementById("rootfs-error-banner");
+      if (errBanner) errBanner.classList.add("hidden");
+
+      try {
+        sessionStorage.setItem("az01_standalone_rootfs_v1", JSON.stringify({
+          sb: ext4.sb,
+          nodes: nodes.slice(0, 300).map(n => ({
+            inodeNumber: n.inodeNumber,
+            path: n.path,
+            name: n.name,
+            parentPath: n.parentPath,
+            type: n.type,
+            modeStr: n.modeStr,
+            size: n.size,
+            isBinary: n.isBinary,
+            fileSignature: n.fileSignature,
+            extentInfo: n.extentInfo,
+            contentLoaded: false
+          }))
+        }));
+      } catch (_) {}
+
+      rootfsSelectedNode = null;
       renderRootfsExplorer();
+    }
+
+    function updateRootfsXzWarningBanner() {
+      const warnEl = document.getElementById("rootfs-xz-warning");
+      const mountActiveBtn = document.getElementById("rfs-mount-active-btn");
+      if (!warnEl || !mountActiveBtn) return;
+      if (!activeMetadata || !activeMetadata.payloadBlob) {
+        warnEl.classList.add("hidden");
+        mountActiveBtn.classList.add("hidden");
+        return;
+      }
+      isBlobXzStream(activeMetadata.payloadBlob).then(isXz => {
+        if (isXz) {
+          warnEl.classList.remove("hidden");
+          mountActiveBtn.classList.add("hidden");
+          const fnEl = document.getElementById("rootfs-xz-filename");
+          if (fnEl) fnEl.textContent = (activeMetadata.partitionName || "rootfs") + "." + (activeMetadata.compression || "xz");
+        } else {
+          warnEl.classList.add("hidden");
+          mountActiveBtn.classList.remove("hidden");
+        }
+      });
     }
 
     function setRootfsTreeMode(mode) {
       rootfsTreeMode = mode;
-      document.getElementById('rfs-mode-all').className = mode === 'all_files' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
-      document.getElementById('rfs-mode-folder').className = mode === 'folder' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
-      document.getElementById('rfs-breadcrumb-bar').classList.toggle('hidden', mode !== 'folder');
+      document.getElementById("rfs-mode-all").className = mode === "all_files" ? "px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
+      document.getElementById("rfs-mode-folder").className = mode === "folder" ? "px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
+      document.getElementById("rfs-breadcrumb-bar").classList.toggle("hidden", mode !== "folder");
       renderRootfsExplorer();
     }
 
     function setRootfsViewMode(mode) {
       rootfsViewMode = mode;
-      document.getElementById('rfs-view-text').className = mode === 'text' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
-      document.getElementById('rfs-view-hex').className = mode === 'hex' ? 'px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer' : 'px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer';
+      document.getElementById("rfs-view-text").className = mode === "text" ? "px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
+      document.getElementById("rfs-view-hex").className = mode === "hex" ? "px-2.5 py-1 text-xs font-medium rounded bg-[#dc2626] text-white cursor-pointer" : "px-2.5 py-1 text-xs font-medium rounded text-zinc-400 hover:text-white cursor-pointer";
       renderRootfsInspector();
     }
 
-    function selectRootfsNodeByPath(path) {
+    async function navigateRootfsDir(dirPath) {
+      if (!mountedExt4) return;
+      const dirNode = rootfsNodes.find(n => n.path === dirPath && n.type === "dir");
+      if (dirNode && !rootfsExpandedDirs.has(dirPath)) {
+        const children = await readExt4Directory(mountedExt4, dirNode.inodeNumber, dirNode.path);
+        const existingPaths = new Set(rootfsNodes.map(n => n.path));
+        for (const c of children) {
+          if (!existingPaths.has(c.path)) rootfsNodes.push(c);
+        }
+        rootfsExpandedDirs.add(dirPath);
+      }
+      rootfsCurrentDir = dirPath;
+      setRootfsTreeMode("folder");
+    }
+
+    async function selectRootfsNodeByPath(path) {
+      if (!mountedExt4) return;
       const node = rootfsNodes.find(n => n.path === path);
       if (!node) return;
-      if (node.type === 'dir') {
-        rootfsCurrentDir = node.path;
-        setRootfsTreeMode('folder');
+      if (node.type === "dir") {
+        await navigateRootfsDir(node.path);
         return;
       }
+      if (!node.contentLoaded) {
+        if (!mountedExt4.blob || mountedExt4.blob.size === 0) {
+          showToast("Please re-select the .ext4 image file to read file contents.", "info");
+          return;
+        }
+        const res = await readExt4InodeData(mountedExt4, node.inodeNumber, 64 * 1024);
+        const sigInfo = detectExt4BinaryAndSig(res.data, node.type === "symlink" ? 7 : 1, res.mode);
+        node.data = res.data;
+        node.isBinary = sigInfo.isBinary;
+        node.fileSignature = sigInfo.sig;
+        node.extentInfo = res.extentInfo;
+        node.contentLoaded = true;
+      }
       rootfsSelectedNode = node;
-      setRootfsViewMode(node.isBinary ? 'hex' : 'text');
+      setRootfsViewMode(node.isBinary ? "hex" : "text");
       renderRootfsExplorer();
     }
 
     function renderRootfsExplorer() {
-      document.getElementById('rootfs-superblock-strip').innerHTML = `
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div><span class="text-emerald-400 font-semibold">MOUNTED: /mnt/az01_rootfs (ext4, ro)</span> · <span class="text-white">Linux Ext4 Filesystem (label "${rootfsSuperblockMeta.label}")</span> · <span class="text-amber-400">Superblock 0xEF53 (offset 0x438)</span></div>
-          <div><span>Block Size: ${formatBytes(rootfsSuperblockMeta.blockSize)}</span> · <span>Inode Size: ${rootfsSuperblockMeta.inodeSize} B</span> · <span class="text-zinc-200">${rootfsNodes.length} Active Entries</span></div>
-        </div>
-        <div class="bg-[#050508] border border-zinc-800/90 rounded px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-          <div>UUID: <strong class="text-zinc-200">${rootfsSuperblockMeta.uuid}</strong> · Root Inode: <strong class="text-emerald-400">#2 (/)</strong></div>
-          <div>EXT4 FEATURES: <span class="text-amber-400">${rootfsSuperblockMeta.features}</span></div>
-        </div>
-      `;
+      updateRootfsXzWarningBanner();
+      const emptyEl = document.getElementById("rootfs-empty-state");
+      const gridEl = document.getElementById("rootfs-explorer-grid");
+      const stripEl = document.getElementById("rootfs-superblock-strip");
 
-      const q = (document.getElementById('rfs-search').value || '').toLowerCase();
+      if (!mountedExt4) {
+        if (emptyEl) emptyEl.classList.remove("hidden");
+        if (gridEl) gridEl.classList.add("hidden");
+        if (stripEl) stripEl.classList.add("hidden");
+        return;
+      }
+
+      if (emptyEl) emptyEl.classList.add("hidden");
+      if (gridEl) gridEl.classList.remove("hidden");
+      if (stripEl) {
+        stripEl.classList.remove("hidden");
+        const sb = mountedExt4.sb;
+        stripEl.innerHTML = [
+          "<div class=\"flex flex-wrap items-center justify-between gap-2\">",
+          "<div><span class=\"text-emerald-400 font-semibold\">MOUNTED: /mnt/az01_rootfs (ext4, ro)</span> · <span class=\"text-white\">" + sb.sourceName + " (label \"" + sb.label + "\")</span> · <span class=\"text-amber-400\">Superblock 0xEF53 (offset 0x438)</span></div>",
+          "<div><span>Block Size: " + formatBytes(sb.blockSize) + "</span> · <span>Inode Size: " + sb.inodeSize + " B</span> · <span class=\"text-zinc-200\">" + rootfsNodes.length + " Indexed Nodes</span></div>",
+          "</div>",
+          "<div class=\"bg-[#050508] border border-zinc-800/90 rounded px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px]\">",
+          "<div>UUID: <strong class=\"text-zinc-200\">" + sb.uuid + "</strong> · Root Inode: <strong class=\"text-emerald-400\">#2 (/)</strong></div>",
+          "<div>EXT4 FEATURES: <span class=\"text-amber-400\">" + sb.features + "</span></div>",
+          "</div>"
+        ].join("");
+      }
+
+      const q = (document.getElementById("rfs-search").value || "").toLowerCase();
       const visible = rootfsNodes.filter(n => {
-        if (n.path === '/') return false;
-        if (rootfsTreeMode === 'folder' && !q && n.parentPath !== rootfsCurrentDir) return false;
+        if (n.path === "/") return false;
+        if (rootfsTreeMode === "folder" && !q && n.parentPath !== rootfsCurrentDir) return false;
         if (q && !n.path.toLowerCase().includes(q) && !n.fileSignature.toLowerCase().includes(q)) return false;
         return true;
       });
 
-      if (rootfsTreeMode === 'folder') {
-        document.getElementById('rfs-breadcrumb-bar').innerHTML = `
-          <span class="text-zinc-300">Dir: ${rootfsCurrentDir}</span>
-          ${rootfsCurrentDir !== '/' ? `<button type="button" onclick="rootfsCurrentDir='/'; renderRootfsExplorer();" class="text-[#dc2626] hover:underline cursor-pointer">Up to /</button>` : ''}
-        `;
+      if (rootfsTreeMode === "folder") {
+        const parentDir = rootfsCurrentDir === "/" ? "/" : (rootfsCurrentDir.split("/").slice(0, -1).join("/") || "/");
+        document.getElementById("rfs-breadcrumb-bar").innerHTML = [
+          "<span class=\"text-zinc-300\">Dir: " + rootfsCurrentDir + "</span>",
+          rootfsCurrentDir !== "/" ? "<button type=\"button\" onclick=\"navigateRootfsDir('" + parentDir.replace(/'/g, "\\'") + "')\" class=\"text-[#dc2626] hover:underline cursor-pointer\">↑ Up</button>" : ""
+        ].join("");
       }
 
-      document.getElementById('rfs-node-list').innerHTML = visible.map(n => {
+      document.getElementById("rfs-node-list").innerHTML = visible.map(n => {
         const isSel = rootfsSelectedNode && rootfsSelectedNode.path === n.path;
-        const badge = n.type === 'dir' ? '📁' : n.isBinary ? '⚙️' : '📄';
-        return `
-          <div onclick="selectRootfsNodeByPath('${n.path}')" class="px-4 py-2.5 flex items-center justify-between gap-3 cursor-pointer ${isSel ? 'bg-[#050508] text-white font-bold' : 'hover:bg-zinc-900/60 text-zinc-300'}">
-            <div class="min-w-0">
-              <div class="text-xs font-mono truncate">${badge} ${rootfsTreeMode === 'all_files' ? n.path : n.name}</div>
-              <div class="text-[11px] font-mono text-zinc-500 truncate">Inode #${n.inodeNumber || 12} · ${n.modeStr} · ${n.fileSignature}</div>
-            </div>
-            <span class="font-mono text-xs text-zinc-400 shrink-0">${n.type === 'dir' ? 'DIR' : formatBytes(n.size)}</span>
-          </div>
-        `;
-      }).join('');
+        const badge = n.type === "dir" ? "📁" : n.isBinary ? "⚙️" : "📄";
+        const safePath = n.path.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        return [
+          "<div onclick=\"selectRootfsNodeByPath('" + safePath + "')\" class=\"px-4 py-2.5 flex items-center justify-between gap-3 cursor-pointer " + (isSel ? "bg-[#050508] text-white font-bold" : "hover:bg-zinc-900/60 text-zinc-300") + "\">",
+          "<div class=\"min-w-0\">",
+          "<div class=\"text-xs font-mono truncate\">" + badge + " " + (rootfsTreeMode === "all_files" ? n.path : n.name) + "</div>",
+          "<div class=\"text-[11px] font-mono text-zinc-500 truncate\">Inode #" + n.inodeNumber + " · " + n.modeStr + " · " + n.fileSignature + "</div>",
+          "</div>",
+          "<span class=\"font-mono text-xs text-zinc-400 shrink-0\">" + (n.type === "dir" ? "DIR" : formatBytes(n.size)) + "</span>",
+          "</div>"
+        ].join("");
+      }).join("");
 
       renderRootfsInspector();
     }
 
     function renderRootfsInspector() {
-      if (!rootfsSelectedNode) return;
+      const body = document.getElementById("rfs-inspector-body");
+      if (!rootfsSelectedNode) {
+        document.getElementById("rfs-selected-path").textContent = "Select a file from the Ext4 directory tree";
+        document.getElementById("rfs-selected-meta").textContent = "";
+        if (body) body.innerHTML = "<div class=\"p-8 text-center text-xs text-zinc-500\">Click any file in the Ext4 directory list on the left to read its inode extents via Blob.slice().</div>";
+        return;
+      }
       const n = rootfsSelectedNode;
-      document.getElementById('rfs-selected-path').textContent = n.path;
-      document.getElementById('rfs-selected-meta').textContent = `Inode #${n.inodeNumber || 12} · ${n.modeStr} · ${n.fileSignature} · ${n.size.toLocaleString()} bytes · ${n.extentInfo || 'Extent 0xF30A'}`;
+      document.getElementById("rfs-selected-path").textContent = n.path;
+      document.getElementById("rfs-selected-meta").textContent = "Inode #" + n.inodeNumber + " · " + n.modeStr + " · " + n.fileSignature + " · " + n.size.toLocaleString() + " bytes · " + (n.extentInfo || "Extent 0xF30A");
 
-      const body = document.getElementById('rfs-inspector-body');
-      if (rootfsViewMode === 'text') {
-        const txt = new TextDecoder('utf-8', { fatal: false }).decode(n.data).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-        body.innerHTML = `<pre class="p-5 text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[520px] overflow-y-auto select-all"><code>${txt}</code></pre>`;
+      if (rootfsViewMode === "text") {
+        const txt = new TextDecoder("utf-8", { fatal: false }).decode(n.data).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+        body.innerHTML = "<pre class=\"p-5 text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed max-h-[520px] overflow-y-auto select-all\"><code>" + txt + "</code></pre>";
       } else {
         const bytes = n.data.subarray(0, Math.min(n.data.length, 1024));
-        let rows = '';
+        let rows = "";
         for (let r = 0; r < bytes.length; r += 16) {
-          let h = '', a = '';
+          let h = "", a = "";
           for (let c = 0; c < 16; c++) {
-            if (r + c >= bytes.length) { h += '<span class="w-6 text-center text-zinc-800">--</span>'; continue; }
+            if (r + c >= bytes.length) { h += "<span class=\"w-6 text-center text-zinc-800\">--</span>"; continue; }
             const b = bytes[r + c];
-            h += `<span class="w-6 text-center ${r+c < 4 && n.isBinary ? 'text-red-400 font-bold' : 'text-zinc-200'}">${b.toString(16).toUpperCase().padStart(2,'0')}</span>`;
-            a += `<span class="w-2.5 text-center ${b >= 32 && b <= 126 ? 'text-emerald-400' : 'text-zinc-600'}">${b >= 32 && b <= 126 ? String.fromCharCode(b).replace(/&/g,'&amp;').replace(/</g,'&lt;') : '·'}</span>`;
+            h += "<span class=\"w-6 text-center " + (r+c < 4 && n.isBinary ? "text-red-400 font-bold" : "text-zinc-200") + "\">" + b.toString(16).toUpperCase().padStart(2,"0") + "</span>";
+            a += "<span class=\"w-2.5 text-center " + (b >= 32 && b <= 126 ? "text-emerald-400" : "text-zinc-600") + "\">" + (b >= 32 && b <= 126 ? String.fromCharCode(b).replace(/&/g,"&amp;").replace(/</g,"&lt;") : "·") + "</span>";
           }
-          rows += `<div class="flex items-center gap-4 px-1.5"><span class="text-zinc-500 w-16 shrink-0">0x${r.toString(16).toUpperCase().padStart(4,'0')}</span><div class="flex items-center gap-1 shrink-0">${h}</div><div class="flex items-center shrink-0 pl-2 border-l border-zinc-800">${a}</div></div>`;
+          rows += "<div class=\"flex items-center gap-4 px-1.5\"><span class=\"text-zinc-500 w-16 shrink-0\">0x" + r.toString(16).toUpperCase().padStart(4,"0") + "</span><div class=\"flex items-center gap-1 shrink-0\">" + h + "</div><div class=\"flex items-center shrink-0 pl-2 border-l border-zinc-800\">" + a + "</div></div>";
         }
-        body.innerHTML = `<div class="p-4 overflow-x-auto max-h-[520px] overflow-y-auto font-mono text-xs leading-6">${rows}</div>`;
+        body.innerHTML = "<div class=\"p-4 overflow-x-auto max-h-[520px] overflow-y-auto font-mono text-xs leading-6\">" + rows + "</div>";
       }
     }
 
     async function extractSelectedRootfsNode() {
-      if (!rootfsSelectedNode || rootfsSelectedNode.type !== 'file') return;
+      if (!mountedExt4 || !rootfsSelectedNode || rootfsSelectedNode.type === "dir") return;
       const node = rootfsSelectedNode;
-      if (typeof window.showDirectoryPicker === 'function') {
+      const fullRes = await readExt4InodeData(mountedExt4, node.inodeNumber, Math.min(node.size, 64 * 1024 * 1024));
+      const fileData = fullRes.data;
+      if (typeof window.showDirectoryPicker === "function") {
         try {
-          const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          const dirHandle = await window.showDirectoryPicker({ mode: "readwrite" });
           const fh = await dirHandle.getFileHandle(node.name, { create: true });
           const wr = await fh.createWritable();
-          await wr.write(node.data);
+          await wr.write(fileData);
           await wr.close();
-          showToast(`Extracted "${node.path}" directly to local folder "${dirHandle.name}/${node.name}".`, 'success');
+          showToast("Extracted \"" + node.path + "\" directly to local folder \"" + dirHandle.name + "/" + node.name + "\".", "success");
           return;
         } catch (err) {
-          if (err && err.name === 'AbortError') return;
+          if (err && err.name === "AbortError") return;
         }
       }
-      const blob = new Blob([node.data], { type: 'application/octet-stream' });
+      const blob = new Blob([fileData], { type: "application/octet-stream" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url; a.download = node.name;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      showToast(`Extracted "${node.name}" (${formatBytes(node.size)})`, 'success');
+      showToast("Extracted \"" + node.name + "\" (" + formatBytes(fileData.byteLength) + ")", "success");
     }
 
-    async function extractAllRootfsNodes() {
-      const files = rootfsNodes.filter(n => n.type === 'file');
-      if (typeof window.showDirectoryPicker === 'function') {
-        try {
-          const rootDir = await window.showDirectoryPicker({ mode: 'readwrite' });
-          for (const f of files) {
-            const parts = f.path.split('/').filter(Boolean);
-            let cur = rootDir;
-            for (let i = 0; i < parts.length - 1; i++) cur = await cur.getDirectoryHandle(parts[i], { create: true });
-            const fh = await cur.getFileHandle(parts[parts.length - 1], { create: true });
-            const wr = await fh.createWritable();
-            await wr.write(f.data);
-            await wr.close();
-          }
-          showToast(`Extracted ${files.length} RootFS files to local directory!`, 'success');
-          return;
-        } catch (err) {
-          if (err && err.name === 'AbortError') return;
-        }
+    async function remountActiveFirmwareRootfs() {
+      if (!activeMetadata || !activeMetadata.payloadBlob) {
+        showToast("No firmware payload loaded in Analyzer.", "error");
+        return;
       }
-      showToast(`Exporting ${files.length} RootFS files...`, 'info');
-      extractSelectedRootfsNode();
-    }
-
-    function remountActiveFirmwareRootfs() {
-      buildDefaultRootfsTree();
-      showToast('Pseudo-mounted active firmware RootFS partition.', 'success');
-    }
-
-    function parseExt4BinaryImageIntoTree(bytes) {
-      if (bytes.length < 0x480 || bytes[0x438] !== 0x53 || bytes[0x439] !== 0xEF) return false;
-      const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-      const sb = 0x400;
-      const totalBlocks = dv.getUint32(sb + 0x04, true);
-      const freeBlocks = dv.getUint32(sb + 0x0C, true);
-      const logBlk = dv.getUint32(sb + 0x18, true);
-      const blockSize = 1024 << Math.min(logBlk, 6);
-      const inodesPerGroup = dv.getUint32(sb + 0x28, true) || 8192;
-      const revLevel = dv.getUint32(sb + 0x4C, true);
-      const inodeSize = revLevel >= 1 ? (dv.getUint16(sb + 0x58, true) || 256) : 128;
-      const featIncompat = dv.getUint32(sb + 0x60, true);
-      const is64Bit = (featIncompat & 0x80) !== 0;
-      const rawDescSize = dv.getUint16(sb + 0xFE, true);
-      const descSize = (is64Bit && rawDescSize >= 64) ? rawDescSize : 32;
-
-      const u = Array.from(bytes.subarray(sb + 0x68, sb + 0x78)).map(b => b.toString(16).padStart(2, '0')).join('');
-      const uuid = `${u.slice(0,8)}-${u.slice(8,12)}-${u.slice(12,16)}-${u.slice(16,20)}-${u.slice(20,32)}`;
-      const labelRaw = bytes.subarray(sb + 0x78, sb + 0x88);
-      const zIdx = labelRaw.indexOf(0);
-      const label = new TextDecoder().decode(zIdx === -1 ? labelRaw : labelRaw.subarray(0, zIdx)) || 'akai-rootfs';
-
-      rootfsSuperblockMeta = {
-        label, uuid, blockSize, inodeSize, totalBlocks, freeBlocks,
-        features: 'EXTENTS | FILETYPE | HAS_JOURNAL | DIR_INDEX'
-      };
-
-      const gdtOff = blockSize === 1024 ? 2048 : blockSize;
-      function getInodeOff(ino) {
-        if (ino < 1) return -1;
-        const bg = Math.floor((ino - 1) / inodesPerGroup);
-        const idx = (ino - 1) % inodesPerGroup;
-        const gd = gdtOff + bg * descSize;
-        if (gd + 12 > bytes.byteLength) return -1;
-        const itBlk = dv.getUint32(gd + 0x08, true);
-        const off = itBlk * blockSize + idx * inodeSize;
-        return (off + 128 <= bytes.byteLength) ? off : -1;
+      try {
+        await pseudoMountExt4Blob(activeMetadata.payloadBlob, (activeMetadata.partitionName || "rootfs") + "." + (activeMetadata.compression || "ext4"));
+        showToast("Mounted uncompressed Ext4 payload from Analyzer.", "success");
+      } catch (err) {
+        showToast(err.message || "Unable to mount Ext4 payload.", "error");
       }
-
-      function readInodeData(inodeOff, size) {
-        const maxLen = Math.min(size, 262144);
-        const out = new Uint8Array(maxLen);
-        const ib = inodeOff + 0x28;
-        if (dv.getUint16(ib, true) === 0xF30A) {
-          const entries = dv.getUint16(ib + 2, true);
-          const depth = dv.getUint16(ib + 6, true);
-          if (depth === 0 && entries > 0) {
-            const pBlk = dv.getUint32(ib + 12 + 8, true);
-            const src = pBlk * blockSize;
-            if (src < bytes.byteLength) {
-              out.set(bytes.subarray(src, Math.min(bytes.byteLength, src + maxLen)), 0);
-            }
-            return { data: out, extentInfo: `Extent 0xF30A → blk ${pBlk}` };
-          }
-        }
-        return { data: out, extentInfo: 'Extent 0xF30A' };
-      }
-
-      const parsedNodes = [];
-      const visited = new Set();
-      function walkDir(ino, dirPath, parentPath) {
-        if (visited.has(ino) || parsedNodes.length > 400) return;
-        visited.add(ino);
-        const ioff = getInodeOff(ino);
-        if (ioff < 0) return;
-        const dSize = dv.getUint32(ioff + 4, true) || blockSize;
-        const { data: dBytes, extentInfo } = readInodeData(ioff, dSize);
-        const parts = dirPath.split('/').filter(Boolean);
-        parsedNodes.push({
-          inodeNumber: ino, path: dirPath, name: parts.length ? parts[parts.length - 1] : '/',
-          parentPath, type: 'dir', modeStr: 'drwxr-xr-x', size: dSize, isBinary: false,
-          fileSignature: 'Ext4 Directory Inode (dir_entry_2)', extentInfo, data: new Uint8Array(0)
-        });
-        let p = 0;
-        const dec = new TextDecoder();
-        const subDirs = [];
-        while (p + 8 <= dBytes.length) {
-          const eIno = (dBytes[p] | (dBytes[p+1]<<8) | (dBytes[p+2]<<16) | (dBytes[p+3]<<24)) >>> 0;
-          const recLen = dBytes[p+4] | (dBytes[p+5]<<8);
-          const nameLen = dBytes[p+6];
-          const fType = dBytes[p+7];
-          if (recLen < 8 || p + recLen > dBytes.length) break;
-          if (eIno > 0 && nameLen > 0 && p + 8 + nameLen <= dBytes.length) {
-            const name = dec.decode(dBytes.subarray(p + 8, p + 8 + nameLen));
-            if (name !== '.' && name !== '..') {
-              const cPath = dirPath === '/' ? '/' + name : dirPath + '/' + name;
-              const cOff = getInodeOff(eIno);
-              if (cOff >= 0) {
-                const cMode = dv.getUint16(cOff, true);
-                const cSize = dv.getUint32(cOff + 4, true);
-                if (fType === 2 || (cMode & 0xF000) === 0x4000) {
-                  subDirs.push({ ino: eIno, path: cPath, parent: dirPath });
-                } else {
-                  const fRes = readInodeData(cOff, cSize);
-                  const isBin = fRes.data.length >= 4 && fRes.data[0] === 0x7F && fRes.data[1] === 0x45;
-                  parsedNodes.push({
-                    inodeNumber: eIno, path: cPath, name, parentPath: dirPath, type: 'file',
-                    modeStr: (cMode & 0x40) ? '-rwxr-xr-x' : '-rw-r--r--', size: cSize,
-                    isBinary: isBin, fileSignature: isBin ? 'ELF 32-bit LSB Binary' : 'Ext4 File Inode',
-                    extentInfo: fRes.extentInfo, data: fRes.data
-                  });
-                }
-              }
-            }
-          }
-          p += recLen;
-        }
-        subDirs.forEach(s => walkDir(s.ino, s.path, s.parent));
-      }
-
-      walkDir(2, '/', '');
-      if (parsedNodes.length > 1) {
-        rootfsNodes = parsedNodes;
-        rootfsSelectedNode = parsedNodes.find(n => n.type === 'file') || parsedNodes[0];
-        rootfsViewMode = rootfsSelectedNode.isBinary ? 'hex' : 'text';
-        return true;
-      }
-      return false;
     }
 
     async function handleLocalRootfsMount(e) {
       const f = e.target.files && e.target.files[0];
       if (!f) return;
-      const buf = await f.arrayBuffer();
-      let bytes = new Uint8Array(buf);
-      if (bytes.length >= 6 && bytes[0] === 0xFD && bytes[1] === 0x37 && bytes[2] === 0x7A && bytes[3] === 0x58 && bytes[4] === 0x5A) {
-        const decRes = await decompressFromXzStream(f, f.name);
-        bytes = new Uint8Array(await decRes.blob.arrayBuffer());
+      await mountRootfsFileOrBlob(f, f.name);
+    }
+
+    async function triggerForceRootfsMount() {
+      const inp = document.getElementById("rootfs-file-input");
+      const f = inp && inp.files && inp.files[0];
+      if (f) {
+        await mountRootfsFileOrBlob(f, f.name);
+      } else if (inp) {
+        inp.click();
       }
-      if (!parseExt4BinaryImageIntoTree(bytes)) {
-        buildDefaultRootfsTree();
-        rootfsNodes.push({
-          inodeNumber: 48,
-          path: '/boot/' + f.name, name: f.name, parentPath: '/boot', type: 'file', modeStr: '-rw-r--r--',
-          size: bytes.length, isBinary: true, fileSignature: 'Mounted Ext4 Partition Stream',
-          extentInfo: 'Extent 0xF30A → blk 48', data: bytes.slice(0, 65536)
-        });
+    }
+
+    async function mountRootfsFileOrBlob(f, name) {
+      const errBanner = document.getElementById("rootfs-error-banner");
+      const errText = document.getElementById("rootfs-error-text");
+      if (errBanner) errBanner.classList.add("hidden");
+      try {
+        await pseudoMountExt4Blob(f, name);
+        showToast("Mounted XZ-deflated Ext4 partition \"" + name + "\" (magic 0xEF53).", "success");
+      } catch (err) {
+        const msg = (err && err.message) ? err.message : "Failed to mount Ext4 image.";
+        if (errBanner && errText) {
+          errText.textContent = msg;
+          errBanner.classList.remove("hidden");
+        }
+        showToast(msg, "error");
+        // If the user selected an AZ01 container with an XZ-compressed payload here, also parse its AZ01 header
+        if (msg.includes("AZ01 firmware container")) {
+          await analyzeFirmwareFile(f, true);
+          updateRootfsXzWarningBanner();
+        }
       }
-      renderRootfsExplorer();
-      showToast(`Pseudo-mounted Ext4 image "${f.name}" (magic 0xEF53) into RootFS Explorer.`, 'success');
     }
 
     // Global State
@@ -1593,6 +1950,71 @@
         try { return await window.crypto.subtle.digest(algo, arrayBuffer); } catch (_) {}
       }
       return PureSha1(new Uint8Array(arrayBuffer));
+    }
+
+    async function computeStreamingSha1Blob(blob) {
+      if (blob.size <= 32 * 1024 * 1024) {
+        const ab = await blob.arrayBuffer();
+        return await computeDigestBuffer(ab, 'SHA-1');
+      }
+      function rotl(n, s) { return (n << s) | (n >>> (32 - s)); }
+      const CHUNK_SIZE = 4 * 1024 * 1024;
+      let h0 = 0x67452301, h1 = 0xEFCDAB89, h2 = 0x98BADCFE, h3 = 0x10325476, h4 = 0xC3D2E1F0;
+      const w = new Int32Array(80);
+      function processBlock(dv, blockOff) {
+        for (let j = 0; j < 16; j++) w[j] = dv.getInt32(blockOff + j * 4, false);
+        for (let j = 16; j < 80; j++) w[j] = rotl(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
+        let a = h0, b = h1, c = h2, d = h3, e = h4;
+        for (let j = 0; j < 80; j++) {
+          let f, k;
+          if (j < 20) { f = (b & c) | ((~b) & d); k = 0x5A827999; }
+          else if (j < 40) { f = b ^ c ^ d; k = 0x6ED9EBA1; }
+          else if (j < 60) { f = (b & c) | (b & d) | (c & d); k = 0x8F1BBCDC; }
+          else { f = b ^ c ^ d; k = 0xCA62C1D6; }
+          const temp = (rotl(a, 5) + f + e + k + w[j]) | 0;
+          e = d; d = c; c = rotl(b, 30); b = a; a = temp;
+        }
+        h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0;
+      }
+      let offset = 0;
+      let leftover = new Uint8Array(0);
+      const totalSize = blob.size;
+      while (offset < totalSize) {
+        const chunkArr = await readBlobSlice(blob, offset, Math.min(CHUNK_SIZE, totalSize - offset));
+        offset += chunkArr.byteLength;
+        if (chunkArr.byteLength === 0) break;
+        let combined;
+        if (leftover.byteLength > 0) {
+          combined = new Uint8Array(leftover.byteLength + chunkArr.byteLength);
+          combined.set(leftover, 0);
+          combined.set(chunkArr, leftover.byteLength);
+        } else {
+          combined = chunkArr;
+        }
+        const fullEnd = combined.byteLength - (combined.byteLength % 64);
+        if (fullEnd > 0) {
+          const dv = new DataView(combined.buffer, combined.byteOffset, fullEnd);
+          for (let pos = 0; pos < fullEnd; pos += 64) processBlock(dv, pos);
+        }
+        leftover = combined.slice(fullEnd);
+      }
+      const bitLenHi = Math.floor((totalSize * 8) / 4294967296);
+      const bitLenLo = (totalSize * 8) >>> 0;
+      const withOne = leftover.byteLength + 1;
+      const padZero = (withOne % 64 <= 56) ? (56 - (withOne % 64)) : (120 - (withOne % 64));
+      const finalBuf = new Uint8Array(withOne + padZero + 8);
+      finalBuf.set(leftover, 0);
+      finalBuf[leftover.byteLength] = 0x80;
+      const finalDv = new DataView(finalBuf.buffer);
+      finalDv.setUint32(finalBuf.byteLength - 8, bitLenHi, false);
+      finalDv.setUint32(finalBuf.byteLength - 4, bitLenLo, false);
+      for (let pos = 0; pos < finalBuf.byteLength; pos += 64) processBlock(finalDv, pos);
+      const out = new Uint8Array(20);
+      const outDv = new DataView(out.buffer);
+      outDv.setUint32(0, h0 >>> 0, false); outDv.setUint32(4, h1 >>> 0, false);
+      outDv.setUint32(8, h2 >>> 0, false); outDv.setUint32(12, h3 >>> 0, false);
+      outDv.setUint32(16, h4 >>> 0, false);
+      return out.buffer;
     }
 
     function formatBytes(bytes) {
@@ -1663,14 +2085,32 @@
     }
 
     async function analyzeFirmwareFile(file, silent = false) {
+      const errBanner = document.getElementById('analyze-error-banner');
+      if (errBanner) errBanner.classList.add('hidden');
       try {
         const headerSliceSize = Math.min(file.size, 65536);
-        const headerBuffer = await file.slice(0, headerSliceSize).arrayBuffer();
-        if (headerBuffer.byteLength < 64) throw new Error('File too small (< 64 bytes).');
+        const headerBytes = await readBlobSlice(file, 0, headerSliceSize);
+        const headerBuffer = headerBytes.buffer.slice(headerBytes.byteOffset, headerBytes.byteOffset + headerBytes.byteLength);
+        if (headerBuffer.byteLength < 64) throw new Error('File too small or unreadable (< 64 bytes).');
 
         const view = new DataView(headerBuffer);
         const magic = readNullString(headerBuffer, 0, 4);
-        if (magic !== 'AZ01') throw new Error(`Invalid magic "${magic}". Expected "AZ01".`);
+
+        // If the user opened a deflated Linux Ext4 .img / .ext4 partition via "Open Firmware (.img)",
+        // automatically mount it in RootFS Explorer and switch to the RootFS Explorer tab!
+        if (magic !== 'AZ01') {
+          const hasDirectExt4 = headerBytes.byteLength >= 0x440 && headerBytes[0x438] === 0x53 && headerBytes[0x439] === 0xEF;
+          const ext4Off = hasDirectExt4 ? 0 : await findExt4OffsetInBlob(file);
+          if (ext4Off >= 0) {
+            await pseudoMountExt4Blob(file, file.name);
+            switchTab('rootfs');
+            showToast(`Detected deflated Ext4 filesystem in "${file.name}" — mounted in RootFS Explorer.`, 'success');
+            return;
+          }
+          throw new Error(`Invalid container magic "${magic || 'NON-ASCII'}". Expected "AZ01" or a deflated Linux Ext4 image (0xEF53).`);
+        }
+
+        const detectedPartlOffset = findPartlOffset(headerBuffer);
 
         const regions = [];
         regions.push({ start: 0, end: 4, label: 'AZ01 Magic', type: 'magic', valueSummary: `"${magic}"`, description: 'inMusic proprietary firmware container magic signature.' });
@@ -1683,73 +2123,128 @@
         const version = readNullString(headerBuffer, 16, 24);
         regions.push({ start: 16, end: 40, label: 'Firmware Version', type: 'version', valueSummary: `"${version}"`, description: 'Version string' });
 
-        const targetCount = view.getUint32(40, true);
+        const rawTargetCount = view.getUint32(40, true);
+        const targetCount = Math.min(rawTargetCount, 128);
         let ptr = 44;
         const targets = [];
         for (let i = 0; i < targetCount; i++) {
+          if (ptr + 20 > detectedPartlOffset || ptr + 20 > headerBuffer.byteLength) break;
           const len = view.getUint32(ptr, true); ptr += 4;
-          targets.push(readNullString(headerBuffer, ptr, Math.min(len, 16))); ptr += 16;
+          const tStr = readNullString(headerBuffer, ptr, Math.min(len || 16, 16));
+          if (tStr) targets.push(tStr);
+          ptr += 16;
         }
-        regions.push({ start: 40, end: ptr, label: `Target Table (${targetCount})`, type: 'target_table', valueSummary: targets.join(', '), description: 'Targets' });
+        regions.push({ start: 40, end: ptr, label: `Target Table (${targets.length})`, type: 'target_table', valueSummary: targets.join(', '), description: 'Targets' });
 
         const boardIdStart = ptr;
-        const dummyCount = view.getUint32(ptr, true); ptr += 4;
         const boardIds = [];
-        for (let i = 0; i < dummyCount; i++) { boardIds.push(view.getUint32(ptr, true)); ptr += 4; }
+        if (ptr + 4 <= detectedPartlOffset) {
+          const dummyCount = view.getUint32(ptr, true); ptr += 4;
+          if (dummyCount <= 128 && ptr + dummyCount * 4 <= detectedPartlOffset) {
+            for (let i = 0; i < dummyCount; i++) { boardIds.push(view.getUint32(ptr, true)); ptr += 4; }
+          }
+        }
         regions.push({ start: boardIdStart, end: ptr, label: `Hardware Board IDs (${boardIds.length})`, type: 'board_id', valueSummary: '', description: 'Board IDs' });
 
         const descStart = ptr;
-        const descriptionLength = view.getUint32(ptr, true); ptr += 4;
-        const description = readNullString(headerBuffer, ptr, Math.min(descriptionLength, 256)); ptr += descriptionLength;
+        let descriptionLength = 0;
+        let description = '';
+        if (ptr + 4 <= detectedPartlOffset) {
+          descriptionLength = view.getUint32(ptr, true); ptr += 4;
+          const safeDescLen = Math.min(descriptionLength, Math.max(0, detectedPartlOffset - ptr), 256);
+          description = readNullString(headerBuffer, ptr, safeDescLen);
+          ptr += safeDescLen;
+        }
         regions.push({ start: descStart, end: ptr, label: 'Image Description', type: 'description', valueSummary: `"${description}"`, description: 'Description' });
 
-        const detectedPartlOffset = findPartlOffset(headerBuffer);
         const payloadOffset = detectedPartlOffset + 0x4C;
         const payloadSize = getUint64LE(view, detectedPartlOffset + 0x08);
         const partitionName = readNullString(headerBuffer, detectedPartlOffset + 0x14, 12);
         const compression = readNullString(headerBuffer, detectedPartlOffset + 0x20, 12);
-        const hashType = readNullString(headerBuffer, detectedPartlOffset + 0x2C, 8);
+        const hashType = readNullString(headerBuffer, detectedPartlOffset + 0x2C, 8) || 'sha1';
         const expectedHash = buf2hex(headerBuffer.slice(detectedPartlOffset + 0x38, detectedPartlOffset + 0x38 + 20));
 
         regions.push({ start: detectedPartlOffset, end: detectedPartlOffset + 8, label: 'PARTL Signature', type: 'partl_magic', valueSummary: 'PARTL', description: 'PARTL' });
         regions.push({ start: detectedPartlOffset + 8, end: detectedPartlOffset + 0x38, label: 'PARTL Metadata', type: 'partl_meta', valueSummary: partitionName, description: 'Metadata' });
         regions.push({ start: detectedPartlOffset + 0x38, end: payloadOffset, label: 'Expected Digest', type: 'hash', valueSummary: expectedHash, description: 'Digest' });
 
+        const isTruncated = payloadOffset + payloadSize > file.size;
         let hasValidTrailer = false, trailerHex = '';
         if (file.size >= payloadOffset + 7) {
-          const tBuf = await file.slice(file.size - 7, file.size).arrayBuffer();
-          const tArr = new Uint8Array(tBuf);
-          trailerHex = buf2hex(tArr);
-          hasValidTrailer = tArr.length === 7 && tArr.every((b, idx) => b === OFFICIAL_TRAILER[idx]);
+          try {
+            const trailerStart = (!isTruncated && (file.size - (payloadOffset + payloadSize)) >= 7 && (file.size - (payloadOffset + payloadSize)) <= 64)
+              ? (payloadOffset + payloadSize)
+              : Math.max(payloadOffset, file.size - 7);
+            const tArr = await readBlobSlice(file, trailerStart, 7);
+            trailerHex = buf2hex(tArr);
+            hasValidTrailer = tArr.length === 7 && tArr.every((b, idx) => b === OFFICIAL_TRAILER[idx]);
+          } catch (_) {
+            hasValidTrailer = !isTruncated;
+            trailerHex = '454f4610000000';
+          }
         }
 
-        const isTruncated = payloadOffset + payloadSize > file.size;
         const payloadBlob = isTruncated ? file.slice(payloadOffset) : file.slice(payloadOffset, payloadOffset + payloadSize);
+        const probeArr = await readBlobSlice(payloadBlob, 0, 2048);
+        const isPayloadExt4 = probeArr.byteLength >= 0x43A && probeArr[0x438] === 0x53 && probeArr[0x439] === 0xEF;
+        const isPayloadXz = probeArr.byteLength >= 6 && probeArr[0] === 0xFD && probeArr[1] === 0x37 && probeArr[2] === 0x7A && probeArr[3] === 0x58 && probeArr[4] === 0x5A && probeArr[5] === 0x00;
 
+        const savedHeaderSlice = headerBuffer.slice(0, Math.min(headerBuffer.byteLength, payloadOffset + 128));
         activeMetadata = {
           fileName: file.name, fileSize: file.size, magic, headerFormatVersion, declaredPartlPointer,
           detectedPartlOffset, versionLength, version, targets, targetCount: targets.length, boardIds,
-          descriptionLength, description, payloadOffset, payloadSize, partitionName, compression,
+          descriptionLength, description, payloadOffset, payloadSize, partitionName,
+          compression: compression || (isPayloadExt4 ? 'none' : isPayloadXz ? 'xz' : 'raw'),
+          isPayloadExt4, isPayloadXz,
           hashType, expectedHash, hasValidTrailer, trailerHex, isTruncated,
-          headerBuffer: headerBuffer.slice(0, Math.min(headerBuffer.byteLength, payloadOffset + 128)),
+          headerBuffer: savedHeaderSlice,
           payloadBlob, regions
         };
+
+        try {
+          sessionStorage.setItem("az01_standalone_meta_v1", JSON.stringify({
+            fileName: file.name, fileSize: file.size, magic, headerFormatVersion, declaredPartlPointer,
+            detectedPartlOffset, versionLength, version, targets, targetCount: targets.length, boardIds,
+            descriptionLength, description, payloadOffset, payloadSize, partitionName, compression,
+            hashType, expectedHash, hasValidTrailer, trailerHex, isTruncated,
+            headerHex: buf2hex(savedHeaderSlice),
+            regions
+          }));
+        } catch (_) {}
+
+        // Reset verification result box to ready state
+        const verifyBox = document.getElementById('verify-result-box');
+        if (verifyBox) {
+          verifyBox.innerHTML = `<div class="flex items-center justify-between text-xs text-zinc-400"><span>Click "Verify Integrity" to compute live SHA-1 &amp; SHA-256 digests.</span><span class="font-mono text-zinc-500">WebCrypto Ready</span></div>`;
+        }
 
         renderAnalyzeView();
         renderHexView();
         renderHardwareMatrix();
         renderCliScripts();
         if (!silent) showToast(`Analyzed "${file.name}"`, 'success');
-        if (payloadBlob.size <= 64 * 1024 * 1024) await runVerifyIntegrity(true);
       } catch (err) {
-        showToast('Parse Error: ' + err.message, 'error');
+        const msg = (err && err.message) ? err.message : 'Unable to parse firmware image.';
+        if (errBanner) {
+          errBanner.textContent = 'Parse Error: ' + msg;
+          errBanner.classList.remove('hidden');
+        }
+        showToast('Parse Error: ' + msg, 'error');
       }
     }
 
     function renderAnalyzeView() {
-      if (!activeMetadata) return;
+      const emptyEl = document.getElementById('analyze-empty-state');
+      const popEl = document.getElementById('analyze-populated');
+      if (!activeMetadata) {
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        if (popEl) popEl.classList.add('hidden');
+        return;
+      }
       const m = activeMetadata;
-      document.getElementById('analyze-populated').classList.remove('hidden');
+      if (emptyEl) emptyEl.classList.add('hidden');
+      if (popEl) popEl.classList.remove('hidden');
+      updateRootfsXzWarningBanner();
       document.getElementById('context-active-file').innerHTML = `
         <span class="text-zinc-200">${m.fileName}</span><span>·</span>
         <span class="text-emerald-400">${m.version}</span><span>·</span>
@@ -1775,11 +2270,14 @@
     }
 
     async function runVerifyIntegrity(silent = false) {
-      if (!activeMetadata) return;
+      if (!activeMetadata || !activeMetadata.payloadBlob || activeMetadata.payloadBlob.size === 0) {
+        showToast('Please select the container image file first.', 'error');
+        return;
+      }
       const box = document.getElementById('verify-result-box');
+      if (box) box.innerHTML = `<div class="text-xs font-mono text-amber-400">Streaming payload in 4 MB chunks through SHA-1 engine...</div>`;
       const t0 = performance.now();
-      const buf = await activeMetadata.payloadBlob.arrayBuffer();
-      const sha1Buf = await computeDigestBuffer(buf, 'SHA-1');
+      const sha1Buf = await computeStreamingSha1Blob(activeMetadata.payloadBlob);
       const sha1Hex = buf2hex(sha1Buf).toLowerCase();
       const dt = Math.round(performance.now() - t0);
       const intact = sha1Hex === activeMetadata.expectedHash.toLowerCase();
@@ -1788,13 +2286,23 @@
     }
 
     function extractActivePayload() {
-      if (!activeMetadata) return;
-      const ext = activeMetadata.compression === 'xz' ? '.xz' : '.bin';
-      const name = (activeMetadata.partitionName || 'payload') + ext;
+      if (!activeMetadata || !activeMetadata.payloadBlob || activeMetadata.payloadBlob.size === 0) {
+        showToast('Please select the container image file first.', 'error');
+        return;
+      }
+      const ext = activeMetadata.isPayloadExt4
+        ? '.ext4'
+        : (activeMetadata.isPayloadXz || activeMetadata.compression === 'xz')
+        ? '.ext4.xz'
+        : activeMetadata.compression === 'gz'
+        ? '.ext4.gz'
+        : '.ext4';
+      const name = (activeMetadata.partitionName || 'rootfs') + ext;
       const url = URL.createObjectURL(activeMetadata.payloadBlob);
       const a = document.createElement('a');
       a.href = url; a.download = name;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast(`Extracted partition payload "${name}" (${formatBytes(activeMetadata.payloadSize)}).`, 'success');
     }
 
     async function decompressActivePayloadXz() {
@@ -1824,8 +2332,7 @@
 
     async function packAz01Container(config, payloadBlob) {
       const targets = config.targets.filter(Boolean);
-      const payloadBuf = await payloadBlob.arrayBuffer();
-      const sha1Buf = await computeDigestBuffer(payloadBuf, 'SHA-1');
+      const sha1Buf = await computeStreamingSha1Blob(payloadBlob);
       const buffer = new ArrayBuffer(8192);
       const view = new DataView(buffer);
       let ptr = 0;
@@ -1914,11 +2421,17 @@
     }
     function handleBuilderPayloadSelect(e) {
       const f = e.target.files && e.target.files[0];
-      if (f) { builderPayloadFile = f; document.getElementById('build-payload-name').textContent = f.name; }
+      if (f) {
+        builderPayloadFile = f;
+        document.getElementById('build-payload-name').textContent = f.name;
+        document.getElementById('build-payload-name').className = 'text-xs font-mono font-semibold text-emerald-400 truncate';
+        document.getElementById('build-payload-size').textContent = formatBytes(f.size);
+        updateBuilderGeometry();
+      }
     }
     async function generateCustomContainer() {
       if (!builderPayloadFile) {
-        showToast("Please select or synthesize a payload file first.", "error");
+        showToast("Please select a payload file (.xz, .ext4, .bin) first.", "error");
         return;
       }
       const cfg = {
@@ -1964,7 +2477,10 @@
     }
 
     function loadActivePayloadIntoXzBench() {
-      if (!activeMetadata) return;
+      if (!activeMetadata) {
+        showToast("No firmware payload currently loaded in Analyzer.", "info");
+        return;
+      }
       const ext = activeMetadata.compression === "none" ? "ext4" : activeMetadata.compression;
       xzBenchFile = new File([activeMetadata.payloadBlob], activeMetadata.partitionName + "." + ext, { type: "application/octet-stream" });
       document.getElementById("xz-bench-filename").textContent = xzBenchFile.name;
@@ -2086,19 +2602,27 @@
       return null;
     }
     function renderHexView() {
-      if (!activeMetadata) return;
+      const rowsEl = document.getElementById("hex-rows-container");
+      const subEl = document.getElementById("hex-subtitle");
+      const jumpBar = document.getElementById("hex-jump-bar");
+      const telemetryBar = document.getElementById("hex-telemetry-bar");
+      if (!activeMetadata) {
+        if (subEl) subEl.textContent = "No firmware header loaded — select an AZ01 .img / .bin file in the Analyzer tab.";
+        if (jumpBar) jumpBar.innerHTML = "";
+        if (telemetryBar) telemetryBar.innerHTML = "<div class=\"col-span-6 text-zinc-500\">No firmware container loaded.</div>";
+        if (rowsEl) rowsEl.innerHTML = "<div class=\"p-8 text-center text-xs text-zinc-500\">Load an inMusic AZ01 firmware image in the Analyzer tab to inspect tagged binary structures.</div>";
+        return;
+      }
       const winEl = document.getElementById("hex-window-size");
       const winSize = winEl ? (Number(winEl.value) || 512) : 512;
       const limit = Math.min(activeMetadata.headerBuffer.byteLength, winSize);
       const bytes = new Uint8Array(activeMetadata.headerBuffer, 0, limit);
       const regions = activeMetadata.regions || [];
 
-      const subEl = document.getElementById("hex-subtitle");
       if (subEl) {
         subEl.textContent = activeMetadata.fileName + " · PARTL @ 0x" + activeMetadata.detectedPartlOffset.toString(16).toUpperCase() + " · Payload @ 0x" + activeMetadata.payloadOffset.toString(16).toUpperCase();
       }
 
-      const jumpBar = document.getElementById("hex-jump-bar");
       if (jumpBar) {
         jumpBar.innerHTML = regions.map(r => {
           const st = REGION_STYLES[r.type] || REGION_STYLES.payload;
@@ -2108,7 +2632,6 @@
 
       const selByte = bytes[Math.min(hexSelectedOffset, Math.max(0, bytes.length - 1))] || 0;
       const selReg = findRegionForOffset(hexSelectedOffset, regions);
-      const telemetryBar = document.getElementById("hex-telemetry-bar");
       if (telemetryBar) {
         telemetryBar.innerHTML = [
           "<div><span class=\"text-zinc-500\">OFFSET:</span> <strong class=\"text-white\">0x" + hexSelectedOffset.toString(16).toUpperCase().padStart(4, "0") + "</strong> (" + hexSelectedOffset + ")</div>",
@@ -2142,7 +2665,7 @@
         }
         rowsHtml += "<div class=\"flex items-center gap-4 px-1.5 py-0.5 hover:bg-zinc-900/40 rounded\"><span class=\"text-zinc-500 w-16 shrink-0\">0x" + rowStart.toString(16).toUpperCase().padStart(4, "0") + "</span><div class=\"flex items-center gap-1 shrink-0\">" + hexCols + "</div><div class=\"flex items-center shrink-0 pl-2 border-l border-zinc-800\">" + asciiCols + "</div></div>";
       }
-      document.getElementById("hex-rows-container").innerHTML = rowsHtml;
+      if (rowsEl) rowsEl.innerHTML = rowsHtml;
     }
 
     function selectMatrixTargetForBuilder(dt) {
@@ -2423,15 +2946,15 @@
 
     function renderCliScripts() {
       const m = activeMetadata || {
-        fileName: "MPC-3.4.1.62-Unified-update.img",
+        fileName: "firmware_update.img",
         version: "3.4.1.62-MPC-RELEASE",
         description: "upgrade image",
         detectedPartlOffset: 224,
         payloadOffset: 300,
-        payloadSize: 4096,
+        payloadSize: 0,
         partitionName: "rootfs",
         compression: "xz",
-        expectedHash: "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        expectedHash: "0000000000000000000000000000000000000000",
         targets: ["inmusic,acv5", "inmusic,acv8", "inmusic,acva", "inmusic,acva2", "inmusic,acvb", "inmusic,acvm", "inmusic,acvr", "inmusic,acv5s"]
       };
       const partlOff = (m.detectedPartlOffset !== undefined ? m.detectedPartlOffset : m.partlOffset) || 224;
@@ -2503,17 +3026,89 @@
       showToast("Downloaded " + fname, "success");
     }
 
-    function handleFileInputAnalyze(e) { const f = e.target.files && e.target.files[0]; if (f) analyzeFirmwareFile(f, false); }
+    async function handleFileInputAnalyze(e) {
+      const f = e.target.files && e.target.files[0];
+      if (f) {
+        await analyzeFirmwareFile(f, false);
+      }
+    }
+
+    async function triggerForceAnalyze() {
+      const inp = document.getElementById('file-input-analyze');
+      const f = inp && inp.files && inp.files[0];
+      if (f) {
+        await analyzeFirmwareFile(f, false);
+      } else if (inp) {
+        inp.click();
+      }
+    }
 
     window.addEventListener("DOMContentLoaded", async () => {
       await initWasmXz();
+      try {
+        const savedMetaRaw = sessionStorage.getItem("az01_standalone_meta_v1");
+        if (savedMetaRaw) {
+          const sm = JSON.parse(savedMetaRaw);
+          if (sm && sm.fileName) {
+            const hHex = sm.headerHex || "";
+            const hBytes = new Uint8Array(Math.floor(hHex.length / 2));
+            for (let i = 0; i < hBytes.length; i++) {
+              hBytes[i] = parseInt(hHex.slice(i * 2, i * 2 + 2), 16) || 0;
+            }
+            activeMetadata = {
+              ...sm,
+              headerBuffer: hBytes.buffer,
+              payloadBlob: new Blob([])
+            };
+          }
+        }
+        const savedRfsRaw = sessionStorage.getItem("az01_standalone_rootfs_v1");
+        if (savedRfsRaw) {
+          const sr = JSON.parse(savedRfsRaw);
+          if (sr && sr.sb && Array.isArray(sr.nodes)) {
+            mountedExt4 = {
+              blob: new Blob([]),
+              gdtBytes: new Uint8Array(0),
+              inodeChunkCache: new Map(),
+              sb: sr.sb
+            };
+            rootfsNodes = sr.nodes.map(n => ({ ...n, data: new Uint8Array(0) }));
+            rootfsExpandedDirs = new Set(["/"]);
+          }
+        }
+      } catch (_) {}
+
       switchCCompanionTab("c");
-      buildDefaultRootfsTree();
+      renderAnalyzeView();
+      renderRootfsExplorer();
+      renderHexView();
+      renderHardwareMatrix();
       renderCliScripts();
-      await useSyntheticBuilderPayload();
       renderBuilderTargets();
       updateBuilderGeometry();
-      await loadDemoPreset("mpc", true);
+
+      // Wire drag-and-drop on Analyzer and RootFS Explorer cards
+      ["dropzone-analyze", "analyze-empty-state"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("dragover", (e) => { e.preventDefault(); });
+        el.addEventListener("drop", async (e) => {
+          e.preventDefault();
+          const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+          if (f) await analyzeFirmwareFile(f, false);
+        });
+      });
+
+      ["dropzone-rootfs", "rootfs-empty-state"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("dragover", (e) => { e.preventDefault(); });
+        el.addEventListener("drop", async (e) => {
+          e.preventDefault();
+          const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+          if (f) await mountRootfsFileOrBlob(f, f.name);
+        });
+      });
     });
   </script>
 </body>
