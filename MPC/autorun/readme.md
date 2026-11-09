@@ -1,7 +1,279 @@
+# Akai MPC Standalone Drive Autorun Engine: Complete Architecture & Cryptographic Specification
+(Based on 3.0.1 analysis. NB : autorun is dropped from 3.10).
+
+## 1. Executive Summary
+The Akai MPC standalone operating system (firmware v3.9.1, ARM 32-bit Linux) embeds a native autorun subsystem designed to detect, validate, and execute shell automation packages from removable external storage (USB flash drives, SD cards, and external SATA drives).
+
+Rather than executing files arbitrarily, the firmware enforces a **multi-stage security gatekeeper** combining directory heuristics, JSON schema validation, user-confirmation prompts, and a **salted cryptographic SHA-256 integrity verification**.
+
+This document provides the definitive technical specification of the autorun subsystem, reverse-engineered directly from the `MPC` binary using IDA Pro and GDB.
+
+---
+
+## 2. Reverse-Engineered Class Architecture & Symbols
+
+The autorun pipeline is implemented primarily in the `ScriptRunner` and `DriveConnections` classes:
+
+```
+[ Removable Drive Inserted ]
+             │
+             ▼
+┌────────────────────────────────────────────────────────┐
+│  DriveConnections_onDriveMounted (0x2489A2C)           │
+│  - Virtual member of ScriptRunner vtable (0x6D778B4)   │
+│  - Iterates over active mount points (/media/*)        │
+└────────────────────────────┬───────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────┐
+│  DriveAutorun_checkAndExecute (0x248E8EC)              │
+│  - Verifies drive connection state (*a1 != 0)          │
+│  - Locates '<DriveMountPath>/autorun/' directory       │
+└────────────────────────────┬───────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────┐
+│  DriveAutorun_scanDirectory (0x248DD28)                │
+│  - RapidJSON manifest parser: sub_248B028              │
+│  - Multi-stream SHA-256 verifier: sub_248A2A0          │
+└────────────────────────────┬───────────────────────────┘
+                             │
+              [ Integrity Verified & Confirmed ]
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────┐
+│  DriveAutorun_executeScript (0x248F4C8)                │
+│  - Formats: sh "<DriveMountPath>/autorun/<script>"      │
+│  - Dispatches execution to local daemon on port 8080   │
+└────────────────────────────────────────────────────────┘
+```
+
+### Key Functions & Virtual Addresses
+
+| Virtual Address | File Offset | Identified Symbol | Description |
+|---|---|---|---|
+| **`0x248E8EC`** | `0x1FBD8EC` | `DriveAutorun_checkAndExecute` | Central coordinator: checks paths, dispatches dialog, launches script |
+| **`0x248DD28`** | `0x1FBCD28` | `DriveAutorun_scanDirectory` | Parses `autorun.json`, verifies presence of `autorun.check`, queues files |
+| **`0x248A2A0`** | `0x1FB92A0` | `sub_248A2A0` (SHA-256 Verifier) | Computes multi-file stream hash + salt and compares with `autorun.check` |
+| **`0x9FF8B4`** | `0x52E8B4` | `sub_9FF8B4` (Salt Decryptor) | Runtime constructor that decrypts the hardcoded Akai UUID salt |
+| **`0x248B028`** | `0x1FBA028` | `sub_248B028` (JSON Parser) | RapidJSON / Cereal deserializer for `autorun.json` |
+| **`0x248F4C8`** | `0x1FBE4C8` | `DriveAutorun_executeScript` | Shell command formatter (`sh "<path>"`) and execution dispatcher |
+| **`0x2489A2C`** | `0x1FB8A2C` | `DriveConnections_onDriveMounted`| Storage listener called on initial mount / boot (`a3 = 1`) |
+| **`0x2489E4C`** | `0x1FB8E4C` | `ScriptRunner::onDriveInserted` | Interactive hotplug listener called on dynamic USB insertion (`a3 = 0`) |
+
+---
+
+## 3. The 5 Sequential Gating Conditions
+
+For an autorun package to be accepted and executed by the MPC, five strict conditions must be satisfied in order:
+
+```
+[ Drive Mount ] ──► (1. /autorun/ Dir?) ──► (2. Files Exist?) ──► (3. JSON Valid?) ──► (4. SHA256 Match?) ──► (5. UI Prompt) ──► [ EXECUTION ]
+                          │                       │                     │                      │                     │
+                          ▼ No                    ▼ No                  ▼ No                   ▼ No                  ▼ No
+                       [ IGNORE ]              [ IGNORE ]            [ IGNORE ]             [ REJECT ]            [ ABORT ]
+```
+
+### Condition 1: Directory Location
+The external media must contain a directory named **`autorun`** (strictly lowercase) at its root filesystem mount point:
+```
+<DriveRoot>/autorun/
+```
+
+### Condition 2: Mandatory Control File Pair
+Inside `<DriveRoot>/autorun/`, two specific files must exist simultaneously:
+1. **`autorun.json`**: The package configuration manifest.
+2. **`autorun.check`**: The cryptographic hash reference file.
+*If either file is missing (`sub_E1EA68`), the scan aborts immediately without any user notification.*
+
+### Condition 3: Manifest Schema Compliance (`autorun.json`)
+The manifest must be valid JSON parsed via RapidJSON (`sub_248B028`). The MPC firmware supports both top-level objects and Cereal/Boost-serialized `"value0"` root wrappers:
+
+```json
+{
+  "value0": {
+    "files": [
+      "payload.tar.gz",
+      "libcustom.so"
+    ],
+    "scripts": [
+      {
+        "path": "install.sh",
+        "askQuestion": true,
+        "message": "Do you want to install this custom mod?",
+        "yesButtonText": "Install",
+        "noButtonText": "Cancel"
+      }
+    ]
+  }
+}
+```
+
+#### Field Specifications:
+* **`scripts`** (Array of Objects, Required):
+  * **`path`** (String): Relative path to the executable shell script inside the `autorun/` folder.
+  * **`askQuestion`** (Boolean): 
+    * `true`: Displays a confirmation modal dialog on the touchscreen.
+    * `false`: Bypasses the confirmation prompt and executes directly (subject to boot-time constraints).
+  * **`message`** (String, Optional): Custom text displayed in the modal prompt.
+  * **`yesButtonText`** (String, Optional): Label for the positive confirmation button (e.g., `"yes"`, `"Install"`, `"Run"`).
+  * **`noButtonText`** (String, Optional): Label for the cancellation button (e.g., `"no"`, `"Cancel"`).
+* **`files`** (Array of Strings, Optional):
+  * List of companion archives, libraries, or binaries that must accompany the script. Every file listed here is included in the cryptographic hash verification.
+
+---
+
+## 4. The Cryptographic Integrity Engine
+
+The most critical barrier preventing unauthorized or corrupted script execution is implemented in **`sub_248A2A0`**.
+
+### The Hashing Formula
+
+The MPC calculates a single **SHA-256** checksum over a concatenated multi-file input stream (`juce::SHA256`, `sub_E96404`).
+
+$$\text{Final Digest} = \text{SHA-256}\Big(\text{autorun.json} + \text{Script}_1 + \dots + \text{Script}_N + \text{File}_1 + \dots + \text{File}_N + \text{AkaiSecretSalt}\Big)$$
+
+### Exact Multi-Stream Concatenation Order:
+1. **`autorun.json` raw bytes FIRST** (Reverse-engineered from assembly `0x248DEF4`–`0x248DF08`).
+2. **Raw bytes of each script in `"scripts"`** (in order of declaration).
+3. **Raw bytes of each file in `"files"`** (in order of declaration).
+4. **The Akai Secret Salt string (ASCII UTF-8)**:  
+   `"f7bed1c9-7e90-4731-9194-c996666b4331"`
+
+### Origin & Decryption of the Secret Salt
+In the compiled ARM binary, the salt does not appear in cleartext. It is stored as an obfuscated 37-byte buffer in `.data` (`0x52EDF2C`) and decrypted at application startup in **`sub_9FF8B4`**:
+
+```c
+// Decompiled from sub_9FF8B4 (0x9FF8B4)
+static const uint8_t encSalt[37] = {
+    0xe1, 0x0c, 0xf3, 0x9c, 0x21, 0x2a, 0x14, 0xf0,
+    0xaa, 0x0c, 0xf4, 0xc0, 0x75, 0x36, 0x43, 0xfe,
+    0xb4, 0x0a, 0xbc, 0xc0, 0x74, 0x22, 0x43, 0xe4,
+    0xe4, 0x02, 0xa8, 0xcf, 0x73, 0x2d, 0x41, 0xab,
+    0xb3, 0x08, 0xa2, 0xc8, 0x45
+};
+
+static const uint8_t xorKey[8] = { 0x87, 0x3b, 0x91, 0xf9, 0x45, 0x1b, 0x77, 0xc9 };
+
+// Decryption produces the 36-character standard UUID:
+// "f7bed1c9-7e90-4731-9194-c996666b4331"
+```
+
+### Strict Formatting of `autorun.check`
+The computed SHA-256 hash is compared character-by-character against the contents of `autorun.check` using `juce::CharacterFunctions::compare` (`sub_DB2678`):
+* **No whitespace trimming is performed by the MPC binary.**
+* If `autorun.check` contains leading spaces, trailing newlines (`\n`), or Windows carriage returns (`\r\n`), the comparison fails on the first byte mismatch.
+* The file must be **exactly 64 ASCII bytes** containing the lowercase hexadecimal digest.
+
+---
+
+## 5. Execution Lifecycle & Operational Behaviors
+
+### Boot-Time (Automount) vs. Hotplug Insertion
+The third argument (`a3`) passed to `DriveAutorun_checkAndExecute` (`0x248E8EC`) controls user interaction:
+
+```c
+// Disassembly of sub_248E8EC (Line 211)
+if ( askQuestion )
+{
+    if ( a3 ) 
+        goto LABEL_21; // a3 == 1 -> SKIP PROMPT AND EXIT!
+        
+    // a3 == 0 -> DISPLAY TOUCH UI MODAL PROMPT
+    v25 = sub_1968938(v44, 1, v50, v47, v48, &v49);
+}
+```
+
+* **Boot-Time Mounting (`a3 = 1`):**  
+  Triggered by `DriveConnections_onDriveMounted` (`0x2489A2C`) when the MPC boots with a drive already plugged in.  
+  👉 If `"askQuestion": true`, **the modal prompt is suppressed** to avoid blocking firmware startup before the UI is initialized.
+* **Interactive Hotplug (`a3 = 0`):**  
+  Triggered by `ScriptRunner::onDriveInserted` (`0x2489E4C`) when a USB drive is inserted while the MPC is fully booted and idling.  
+  👉 The touchscreen displays the confirmation prompt:  
+  `"Script detected on [DriveName] - Do you want to run it?"`
+
+### Launch Command
+Once confirmed, execution is logged to stderr and dispatched via the internal system daemon (port 8080):
+```bash
+sh "<DriveMountPath>/autorun/<script>"
+```
+The script runs as **`root`**, giving it complete administrative authority over the system.
+
+---
+
+## 6. Official Packaging & Signing Tooling
+
+To simplify creating, signing, and verifying autorun packages, two standalone command-line tools have been reverse-engineered and integrated into the project:
+
+* **Python 3:** `MPC-391/mpc_autorun_signer.py` (No external dependencies required).
+* **Node.js:** `MPC-391/mpc_autorun_signer.js`.
+
+### CLI Usage Guide
+
+#### 1. Generate and Sign a Complete USB Package:
+Creates the `autorun/` directory, copies your script, generates `autorun.json`, and writes a validated `autorun.check`:
+```bash
+python3 MPC-391/mpc_autorun_signer.py create /media/my_usb_drive \
+    --script ./my_script.sh \
+    --message "Launch The KikGenLabs Plugin Manager?"
+```
+
+#### 2. Sign an Existing `autorun/` Directory:
+If you have modified scripts, payloads, or `autorun.json`:
+```bash
+python3 MPC-391/mpc_autorun_signer.py sign /media/my_usb_drive/autorun
+```
+
+#### 3. Verify Integrity Before Testing on Hardware:
+Confirms whether the firmware's SHA-256 verifier will accept the package:
+```bash
+python3 MPC-391/mpc_autorun_signer.py verify /media/my_usb_drive/autorun
+```
+*Expected Output:*
+```
+[*] Expected Hash (autorun.check): 926b161aa9916041002b3f0bbb09dcc0ac0993e69fb475390de5edfccf17ac90
+[*] Computed Hash (files + salt) : 926b161aa9916041002b3f0bbb09dcc0ac0993e69fb475390de5edfccf17ac90
+[✓] VALID: The package matches the Akai MPC firmware requirements.
+```
+
+---
+
+## 7. Practical Applications & Best Practices
+
+1. **Root Access & Maintenance:**
+   Enables recovering corrupted settings, dumping firmware partitions, and running custom hardware diagnostics without modifying the read-only rootfs (`/dev/root`).
+2. **Community Bootloaders (TKGL Bootstrap):**
+   Utilized by mods to spawn background SSH servers, bridge USB MIDI controllers, or inject shared libraries via `/etc/ld.so.preload`.
+3. **Hotplug Reliability:**
+   Always plug the USB drive into the MPC **after** the system has booted into the main project screen if using `"askQuestion": true`.
+4. **Clean Line Endings:**
+   Ensure all shell scripts and JSON files use standard Unix line endings (`LF`, `\n`) rather than Windows DOS endings (`CRLF`, `\r\n`), as byte differences directly alter the SHA-256 digest.
 ### What is the Autorun?
 The built-in `autorun` feature is a low-level system mechanism designed exclusively to execute official, digitally signed AKAI update scripts or factory content deployments. The system triggers this process from an external drive either at boot time or when a storage device is hot-plugged.
 
-### How It Works: The Sub-Script Validation Bypass
+
+
+
+
+
+# 📂 Previous approach (DEPRECATED) : The "Static/Dynamic" Autorun Hack for AKAI MPC & Force
+
+This page provides an in-depth breakdown of the architecture, workflow, and bypass logic used to circumvent cryptographic signature and footprint verifications within the standalone AKAI MPC / Force operating system (compatible up to firmware v3.9.1). This method allows for the execution of arbitrary root-level code without breaking the OS validation chain.
+
+## 1. Overview & Research Approach
+
+The AKAI standalone operating system implements a strict security check when an external storage device containing an `autorun` folder is inserted or detected at boot. The OS does not merely read the configuration manifest (`autorun.json`); it explicitly requires a matching verification key inside `autorun.check`.
+
+### The Discovery Process
+1.  **Signature Analysis:** The initial objective was to build a utility capable of recalculating and signing the `autorun.check` footprint on the fly whenever script files were updated.
+2.  **The SHA-256 Roadblock:** Internal analysis revealed that the key stored inside `autorun.check` is not a basic file concatenation or a standard, easily reproducible hash. The internal routine utilizes a more complex structure incorporating unique salt values, specific header arrangements, or embedded private keys.
+3.  **The Strategic Pivot (The Hack):** Rather than trying to reverse-engineer Akai's complex cryptographic signing tool for every single script revision, the strategy shifted toward a **Two-Script Architecture (Static / Dynamic)**:
+    *   Generate the valid SHA-256 hash "manually", once and for all, for a strictly frozen package of core files (`autorun.json` + `tkgl_static_script.sh`).
+    *   Delegate all custom user operations to a secondary sub-script completely hidden from AKAI's boot validator.
+
+## 2. Hack Architecture & Directory Structure
+---
+### PREVIOUS METHOD - DEPRECAYED . USE THE SIGN SCRIPT
 The MPC OS validates the integrity of the `autorun` package by verification against an `autorun.check` file. This file contains a complex **SHA-256 hash** generated over the `autorun.json` and its primary target script. Because simply concatenating the files is not enough to recreate Akai's specific signing key, a clever decoupled architecture is required:
 
 *   **The Static Package:** A main, unmodifiable shell script (`tkgl_static_script.sh`) is declared within `autorun.json`. The SHA-256 hash for this exact package (`autorun.json` + static script) is pre-calculated "manually" to satisfy the system's `autorun.check` requirements.
@@ -19,28 +291,6 @@ This specific plug-and-play exploit folder structure works out of the box on FAT
 ⚠️ **Disclaimer:** Modifying your device's filesystem carries a significant risk of bricking your unit and immediately voids the manufacturer's warranty. Proceed with caution.
 
 ---
-
-# 📂 Technical Analysis: The "Static/Dynamic" Autorun Hack for AKAI MPC & Force
-
-This page provides an in-depth breakdown of the architecture, workflow, and bypass logic used to circumvent cryptographic signature and footprint verifications within the standalone AKAI MPC / Force operating system (compatible up to firmware v3.9.1). This method allows for the execution of arbitrary root-level code without breaking the OS validation chain.
-
----
-
-## 1. Overview & Research Approach
-
-The AKAI standalone operating system implements a strict security check when an external storage device containing an `autorun` folder is inserted or detected at boot. The OS does not merely read the configuration manifest (`autorun.json`); it explicitly requires a matching verification key inside `autorun.check`.
-
-### The Discovery Process
-1.  **Signature Analysis:** The initial objective was to build a utility capable of recalculating and signing the `autorun.check` footprint on the fly whenever script files were updated.
-2.  **The SHA-256 Roadblock:** Internal analysis revealed that the key stored inside `autorun.check` is not a basic file concatenation or a standard, easily reproducible hash. The internal routine utilizes a more complex structure incorporating unique salt values, specific header arrangements, or embedded private keys.
-3.  **The Strategic Pivot (The Hack):** Rather than trying to reverse-engineer Akai's complex cryptographic signing tool for every single script revision, the strategy shifted toward a **Two-Script Architecture (Static / Dynamic)**:
-    *   Generate the valid SHA-256 hash "manually", once and for all, for a strictly frozen package of core files (`autorun.json` + `tkgl_static_script.sh`).
-    *   Delegate all custom user operations to a secondary sub-script completely hidden from AKAI's boot validator.
-
----
-
-## 2. Hack Architecture & Directory Structure
-
 The following diagram illustrates how the AKAI authentication system is bypassed by executing commands through an indirect sub-script call:
 
 ```text
@@ -143,177 +393,6 @@ It is critically important to understand that you must never modify a single cha
 ## 5. Future Horizons (Firmware v3.10+)
 
 The "Static/Dynamic" deployment structure has proven completely reliable out of the box across MPC hardware models and the AKAI Force up to firmware **v3.9.1**. It remains a foundation for community-made modifications, custom patches, and SSH setups.
-
-
-## 6. C++ SHA256 encoding extrapolaton deducted from MPC binary
-
-```cpp
-#include <cstdint>
-#include <cstring>
-
-// Stream interface deduced from the call (*(*arg2 + 0x10))(arg2, srcpp, r2_2)
-struct IStream {
-    virtual ~IStream() = default;
-    virtual void dummy1() = 0;
-    virtual void dummy2() = 0;
-    virtual void dummy3() = 0;
-    // Offset 0x10 (4 * 4 bytes): 5th virtual function
-    virtual size_t Read(void* buffer, size_t size) = 0; 
-};
-
-// SHA-256 round constants (equivalent to data_4add388)
-static const uint32_t K[64] = {
-    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-};
-
-// Utility functions for circular rotations
-inline uint32_t rotr(uint32_t x, uint32_t n) {
-    return (x >> n) | (x << (32 - n));
-}
-
-inline uint32_t bswap_32(uint32_t x) {
-    return __builtin_bswap32(x); // __vrev32 in your NEON
-}
-
-// Main function
-void sub_autorun_condensatSHA_256(uint32_t* hash_out, IStream* stream, int32_t arg3_len_lo, int32_t arg4_len_hi) {
-    
-    // Initialization of SHA-256 state vectors (H0 to H7)
-    uint32_t H[8] = {
-        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-        0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-    };
-
-    // Stream size management (64-bit) for padding
-    uint64_t total_length = 0;
-    if (arg4_len_hi >= 0) {
-        total_length = ((uint64_t)arg4_len_hi << 32) | (uint32_t)arg3_len_lo;
-    } else {
-        total_length = ((uint64_t)0x7fffffff << 32) | 0xffffffff;
-    }
-
-    uint8_t buffer[64];
-    uint32_t W[64];
-    size_t len;
-    uint64_t current_len = 0;
-
-    while (true) {
-        // Read a block (max 64 bytes / 0x40)
-        size_t to_read = 64;
-        len = stream->Read(buffer, to_read);
-        current_len += len;
-
-        // End condition or padding (len <= 0x3f equates to a partial block)
-        if (len < 64) {
-            break; 
-        }
-
-        // Message Schedule preparation (Endianness swap NEON -> __vrev32)
-        for (int i = 0; i < 16; ++i) {
-            std::memcpy(&W[i], buffer + i * 4, 4);
-            W[i] = bswap_32(W[i]);
-        }
-
-        // Message Schedule extension
-        for (int i = 16; i < 64; ++i) {
-            uint32_t s0 = rotr(W[i - 15], 7) ^ rotr(W[i - 15], 18) ^ (W[i - 15] >> 3);
-            uint32_t s1 = rotr(W[i - 2], 17) ^ rotr(W[i - 2], 19) ^ (W[i - 2] >> 10);
-            W[i] = W[i - 16] + s0 + W[i - 7] + s1;
-        }
-
-        // Round initialization
-        uint32_t a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
-
-        // Compression loop
-        for (int i = 0; i < 64; ++i) {
-            uint32_t S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
-            uint32_t ch = (e & f) ^ (~e & g);
-            uint32_t temp1 = h + S1 + ch + K[i] + W[i];
-            
-            uint32_t S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
-            uint32_t maj = (a & b) ^ (a & c) ^ (b & c);
-            uint32_t temp2 = S0 + maj;
-
-            h = g;
-            g = f;
-            f = e;
-            e = d + temp1;
-            d = c;
-            c = b;
-            b = a;
-            a = temp1 + temp2;
-        }
-
-        // State update
-        H[0] += a; H[1] += b; H[2] += c; H[3] += d;
-        H[4] += e; H[5] += f; H[6] += g; H[7] += h;
-    }
-
-    // --- PADDING PHASE (when the stream stops or end of file is reached) ---
-    buffer[len] = 0x80; // Append the "1" bit
-    
-    // If there is no room to append the 64-bit size (len > 55)
-    if (len >= 56) {
-        std::memset(buffer + len + 1, 0, 64 - len - 1);
-        
-        // Processing the intermediate padding block
-        for (int i = 0; i < 16; ++i) { W[i] = bswap_32(((uint32_t*)buffer)[i]); }
-        for (int i = 16; i < 64; ++i) {
-            W[i] = W[i - 16] + (rotr(W[i - 15], 7) ^ rotr(W[i - 15], 18) ^ (W[i - 15] >> 3)) + 
-                   W[i - 7] + (rotr(W[i - 2], 17) ^ rotr(W[i - 2], 19) ^ (W[i - 2] >> 10));
-        }
-
-        uint32_t a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
-        for (int i = 0; i < 64; ++i) {
-            uint32_t temp1 = h + (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + W[i];
-            uint32_t temp2 = (rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
-            h = g; g = f; f = e; e = d + temp1; d = c; c = b; b = a; a = temp1 + temp2;
-        }
-        H[0] += a; H[1] += b; H[2] += c; H[3] += d;
-        H[4] += e; H[5] += f; H[6] += g; H[7] += h;
-
-        std::memset(buffer, 0, 56);
-    } else {
-        std::memset(buffer + len + 1, 0, 56 - len - 1);
-    }
-
-    // Append the total length in BITS at the very end of the block (bswap NEON)
-    uint64_t total_bits = total_length * 8;
-    uint32_t bit_len_hi = bswap_32((uint32_t)(total_bits >> 32));
-    uint32_t bit_len_lo = bswap_32((uint32_t)total_bits);
-    std::memcpy(buffer + 56, &bit_len_hi, 4);
-    std::memcpy(buffer + 60, &bit_len_lo, 4);
-
-    // Processing the final block with the integrated size
-    for (int i = 0; i < 16; ++i) { W[i] = bswap_32(((uint32_t*)buffer)[i]); }
-    for (int i = 16; i < 64; ++i) {
-        W[i] = W[i - 16] + (rotr(W[i - 15], 7) ^ rotr(W[i - 15], 18) ^ (W[i - 15] >> 3)) + 
-               W[i - 7] + (rotr(W[i - 2], 17) ^ rotr(W[i - 2], 19) ^ (W[i - 2] >> 10));
-    }
-
-    uint32_t a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
-    for (int i = 0; i < 64; ++i) {
-        uint32_t temp1 = h + (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + W[i];
-        uint32_t temp2 = (rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
-        h = g; g = f; f = e; e = d + temp1; d = c; c = b; b = a; a = temp1 + temp2;
-    }
-    H[0] += a; H[1] += b; H[2] += c; H[3] += d;
-    H[4] += e; H[5] += f; H[6] += g; H[7] += h;
-
-    // The final __vst4 instruction and unimplemented {vshr...} reorder 
-    // the vector registers and write the Big Endian result to the output.
-    for (int i = 0; i < 8; ++i) {
-        hash_out[i] = bswap_32(H[i]);
-    }
-}
-```
 
 ❗ **Important Structural System Notice:**
 Development analysis suggests that this custom autorun method will face a major security overhaul and mitigation measures beginning with the **v3.10** release branch (succeeding the v3.9.1 firmware). AKAI is expected to patch this exploit path either by introducing recursive checks on called sub-shells or by changing the underlying file signature validation routines entirely. Ensure you utilize this flexibility while your devices remain on legacy v2.x / v3.9.x firmware branches.
