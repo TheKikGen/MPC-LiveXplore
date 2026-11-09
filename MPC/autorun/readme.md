@@ -1,5 +1,5 @@
 # Akai MPC Standalone Drive Autorun Engine: Complete Architecture & Cryptographic Specification
-(Based on 3.0.1 analysis. NB : autorun is dropped from 3.10).
+(Based on 3.9.1 analysis. NB : autorun is dropped from 3.10).
 
 ## 1. Executive Summary
 The Akai MPC standalone operating system (firmware v3.9.1, ARM 32-bit Linux) embeds a native autorun subsystem designed to detect, validate, and execute shell automation packages from removable external storage (USB flash drives, SD cards, and external SATA drives).
