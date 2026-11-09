@@ -11,6 +11,10 @@ This document provides the definitive technical specification of the autorun sub
 ---
 
 ## 2. Reverse-Engineered Class Architecture & Symbols
+### What is the Autorun?
+The built-in `autorun` feature is a low-level system mechanism designed exclusively to execute official, digitally signed AKAI update scripts or factory content deployments. The system triggers this process from an external drive either at boot time or when a storage device is hot-plugged.
+
+
 
 The autorun pipeline is implemented primarily in the `ScriptRunner` and `DriveConnections` classes:
 
@@ -248,13 +252,6 @@ python3 MPC-391/mpc_autorun_signer.py verify /media/my_usb_drive/autorun
    Always plug the USB drive into the MPC **after** the system has booted into the main project screen if using `"askQuestion": true`.
 4. **Clean Line Endings:**
    Ensure all shell scripts and JSON files use standard Unix line endings (`LF`, `\n`) rather than Windows DOS endings (`CRLF`, `\r\n`), as byte differences directly alter the SHA-256 digest.
-### What is the Autorun?
-The built-in `autorun` feature is a low-level system mechanism designed exclusively to execute official, digitally signed AKAI update scripts or factory content deployments. The system triggers this process from an external drive either at boot time or when a storage device is hot-plugged.
-
-
-
-
-
 
 # 📂 Previous approach (DEPRECATED) : The "Static/Dynamic" Autorun Hack for AKAI MPC & Force
 
