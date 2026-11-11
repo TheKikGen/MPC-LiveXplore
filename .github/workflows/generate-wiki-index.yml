@@ -16,21 +16,23 @@ jobs:
 
       - name: Générer la page d'accueil et la barre latérale
         run: |
-          # 1. Initialiser Home.md avec votre fichier template
-          cat wiki-template.md > wiki-dir/Home.md
+          # 1. On se déplace d'abord dans le dossier du wiki
+          cd wiki-dir
           
-          # 2. Initialiser le menu de droite (_Sidebar.md) de manière compacte
-          cat << 'EOF' > wiki-dir/_Sidebar.md
+          # 2. Initialiser Home.md avec votre fichier template (situé un dossier plus haut)
+          cat ../wiki-template.md > Home.md
+          
+          # 3. Initialiser le menu de droite (_Sidebar.md) de manière compacte
+          cat << 'EOF' > _Sidebar.md
 # 🧭 [Home](Home)
 
 ### 🛠️ Core & Hacks
 EOF
           
-          cd wiki-dir
-          # Création de fichiers temporaires pour trier les articles
+          # 4. Création de fichiers temporaires pour trier les articles
           touch /tmp/core.md /tmp/midi.md /tmp/content.md /tmp/hardware.md /tmp/trouble.md
 
-          # 3. Boucle et tri automatique des fichiers
+          # 5. Boucle et tri automatique des fichiers
           for file in *.md; do
             if [ "$file" != "Home.md" ] && [ "$file" != "_Sidebar.md" ] && [ "$file" != "_Footer.md" ]; then
               filename="${file%.md}"
@@ -54,7 +56,7 @@ EOF
             fi
           done
 
-          # 4. Assemblage final de Home.md (Page d'accueil principale)
+          # 6. Assemblage final de Home.md (Page d'accueil principale)
           echo -e "\n---\n\n## 🛠️ Core System & Hacks\n\nEverything related to the underlying embedded Linux operating system and runtime customization:\n" >> Home.md
           [ -s /tmp/core.md ] && cat /tmp/core.md >> Home.md || echo "*No articles found.*" >> Home.md
 
@@ -65,13 +67,12 @@ EOF
           [ -s /tmp/content.md ] && cat /tmp/content.md >> Home.md || echo "*No articles found.*" >> Home.md
 
           echo -e "\n---\n\n## 🔍 Device Diagnostics & Hardware\n\nBoard layouts, chip identification, and troubleshooting:\n" >> Home.md
-          [ -s /tmp/hardware.md ] && cat /tmp/hardware.md >> Home.md || echo "*No articles found.*" >> Hardware.md
+          [ -s /tmp/hardware.md ] && cat /tmp/hardware.md >> Home.md || echo "*No articles found.*" >> Home.md
 
           echo -e "\n---\n\n## 🩹 Troubleshooting & Bug Fixes\n" >> Home.md
           [ -s /tmp/trouble.md ] && cat /tmp/trouble.md >> Home.md || echo "*No articles found.*" >> Home.md
 
-
-          # 5. Assemblage du menu de droite (_Sidebar.md)
+          # 7. Assemblage du menu de droite (_Sidebar.md)
           [ -s /tmp/core.md ] && cat /tmp/core.md >> _Sidebar.md
           
           echo -e "\n### 🎹 MIDI & Control" >> _Sidebar.md
@@ -90,9 +91,8 @@ EOF
         run: |
           cd wiki-dir
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "github-actions[bot]@://github.com"
           
-          # Ajoute les deux fichiers modifiés au commit
           git add Home.md _Sidebar.md
           
           if git diff --cached --quiet; then
