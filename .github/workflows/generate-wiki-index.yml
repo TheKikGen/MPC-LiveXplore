@@ -1,8 +1,8 @@
 name: Générer l'Index du Wiki
 
 on:
-  gollum: # Se déclenche à chaque modification du wiki
-  workflow_dispatch: # Permet de lancer l'action manuellement depuis l'onglet Actions
+  gollum:
+  workflow_dispatch:
 
 jobs:
   update-wiki-index:
@@ -10,8 +10,7 @@ jobs:
     steps:
       - name: Checkout du wiki
         run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@://github.com{{ github.repository }}.wiki.git wiki
-          cd wiki
+          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@://github.com{{ github.repository }}.wiki.git" wiki
 
       - name: Générer la page d'accueil
         run: |
@@ -47,40 +46,29 @@ EOF
 
           # 3. Boucle et tri automatique des fichiers
           for file in *.md; do
-            # Ignorer les fichiers système du Wiki
             if [ "$file" != "Home.md" ] && [ "$file" != "_Sidebar.md" ] && [ "$file" != "_Footer.md" ]; then
               filename="${file%.md}"
-              
-              # Formater le nom pour l'URL du Wiki GitHub (les espaces deviennent des tirets)
               url_name=$(echo "$filename" | sed 's/ /-/g')
-              
-              # Remplacer les caractères spéciaux problématiques pour le lien si nécessaire
-              # Note : Dans un Wiki GitHub, les liens pointent vers le nom de la page directement
               line="* [$filename]($url_name)"
-              
-              # Conversion en minuscule pour le filtrage par mot-clé
               lower_file=$(echo "$file" | tr '[:upper:]' '[:lower:]')
 
-              # Tri par pertinence de mots-clés dans le nom du fichier
               if [[ "$lower_file" =~ "ssh" || "$lower_file" =~ "console" || "$lower_file" =~ "overlay" || "$lower_file" =~ "autorun" || "$lower_file" =~ "rootfs" || "$lower_file" =~ "iamforce" || "$lower_file" =~ "analysis" ]]; then
                 echo "$line" >> /tmp/core.md
               elif [[ "$lower_file" =~ "midi" || "$lower_file" =~ "libinput" || "$lower_file" =~ "controller" ]]; then
                 echo "$line" >> /tmp/midi.md
               elif [[ "$lower_file" =~ "arp" || "$lower_file" =~ "plugin" || "$lower_file" =~ "splash" || "$lower_file" =~ "settings" ]]; then
                 echo "$line" >> /tmp/content.md
-              elif [[ "$lower_file" =~ "hardware" || "$lower_file" =~ "live-ii" || "$lower_file" =~ "emmc" || "$lower_file" =~ "ssd" || "$lower_file" =~ "i2c" || "$lower_file" =~ "ids" || "$lower_file" =~ "serial" ]]; then
+              elif [[ "$lower_file" =~ "hardware" || "$lower_file" =~ "live-ii" || "$lower_file" =~ "emmc" || "$lower_file" =~ "ssd" || "$lower_file" || "$lower_file" =~ "i2c" || "$lower_file" =~ "ids" || "$lower_file" =~ "serial" ]]; then
                 echo "$line" >> /tmp/hardware.md
               elif [[ "$lower_file" =~ "touch" || "$lower_file" =~ "screen" || "$lower_file" =~ "pop" || "$lower_file" =~ "fix" || "$lower_file" =~ "black" ]]; then
                 echo "$line" >> /tmp/trouble.md
               else
-                # Section par défaut si aucun mot-clé ne match (ici mis dans Hardware/Diagnostics par sécurité)
                 echo "$line" >> /tmp/hardware.md
               fi
             fi
           done
 
-          # 4. Assemblage final de la page Home.md avec les sections triées
-          
+          # 4. Assemblage final
           echo -e "\n---\n\n## 🛠️ Core System & Hacks\n\nEverything related to the underlying embedded Linux operating system and runtime customization:\n" >> Home.md
           [ -s /tmp/core.md ] && cat /tmp/core.md >> Home.md || echo "*No articles found.*" >> Home.md
 
