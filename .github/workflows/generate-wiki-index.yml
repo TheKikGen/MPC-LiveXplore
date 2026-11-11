@@ -1,0 +1,111 @@
+name: Générer l'Index du Wiki
+
+on:
+  gollum: # Se déclenche à chaque modification du wiki
+  workflow_dispatch: # Permet de lancer l'action manuellement depuis l'onglet Actions
+
+jobs:
+  update-wiki-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du wiki
+        run: |
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@://github.com{{ github.repository }}.wiki.git wiki
+          cd wiki
+
+      - name: Générer la page d'accueil
+        run: |
+          cd wiki
+          
+          # 1. Écriture de l'en-tête fixe et du tableau de navigation
+          cat << 'EOF' > Home.md
+        __ __| |           |  /_) |     ___|             |           |
+
+           |   __ \   _ \  ' /  | |  / |      _ \ __ \   |      _` | __ \   __|
+           |   | | |  __/  . \  |   <  |   |  __/ |   |  |     (   | |   |\__ \
+          _|  _| |_|\___| _|\_\_|_|\_\\____|\___|_|  _| _____|\__,_|_.__/ ____/
+
+# 🎹 MPC-LiveXplore Wiki
+
+Welcome to the **MPC-LiveXplore** documentation hub. This wiki covers hardware analysis, Linux system internals, custom firmware workflows, MIDI routing, and modding guides for the Akai MPC standalone series (Live, Live II, X, One, and Force).
+
+---
+
+## 🧭 Navigation Hub
+
+| Section | Description |
+| :--- | :--- |
+| [🛠️ Core System & Hacks](#️-core-system--hacks) | Root access, SSH setup, overlays, and boot modes |
+| [🎹 MIDI & Controller Customization](#-midi--controller-customization) | Port expansion, MIDI mapping, and internal routing |
+| [🎨 Content, Presets & Assets](#-custom-content--assets) | Arp templates, direct plugin links, and splash screens |
+| [🔍 Diagnostics & Hardware](#-device-diagnostics--hardware) | Disassembly shots, teardown analysis, I2C, and EMMC specs |
+
+EOF
+
+          # 2. Création de fichiers temporaires pour trier les articles
+          touch /tmp/core.md /tmp/midi.md /tmp/content.md /tmp/hardware.md /tmp/trouble.md
+
+          # 3. Boucle et tri automatique des fichiers
+          for file in *.md; do
+            # Ignorer les fichiers système du Wiki
+            if [ "$file" != "Home.md" ] && [ "$file" != "_Sidebar.md" ] && [ "$file" != "_Footer.md" ]; then
+              filename="${file%.md}"
+              
+              # Formater le nom pour l'URL du Wiki GitHub (les espaces deviennent des tirets)
+              url_name=$(echo "$filename" | sed 's/ /-/g')
+              
+              # Remplacer les caractères spéciaux problématiques pour le lien si nécessaire
+              # Note : Dans un Wiki GitHub, les liens pointent vers le nom de la page directement
+              line="* [$filename]($url_name)"
+              
+              # Conversion en minuscule pour le filtrage par mot-clé
+              lower_file=$(echo "$file" | tr '[:upper:]' '[:lower:]')
+
+              # Tri par pertinence de mots-clés dans le nom du fichier
+              if [[ "$lower_file" =~ "ssh" || "$lower_file" =~ "console" || "$lower_file" =~ "overlay" || "$lower_file" =~ "autorun" || "$lower_file" =~ "rootfs" || "$lower_file" =~ "iamforce" || "$lower_file" =~ "analysis" ]]; then
+                echo "$line" >> /tmp/core.md
+              elif [[ "$lower_file" =~ "midi" || "$lower_file" =~ "libinput" || "$lower_file" =~ "controller" ]]; then
+                echo "$line" >> /tmp/midi.md
+              elif [[ "$lower_file" =~ "arp" || "$lower_file" =~ "plugin" || "$lower_file" =~ "splash" || "$lower_file" =~ "settings" ]]; then
+                echo "$line" >> /tmp/content.md
+              elif [[ "$lower_file" =~ "hardware" || "$lower_file" =~ "live-ii" || "$lower_file" =~ "emmc" || "$lower_file" =~ "ssd" || "$lower_file" =~ "i2c" || "$lower_file" =~ "ids" || "$lower_file" =~ "serial" ]]; then
+                echo "$line" >> /tmp/hardware.md
+              elif [[ "$lower_file" =~ "touch" || "$lower_file" =~ "screen" || "$lower_file" =~ "pop" || "$lower_file" =~ "fix" || "$lower_file" =~ "black" ]]; then
+                echo "$line" >> /tmp/trouble.md
+              else
+                # Section par défaut si aucun mot-clé ne match (ici mis dans Hardware/Diagnostics par sécurité)
+                echo "$line" >> /tmp/hardware.md
+              fi
+            fi
+          done
+
+          # 4. Assemblage final de la page Home.md avec les sections triées
+          
+          echo -e "\n---\n\n## 🛠️ Core System & Hacks\n\nEverything related to the underlying embedded Linux operating system and runtime customization:\n" >> Home.md
+          [ -s /tmp/core.md ] && cat /tmp/core.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+          echo -e "\n---\n\n## 🎹 MIDI & Controller Customization\n\nControl surface hacks, driver behaviors, and signal routing:\n" >> Home.md
+          [ -s /tmp/midi.md ] && cat /tmp/midi.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+          echo -e "\n---\n\n## 🎨 Custom Content & Assets\n" >> Home.md
+          [ -s /tmp/content.md ] && cat /tmp/content.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+          echo -e "\n---\n\n## 🔍 Device Diagnostics & Hardware\n\nBoard layouts, chip identification, and troubleshooting:\n" >> Home.md
+          [ -s /tmp/hardware.md ] && cat /tmp/hardware.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+          echo -e "\n---\n\n## 🩹 Troubleshooting & Bug Fixes\n" >> Home.md
+          [ -s /tmp/trouble.md ] && cat /tmp/trouble.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+      - name: Commit et Push des modifications
+        run: |
+          cd wiki
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@://github.com"
+          
+          if git diff --quiet Home.md; then
+            echo "Aucun changement détecté dans l'index."
+          else
+            git add Home.md
+            git commit -m "🤖 Automatique : Mise à jour de la page d'accueil du Wiki"
+            git push
+          fi
