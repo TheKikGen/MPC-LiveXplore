@@ -1,4 +1,4 @@
-name: Générer l'Index du Wiki via Scraping
+name: Générer l'Index du Wiki
 
 on:
   gollum:
@@ -11,76 +11,51 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout du dépôt principal
-        uses: actions/checkout@v4
-
-      - name: Installer Python et Beautiful Soup
-        run: pip install beautifulsoup4 requests
-
-      - name: Scrapper le menu à droite et générer la page d'accueil
-        shell: python
-        run: |
-          import requests
-          from bs4 import BeautifulSoup
-          import os
-
-          # URL publique corrigée avec le slash indispensable
-          repo = os.getenv('GITHUB_REPOSITORY')
-          url = f"https://github.com{repo}/wiki"
-          
-          print(f"Tentative de scraping sur l'URL : {url}")
-          response = requests.get(url)
-
-          if response.status_code != 200:
-              print(f"Impossible d'accéder au Wiki public (Code: {response.status_code})")
-              exit(1)
-
-          soup = BeautifulSoup(response.text, 'html.parser')
-          
-          # Extraction du menu latéral natif de GitHub
-          sidebar = soup.find('div', class_='js-wiki-sidebar-toggle-display')
-          
-          if not sidebar:
-              print("Le menu de droite n'a pas pu être trouvé sur la page.")
-              exit(1)
-
-          markdown_content = []
-          markdown_content.append("# 🧭 Wiki Navigation Index\n")
-          markdown_content.append("Voici la liste ordonnée de toutes les sections et articles de la documentation :\n")
-
-          # Extraction automatique de l'arborescence
-          for link in sidebar.find_all('a', class_='Link--primary'):
-              title = link.get_text(strip=True)
-              href = link.get('href', '')
-              clean_href = href.split('/')[-1]
-              
-              if clean_href.startswith('#'):
-                  markdown_content.append(f"\n## {title}\n")
-              else:
-                  markdown_content.append(f"* [{title}]({clean_href})")
-
-          with open("Home.md", "w", encoding="utf-8") as f:
-              f.write("\n".join(markdown_content))
-          
-          print("Fichier Home.md généré avec succès !")
-
-      - name: Cloner le Wiki de destination
+      - name: Récupérer l'arborescence du Wiki
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}.wiki
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: wiki-repo
+
+      - name: Scanner les fichiers et générer l'index
+        shell: python
+        run: |
+          import os
+
+          # 1. Lister tous les fichiers Markdown du wiki
+          files = [f for f in os.listdir('.') if f.endswith('.md')]
+          
+          # 2. Exclure les pages spéciales du système de navigation
+          excluded = ['Home.md', '_Sidebar.md', '_Footer.md']
+          articles = [f for f in files if f not in excluded]
+          
+          # 3. Trier les articles par ordre alphabétique
+          articles.sort()
+
+          # 4. Construire le contenu de la nouvelle page d'accueil
+          markdown = []
+          markdown.append("# 🧭 Index Automatique des Articles\n")
+          markdown.append("Voici la liste de toutes les pages disponibles sur ce Wiki :\n")
+
+          for file in articles:
+              title = file[:-3]  # Supprime l'extension '.md'
+              url_name = title.replace(' ', '-')  # Format d'URL de GitHub
+              markdown.append(f"* [{title}]({url_name})")
+
+          # 5. Écrire le résultat dans Home.md
+          with open("Home.md", "w", encoding="utf-8") as f:
+              f.write("\n".join(markdown))
+          
+          print(f"Index généré avec succès ! {len(articles)} articles trouvés.")
 
       - name: Pousser les modifications sur le Wiki
         run: |
-          cp Home.md wiki-repo/Home.md
-          cd wiki-repo
           git config user.name "github-actions-bot"
           git config user.email "github-actions-bot@users.noreply.github.com"
           git add Home.md
           if git diff --cached --quiet; then
             echo "Aucun changement détecté."
           else
-            git commit -m "Automatique: Synchronisation de l'index depuis le menu"
+            git commit -m "Automatique: Mise a jour de la page d-accueil"
             git push origin HEAD
           fi
