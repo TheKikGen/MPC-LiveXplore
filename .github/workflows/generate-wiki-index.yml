@@ -11,11 +11,12 @@ jobs:
       contents: write
 
     steps:
-      - name: Récupérer l'arborescence du Wiki
+      - name: Récupérer l'intégralité du Wiki (29 pages)
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}.wiki
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0 # Force GitHub à charger l'historique complet et tous les fichiers
 
       - name: Scanner les fichiers et générer l'index
         shell: python
@@ -35,7 +36,7 @@ jobs:
           # 4. Construire le contenu de la nouvelle page d'accueil
           markdown = []
           markdown.append("# 🧭 Index Automatique des Articles\n")
-          markdown.append("Voici la liste de toutes les pages disponibles sur ce Wiki :\n")
+          markdown.append(f"Voici la liste de toutes les pages disponibles sur ce Wiki ({len(articles)} articles trouvés) :\n")
 
           for file in articles:
               title = file[:-3]  # Supprime l'extension '.md'
@@ -51,7 +52,7 @@ jobs:
       - name: Pousser les modifications sur le Wiki
         run: |
           git config user.name "github-actions-bot"
-          git config user.email "github-actions-bot@users.noreply.github.com"
+          git config user.email "github-actions-bot@://github.com"
           git add Home.md
           if git diff --cached --quiet; then
             echo "Aucun changement détecté."
