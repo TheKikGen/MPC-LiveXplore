@@ -15,8 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Installer Python et Beautiful Soup
-        run: |
-          pip install beautifulsoup4 requests
+        run: pip install beautifulsoup4 requests
 
       - name: Scrapper le menu à droite et générer la page d'accueil
         shell: python
@@ -25,8 +24,11 @@ jobs:
           from bs4 import BeautifulSoup
           import os
 
-          # URL publique de votre wiki pour aller chercher le menu de droite
-          url = f"https://github.com{os.getenv('GITHUB_REPOSITORY')}/wiki"
+          # URL publique corrigée avec le slash indispensable
+          repo = os.getenv('GITHUB_REPOSITORY')
+          url = f"https://github.com{repo}/wiki"
+          
+          print(f"Tentative de scraping sur l'URL : {url}")
           response = requests.get(url)
 
           if response.status_code != 200:
@@ -35,51 +37,46 @@ jobs:
 
           soup = BeautifulSoup(response.text, 'html.parser')
           
-          # On cherche l'élément HTML exact contenant le menu latéral
+          # Extraction du menu latéral natif de GitHub
           sidebar = soup.find('div', class_='js-wiki-sidebar-toggle-display')
           
           if not sidebar:
               print("Le menu de droite n'a pas pu être trouvé sur la page.")
               exit(1)
 
-          # Construction de la nouvelle page d'accueil
           markdown_content = []
           markdown_content.append("# 🧭 Wiki Navigation Index\n")
           markdown_content.append("Voici la liste ordonnée de toutes les sections et articles de la documentation :\n")
 
-          # On parcourt tous les blocs de pages et sections trouvés dans le menu
+          # Extraction automatique de l'arborescence
           for link in sidebar.find_all('a', class_='Link--primary'):
               title = link.get_text(strip=True)
               href = link.get('href', '')
-              
-              # Nettoyage de l'URL pour ne garder que le lien Markdown valide
               clean_href = href.split('/')[-1]
               
-              # Si c'est une section (ancre commençant par #), on applique un style de titre
               if clean_href.startswith('#'):
                   markdown_content.append(f"\n## {title}\n")
               else:
                   markdown_content.append(f"* [{title}]({clean_href})")
 
-          # Écriture locale du fichier final
           with open("Home.md", "w", encoding="utf-8") as f:
               f.write("\n".join(markdown_content))
           
-          print("Fichier Home.md généré avec succès à partir du menu à droite !")
+          print("Fichier Home.md généré avec succès !")
 
-      - name: Publier la mise à jour sur le Wiki via Checkout Automatique
+      - name: Cloner le Wiki de destination
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}.wiki
           token: ${{ secrets.GITHUB_TOKEN }}
           path: wiki-repo
 
-      - name: Pousser Home.md sur le Wiki
+      - name: Pousser les modifications sur le Wiki
         run: |
           cp Home.md wiki-repo/Home.md
           cd wiki-repo
           git config user.name "github-actions-bot"
-          git config user.email "github-actions-bot@://github.com"
+          git config user.email "github-actions-bot@users.noreply.github.com"
           git add Home.md
           if git diff --cached --quiet; then
             echo "Aucun changement détecté."
