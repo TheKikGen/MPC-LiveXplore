@@ -9,8 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout du wiki
-        run: |
-          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@://github.com{{ github.repository }}.wiki.git" wiki
+        run: 'git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@://github.com{{ github.repository }}.wiki.git" wiki'
 
       - name: Générer la page d'accueil
         run: |
