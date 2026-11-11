@@ -1,0 +1,103 @@
+name: Générer l'Index et le Menu du Wiki
+
+on:
+  gollum:
+  workflow_dispatch:
+
+jobs:
+  update-wiki-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du depot principal (contient le template)
+        uses: actions/checkout@v4
+
+      - name: Cloner le wiki
+        run: 'git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@://github.com{{ github.repository }}.wiki.git" wiki-dir'
+
+      - name: Générer la page d'accueil et la barre latérale
+        run: |
+          # 1. Initialiser Home.md avec votre fichier template
+          cat wiki-template.md > wiki-dir/Home.md
+          
+          # 2. Initialiser le menu de droite (_Sidebar.md) de manière compacte
+          cat << 'EOF' > wiki-dir/_Sidebar.md
+# 🧭 [Home](Home)
+
+### 🛠️ Core & Hacks
+EOF
+          
+          cd wiki-dir
+          # Création de fichiers temporaires pour trier les articles
+          touch /tmp/core.md /tmp/midi.md /tmp/content.md /tmp/hardware.md /tmp/trouble.md
+
+          # 3. Boucle et tri automatique des fichiers
+          for file in *.md; do
+            if [ "$file" != "Home.md" ] && [ "$file" != "_Sidebar.md" ] && [ "$file" != "_Footer.md" ]; then
+              filename="${file%.md}"
+              url_name=$(echo "$filename" | sed 's/ /-/g')
+              line="* [$filename]($url_name)"
+              lower_file=$(echo "$file" | tr '[:upper:]' '[:lower:]')
+
+              if [[ "$lower_file" =~ "ssh" || "$lower_file" =~ "console" || "$lower_file" =~ "overlay" || "$lower_file" =~ "autorun" || "$lower_file" =~ "rootfs" || "$lower_file" =~ "iamforce" || "$lower_file" =~ "analysis" ]]; then
+                echo "$line" >> /tmp/core.md
+              elif [[ "$lower_file" =~ "midi" || "$lower_file" =~ "libinput" || "$lower_file" =~ "controller" ]]; then
+                echo "$line" >> /tmp/midi.md
+              elif [[ "$lower_file" =~ "arp" || "$lower_file" =~ "plugin" || "$lower_file" =~ "splash" || "$lower_file" =~ "settings" ]]; then
+                echo "$line" >> /tmp/content.md
+              elif [[ "$lower_file" =~ "hardware" || "$lower_file" =~ "live-ii" || "$lower_file" =~ "emmc" || "$lower_file" =~ "ssd" || "$lower_file" =~ "i2c" || "$lower_file" =~ "ids" || "$lower_file" =~ "serial" ]]; then
+                echo "$line" >> /tmp/hardware.md
+              elif [[ "$lower_file" =~ "touch" || "$lower_file" =~ "screen" || "$lower_file" =~ "pop" || "$lower_file" =~ "fix" || "$lower_file" =~ "black" ]]; then
+                echo "$line" >> /tmp/trouble.md
+              else
+                echo "$line" >> /tmp/hardware.md
+              fi
+            fi
+          done
+
+          # 4. Assemblage final de Home.md (Page d'accueil principale)
+          echo -e "\n---\n\n## 🛠️ Core System & Hacks\n\nEverything related to the underlying embedded Linux operating system and runtime customization:\n" >> Home.md
+          [ -s /tmp/core.md ] && cat /tmp/core.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+          echo -e "\n---\n\n## 🎹 MIDI & Controller Customization\n\nControl surface hacks, driver behaviors, and signal routing:\n" >> Home.md
+          [ -s /tmp/midi.md ] && cat /tmp/midi.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+          echo -e "\n---\n\n## 🎨 Custom Content & Assets\n" >> Home.md
+          [ -s /tmp/content.md ] && cat /tmp/content.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+          echo -e "\n---\n\n## 🔍 Device Diagnostics & Hardware\n\nBoard layouts, chip identification, and troubleshooting:\n" >> Home.md
+          [ -s /tmp/hardware.md ] && cat /tmp/hardware.md >> Home.md || echo "*No articles found.*" >> Hardware.md
+
+          echo -e "\n---\n\n## 🩹 Troubleshooting & Bug Fixes\n" >> Home.md
+          [ -s /tmp/trouble.md ] && cat /tmp/trouble.md >> Home.md || echo "*No articles found.*" >> Home.md
+
+
+          # 5. Assemblage du menu de droite (_Sidebar.md)
+          [ -s /tmp/core.md ] && cat /tmp/core.md >> _Sidebar.md
+          
+          echo -e "\n### 🎹 MIDI & Control" >> _Sidebar.md
+          [ -s /tmp/midi.md ] && cat /tmp/midi.md >> _Sidebar.md
+          
+          echo -e "\n### 🎨 Presets & Assets" >> _Sidebar.md
+          [ -s /tmp/content.md ] && cat /tmp/content.md >> _Sidebar.md
+          
+          echo -e "\n### 🔍 Diagnostics & HW" >> _Sidebar.md
+          [ -s /tmp/hardware.md ] && cat /tmp/hardware.md >> _Sidebar.md
+          
+          echo -e "\n### 🩹 Bug Fixes" >> _Sidebar.md
+          [ -s /tmp/trouble.md ] && cat /tmp/trouble.md >> _Sidebar.md
+
+      - name: Commit et Push des modifications
+        run: |
+          cd wiki-dir
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Ajoute les deux fichiers modifiés au commit
+          git add Home.md _Sidebar.md
+          
+          if git diff --cached --quiet; then
+            echo "Aucun changement détecté dans l'index ou la sidebar."
+          else
+            git commit -m "🤖 Automatique : Mise à jour de la page d'accueil et du menu"
+            git push
+          fi
