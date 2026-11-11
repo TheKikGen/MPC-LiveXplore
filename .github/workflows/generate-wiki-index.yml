@@ -1,8 +1,8 @@
 name: Générer l'Index du Wiki
 
 on:
-  gollum:
-  workflow_dispatch:
+  #gollum:
+  #workflow_dispatch:
 
 jobs:
   update-wiki-index:
