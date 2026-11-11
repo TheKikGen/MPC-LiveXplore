@@ -1,4 +1,4 @@
-name: Générer l'Index et le Menu du Wiki
+name: Générer l'Index du Wiki via Scraping
 
 on:
   gollum:
@@ -7,31 +7,83 @@ on:
 jobs:
   update-wiki-index:
     runs-on: ubuntu-latest
-    
     permissions:
       contents: write
 
     steps:
-      - name: Checkout du depot principal
+      - name: Checkout du dépôt principal
         uses: actions/checkout@v4
 
-      - name: Cloner le wiki
-        run: git clone "https://oauth2:${{ secrets.GITHUB_TOKEN }}@://github.com{{ github.repository }}.wiki.git" wiki-dir
-
-      - name: Executer le script de generation
+      - name: Installer Python et Beautiful Soup
         run: |
-          chmod +x generate-wiki.sh
-          ./generate-wiki.sh
+          pip install beautifulsoup4 requests
 
-      - name: Commit et Push des modifications
+      - name: Scrapper le menu à droite et générer la page d'accueil
+        shell: python
         run: |
-          cd wiki-dir
+          import requests
+          from bs4 import BeautifulSoup
+          import os
+
+          # URL publique de votre wiki pour aller chercher le menu de droite
+          url = f"https://github.com{os.getenv('GITHUB_REPOSITORY')}/wiki"
+          response = requests.get(url)
+
+          if response.status_code != 200:
+              print(f"Impossible d'accéder au Wiki public (Code: {response.status_code})")
+              exit(1)
+
+          soup = BeautifulSoup(response.text, 'html.parser')
+          
+          # On cherche l'élément HTML exact contenant le menu latéral
+          sidebar = soup.find('div', class_='js-wiki-sidebar-toggle-display')
+          
+          if not sidebar:
+              print("Le menu de droite n'a pas pu être trouvé sur la page.")
+              exit(1)
+
+          # Construction de la nouvelle page d'accueil
+          markdown_content = []
+          markdown_content.append("# 🧭 Wiki Navigation Index\n")
+          markdown_content.append("Voici la liste ordonnée de toutes les sections et articles de la documentation :\n")
+
+          # On parcourt tous les blocs de pages et sections trouvés dans le menu
+          for link in sidebar.find_all('a', class_='Link--primary'):
+              title = link.get_text(strip=True)
+              href = link.get('href', '')
+              
+              # Nettoyage de l'URL pour ne garder que le lien Markdown valide
+              clean_href = href.split('/')[-1]
+              
+              # Si c'est une section (ancre commençant par #), on applique un style de titre
+              if clean_href.startswith('#'):
+                  markdown_content.append(f"\n## {title}\n")
+              else:
+                  markdown_content.append(f"* [{title}]({clean_href})")
+
+          # Écriture locale du fichier final
+          with open("Home.md", "w", encoding="utf-8") as f:
+              f.write("\n".join(markdown_content))
+          
+          print("Fichier Home.md généré avec succès à partir du menu à droite !")
+
+      - name: Publier la mise à jour sur le Wiki via Checkout Automatique
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: wiki-repo
+
+      - name: Pousser Home.md sur le Wiki
+        run: |
+          cp Home.md wiki-repo/Home.md
+          cd wiki-repo
           git config user.name "github-actions-bot"
-          git config user.email "github-actions-bot@users.noreply.github.com"
-          git add Home.md _Sidebar.md
+          git config user.email "github-actions-bot@://github.com"
+          git add Home.md
           if git diff --cached --quiet; then
             echo "Aucun changement détecté."
           else
-            git commit -m "Automatique: Mise a jour de la page d-accueil et du menu du Wiki"
+            git commit -m "Automatique: Synchronisation de l'index depuis le menu"
             git push origin HEAD
           fi
